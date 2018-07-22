@@ -2,6 +2,7 @@ package com.laika.laika_yellow_book;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -83,5 +84,16 @@ public class DbHelper extends SQLiteOpenHelper{
             return false;
         else
             return true;
+    }
+
+    public Integer deleteData (String id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.delete(TABLE_NAME, "ID = ?",new String[] {id});
+    }
+
+    public Cursor getDataByID(String id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor res = db.rawQuery("select * from "+TABLE_NAME + " WHERE CowNum = ?",new String[] {id});
+        return res;
     }
 }
