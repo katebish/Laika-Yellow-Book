@@ -19,4 +19,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.932" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:layout_marginEnd="134dp"
+        android:layout_marginLeft="135dp"
+        android:layout_marginRight="134dp"
+        android:layout_marginStart="135dp"
+        android:layout_marginTop="353dp"
+        android:onClick="SpeechTest"
+        android:text="Speech Test"
+        app:layout_constraintBottom_toTopOf="@+id/btn_NewEntry"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </android.support.constraint.ConstraintLayout>

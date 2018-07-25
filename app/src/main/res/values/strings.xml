@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Laika-Yellow-Book</string>
+    <string name="buttonSpeech">Click for speech</string>
 </resources>
