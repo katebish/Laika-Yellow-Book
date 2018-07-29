@@ -23,7 +23,7 @@ public class DbHelper extends SQLiteOpenHelper{
     public static final String COL7 = "Condition";
     public static final String COL8 = "Sex";
     public static final String COL9 = "Fate";
-    public static final String COL10 = "CalfIndentNo";
+    public static final String COL10 = "CalfID";
     public static final String COL11 = "Remarks";
 
     public DbHelper(Context context) {
@@ -33,7 +33,7 @@ public class DbHelper extends SQLiteOpenHelper{
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        sqLiteDatabase.execSQL("CREATE TABLE " + TABLE_NAME + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, CowNum INTEGER, DueCalveDate DATE, SireOfCalf INTEGER, CalfBW DOUBLE, CalvingDate DATE, CalvingDiff TEXT, Condition TEXT, Sex TEXT, Fate TEXT, CalfIndentNo INTEGER, Remarks TEXT)");
+        sqLiteDatabase.execSQL("CREATE TABLE " + TABLE_NAME + " ("+COL1+" INTEGER, "+COL2+" DATE, "+COL3+" INTEGER, "+COL4+" DOUBLE, "+COL5+" DATE, "+COL6+" TEXT, "+COL7+" TEXT, "+COL8+" TEXT, "+COL9+" TEXT, "+COL10+" INTEGER, "+COL11+" TEXT, PRIMARY KEY ("+COL1+", "+COL10+"))");
     }
 
     @Override
