@@ -1,20 +1,37 @@
 package com.laika.laika_yellow_book;
 
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
+import android.speech.RecognizerIntent;
+import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 
-public class NewEntryActivity extends AppCompatActivity {
-    DbHelper myDb;
-    EditText edit_CowNumber, edit_DueCalveDate, edit_SireIfCalf, edit_CalfBW, edit_CalvingDate, edit_CalvingDiff, edit_Condition, edit_Sex, edit_Fate, edit_CalfIndent,edit_Remarks;
-    Button btn_Save;
+import static android.speech.tts.TextToSpeech.QUEUE_FLUSH;
+
+
+public class NewEntryActivity extends AppCompatActivity{
+    private DbHelper myDb;
+
+    private EditText edit_CowNumber, edit_DueCalveDate, edit_SireIfCalf, edit_CalfBW, edit_CalvingDate, edit_CalvingDiff, edit_Condition, edit_Sex, edit_Fate, edit_CalfIndent,edit_Remarks;
+    private Button voiceInput;
+    private LinearLayout layout;
+    private int childCount;
+    private String[] text;
+    private int i = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,7 +49,24 @@ public class NewEntryActivity extends AppCompatActivity {
         edit_Fate = (EditText) findViewById(R.id.edit_Fate);
         edit_CalfIndent = (EditText) findViewById(R.id.edit_CalfIndent);
         edit_Remarks = (EditText) findViewById(R.id.edit_Remarks);
-        btn_Save = (Button) findViewById(R.id.btn_Save);
+        voiceInput = (Button) findViewById(R.id.btn_VoiceInput);
+
+        //get all textview values
+        layout = (LinearLayout) findViewById(R.id.linearLayout1);
+        childCount = layout.getChildCount();
+        text = new String[childCount];
+        int c = 0;
+        for (int i = 0; i < childCount; i ++) {
+            View v = layout.getChildAt(i);
+            //EditText extends TextView
+            if(v instanceof EditText) {
+                continue;
+            }
+            else if(v instanceof TextView) {
+                text[c] = ((TextView) v).getText().toString();
+                c++;
+            }
+        }
     }
 
     public void AddData(View view) throws ParseException {
@@ -49,5 +83,52 @@ public class NewEntryActivity extends AppCompatActivity {
            Toast.makeText(NewEntryActivity.this,"Data is inserted",Toast.LENGTH_LONG).show();
         else
            Toast.makeText(NewEntryActivity.this,"Insertion failed",Toast.LENGTH_LONG).show();
+    }
+
+
+    private final int REQ_CODE_SPEECH_INPUT = 100;
+    private EditText currEditText;
+
+    private void init() {
+        //stt
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT,text[i]);
+        i++;
+        try {
+            startActivityForResult(intent, REQ_CODE_SPEECH_INPUT);
+        }
+        catch (ActivityNotFoundException a) {}
+    }
+
+    public void askSpeechInput(View view) {
+        if(view == voiceInput) {
+            i = 0;
+            currEditText = edit_CowNumber;
+            edit_CowNumber.requestFocus();
+        }
+        init();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode) {
+            case REQ_CODE_SPEECH_INPUT: {
+                if (resultCode == RESULT_OK && null != data) {
+                    ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                    currEditText.setText(result.get(0));
+                    currEditText = findViewById(currEditText.getNextFocusDownId());
+                    if(currEditText != null) {
+                        currEditText.requestFocus();
+                        askSpeechInput(currEditText);
+                    }
+                }
+                break;
+            }
+        }
     }
 }
