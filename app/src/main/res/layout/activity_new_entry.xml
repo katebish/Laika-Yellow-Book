@@ -8,8 +8,8 @@
 
     <ScrollView
         android:layout_width="352dp"
-        android:layout_height="479dp"
-        android:layout_marginBottom="16dp"
+        android:layout_height="399dp"
+        android:layout_marginBottom="32dp"
         android:layout_marginEnd="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
@@ -17,13 +17,15 @@
         android:layout_marginTop="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.437">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/textView1"
@@ -37,9 +39,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:inputType="number"
                 android:hint="Cow Number"
-                android:text="201"/>
+                android:inputType="number"
+                android:text="201" />
 
             <TextView
                 android:id="@+id/textView2"
@@ -53,9 +55,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:inputType="date"
                 android:hint="Due Calve Date"
-                android:text="22/07/2018"/>
+                android:inputType="date"
+                android:text="22/07/2018" />
 
             <TextView
                 android:id="@+id/textView11"
@@ -69,9 +71,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:inputType="date"
                 android:hint="Sire of Calf"
-                android:text="107"/>
+                android:inputType="date"
+                android:text="107" />
 
             <TextView
                 android:id="@+id/textView3"
@@ -85,9 +87,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:inputType="numberDecimal"
                 android:hint="Calf B.W."
-                android:text="35.23"/>
+                android:inputType="numberDecimal"
+                android:text="35.23" />
 
             <TextView
                 android:id="@+id/textView4"
@@ -101,9 +103,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:inputType="date"
                 android:hint="Calving Date"
-                android:text="21/07/2018"/>
+                android:inputType="date"
+                android:text="21/07/2018" />
 
             <TextView
                 android:id="@+id/textView5"
@@ -117,9 +119,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:inputType="text"
                 android:hint="Calving Diff."
-                android:text="diff"/>
+                android:inputType="text"
+                android:text="diff" />
 
             <TextView
                 android:id="@+id/textView6"
@@ -133,9 +135,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:inputType="text"
                 android:hint="Condition"
-                android:text="BL"/>
+                android:inputType="text"
+                android:text="BL" />
 
             <TextView
                 android:id="@+id/textView7"
@@ -149,9 +151,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:inputType="text"
                 android:hint="Sex"
-                android:text="B"/>
+                android:inputType="text"
+                android:text="B" />
 
             <TextView
                 android:id="@+id/textView8"
@@ -165,9 +167,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:inputType="text"
                 android:hint="Fate"
-                android:text="Fate"/>
+                android:inputType="text"
+                android:text="Fate" />
 
             <TextView
                 android:id="@+id/textView9"
@@ -181,9 +183,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:inputType="number"
                 android:hint="Calf Indent. No. TAT/TAG"
-                android:text="207"/>
+                android:inputType="number"
+                android:text="207" />
 
             <TextView
                 android:id="@+id/textView10"
@@ -197,18 +199,32 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:inputType="text"
                 android:hint="Remarks"
-                android:text="Remarks"/>
-
-            <Button
-                android:id="@+id/btn_Save"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:onClick="AddData"
-                android:text="Save" />
-
+                android:inputType="text"
+                android:text="Remarks" />
         </LinearLayout>
     </ScrollView>
 
+    <Button
+        android:id="@+id/btn_VoiceInput"
+        android:layout_width="136dp"
+        android:layout_height="42dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginStart="32dp"
+        android:onClick="AddData"
+        android:text="Voice Input"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/btn_Save"
+        android:layout_width="136dp"
+        android:layout_height="42dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginRight="32dp"
+        android:text="Save"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 </android.support.constraint.ConstraintLayout>
