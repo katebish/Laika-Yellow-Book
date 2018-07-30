@@ -6,34 +6,101 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <Button
-        android:id="@+id/btn_NewEntry"
+    <android.support.constraint.Guideline
+        android:id="@+id/guidelineLHS"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp"
-        android:onClick="NewEntryPage"
-        android:text="New Entry"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginLeft="72dp"
+        android:layout_marginStart="72dp"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.1875"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guidelineRHS"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="72dp"
+        android:layout_marginRight="72dp"
+        android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.932" />
+        app:layout_constraintGuide_percent="0.8125" />
+
+    <TextView
+        android:id="@+id/textViewWelcome"
+        android:layout_width="wrap_content"
+        android:layout_height="64dp"
+        android:layout_marginBottom="64dp"
+        android:layout_marginTop="16dp"
+        android:text="Welcome Back!"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/buttonMostRecent"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineRHS"
+        app:layout_constraintStart_toStartOf="@+id/guidelineLHS"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/button2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
-        android:layout_marginEnd="134dp"
-        android:layout_marginLeft="135dp"
-        android:layout_marginRight="134dp"
-        android:layout_marginStart="135dp"
-        android:layout_marginTop="353dp"
+        android:id="@+id/buttonMostRecent"
+        android:layout_width="0dp"
+        android:layout_height="64dp"
+        android:layout_marginTop="64dp"
+        android:text="Most Recent"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineRHS"
+        app:layout_constraintStart_toStartOf="@+id/guidelineLHS"
+        app:layout_constraintTop_toBottomOf="@+id/textViewWelcome" />
+
+    <Button
+        android:id="@+id/buttonSpeechTest"
+        android:layout_width="0dp"
+        android:layout_height="64dp"
+        android:layout_marginTop="16dp"
         android:onClick="SpeechTest"
         android:text="Speech Test"
-        app:layout_constraintBottom_toTopOf="@+id/btn_NewEntry"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:textSize="18sp"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineRHS"
+        app:layout_constraintStart_toStartOf="@+id/guidelineLHS"
+        app:layout_constraintTop_toBottomOf="@+id/buttonMostRecent" />
+
+    <EditText
+        android:id="@+id/editTextSearch"
+        android:layout_width="0dp"
+        android:layout_height="64dp"
+        android:layout_marginEnd="26dp"
+        android:layout_marginRight="26dp"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:text="Search by cow number"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toStartOf="@+id/buttonGo"
+        app:layout_constraintStart_toStartOf="@+id/guidelineLHS"
+        app:layout_constraintTop_toBottomOf="@+id/buttonSpeechTest" />
+
+    <Button
+        android:id="@+id/buttonGo"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginTop="16dp"
+        android:text="GO"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineRHS"
+        app:layout_constraintStart_toEndOf="@+id/editTextSearch"
+        app:layout_constraintTop_toBottomOf="@+id/buttonSpeechTest" />
+
+    <Button
+        android:id="@+id/btn_NewEntry"
+        android:layout_width="0dp"
+        android:layout_height="72dp"
+        android:layout_marginBottom="16dp"
+        android:onClick="NewEntryPage"
+        android:text="New Entry"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineRHS"
+        app:layout_constraintStart_toStartOf="@+id/guidelineLHS" />
+
 </android.support.constraint.ConstraintLayout>
