@@ -15,6 +15,7 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.BufferedReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -111,24 +112,24 @@ public class SpeechTest extends AppCompatActivity implements RecognitionListener
     }
     private String validateString(ArrayList<String> result) {
         try {
-            String cleaned ="";
-            URL request = new URL("https://api.wit.ai/message?v=20180801&q="+result.get(0));
+            String cleaned = "";
+            URL request = new URL("https://api.wit.ai/message?v=20180801&q=" + result.get(0));
             HttpURLConnection connection = (HttpURLConnection) request.openConnection();
             connection.setRequestMethod("GET");
             connection.setRequestProperty("Accept", "application/json");
             connection.setRequestProperty("Authorization", "Bearer JL26524NMPCGBFR7253SR5K2DWKUHXUW");
-            if(connection.getResponseCode()==200){
-                InputStream stream = new BufferedInputStream(connection.getInputStream());
-                InputStreamReader reader = new InputStreamReader(stream);
-                int ch;
-                while((ch = reader.read())!=-1){
-                    cleaned += (char) ch;
+            if (connection.getResponseCode() == 200) {
+                InputStream input = connection.getInputStream();
+                InputStreamReader inputReader = new InputStreamReader(input);
+                int data;
+                while ((data = inputReader.read()) != -1) {
+                    cleaned += data;
                 }
             }
             connection.disconnect();
             return cleaned;
         } catch (IOException e) {
-            Toast.makeText(SpeechTest.this,"Connection failed",Toast.LENGTH_LONG).show();
+            Toast.makeText(SpeechTest.this, "Connection failed", Toast.LENGTH_LONG).show();
             throw new RuntimeException(e);
         }
     }
