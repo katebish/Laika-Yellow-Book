@@ -9,10 +9,17 @@ import android.speech.RecognizerIntent;
 import android.content.Intent;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Locale;
-import java.util.regex.*;
 
 //Basic speech to text
 public class SpeechTest extends AppCompatActivity implements RecognitionListener{
@@ -61,6 +68,7 @@ public class SpeechTest extends AppCompatActivity implements RecognitionListener
                         all +=" "+i.next();
                     }
                     textV.setText(all);
+                    textV.setText(textV.getText()+"result of curl"+validateString(result));
                 }
             }
         }
@@ -100,6 +108,29 @@ public class SpeechTest extends AppCompatActivity implements RecognitionListener
     @Override
     public void onPartialResults(Bundle savedInstanceState){
         //need to implement
+    }
+    private String validateString(ArrayList<String> result) {
+        try {
+            String cleaned ="";
+            URL request = new URL("https://api.wit.ai/message?v=20180801&q="+result.get(0));
+            HttpURLConnection connection = (HttpURLConnection) request.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setRequestProperty("Accept", "application/json");
+            connection.setRequestProperty("Authorization", "Bearer JL26524NMPCGBFR7253SR5K2DWKUHXUW");
+            if(connection.getResponseCode()==200){
+                InputStream stream = new BufferedInputStream(connection.getInputStream());
+                InputStreamReader reader = new InputStreamReader(stream);
+                int ch;
+                while((ch = reader.read())!=-1){
+                    cleaned += (char) ch;
+                }
+            }
+            connection.disconnect();
+            return cleaned;
+        } catch (IOException e) {
+            Toast.makeText(SpeechTest.this,"Connection failed",Toast.LENGTH_LONG).show();
+            throw new RuntimeException(e);
+        }
     }
 }
 
