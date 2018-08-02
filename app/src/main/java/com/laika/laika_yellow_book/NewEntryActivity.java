@@ -205,7 +205,7 @@ public class NewEntryActivity extends AppCompatActivity{
         twinCalf.setEms(10);
         twinCalf.setHint("Twin Calf ID");
         twinCalf.setId(id);
-        int pos = 19 + id;
+        int pos = 3 + id;
         id++;
         linearLayout.addView(twinCalf,pos);
     }
