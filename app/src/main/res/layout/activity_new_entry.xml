@@ -42,7 +42,7 @@
                 android:ems="10"
                 android:hint="Cow Number"
                 android:inputType="number"
-                android:nextFocusDown="@+id/edit_DueCalveDate"
+                android:nextFocusDown="@+id/edit_CalfIndent"
                 android:imeOptions="actionNext"/>
 
             <TextView
@@ -59,7 +59,7 @@
                 android:ems="10"
                 android:hint="Calf Indent. No. TAT/TAG"
                 android:inputType="number"
-                android:nextFocusDown="@+id/edit_Remarks"
+                android:nextFocusDown="@+id/edit_DueCalveDate"
                 android:imeOptions="actionNext"/>
 
             <TextView
@@ -207,7 +207,7 @@
                 android:ems="10"
                 android:hint="Fate"
                 android:inputType="text"
-                android:nextFocusDown="@+id/edit_CalfIndent"
+                android:nextFocusDown="@+id/edit_Remarks"
                 android:imeOptions="actionNext"/>
 
             <TextView
