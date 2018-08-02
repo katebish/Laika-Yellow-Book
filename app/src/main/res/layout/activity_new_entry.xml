@@ -42,8 +42,37 @@
                 android:ems="10"
                 android:hint="Cow Number"
                 android:inputType="number"
+                android:nextFocusDown="@+id/edit_CalfIndent"
+                android:imeOptions="actionNext"/>
+
+            <TextView
+                android:id="@+id/textView9"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:labelFor="@id/edit_CalfIndent"
+                android:text="Calf Indent. No. TAT/TAG" />
+
+            <EditText
+                android:id="@+id/edit_CalfIndent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="Calf Indent. No. TAT/TAG"
+                android:inputType="number"
                 android:nextFocusDown="@+id/edit_DueCalveDate"
                 android:imeOptions="actionNext"/>
+
+            <TextView
+                android:id="@+id/tv_addTwinCalf"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:labelFor="@id/edit_CalfIndent"
+                android:onClick="AddNewCalf"
+                android:text="@string/addNewCalf"
+                android:clickable="true" />
+
+
 
             <TextView
                 android:id="@+id/textView2"
@@ -178,23 +207,6 @@
                 android:ems="10"
                 android:hint="Fate"
                 android:inputType="text"
-                android:nextFocusDown="@+id/edit_CalfIndent"
-                android:imeOptions="actionNext"/>
-
-            <TextView
-                android:id="@+id/textView9"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:labelFor="@id/edit_CalfIndent"
-                android:text="Calf Indent. No. TAT/TAG" />
-
-            <EditText
-                android:id="@+id/edit_CalfIndent"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="Calf Indent. No. TAT/TAG"
-                android:inputType="number"
                 android:nextFocusDown="@+id/edit_Remarks"
                 android:imeOptions="actionNext"/>
 

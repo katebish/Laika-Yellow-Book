@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -187,5 +188,25 @@ public class NewEntryActivity extends AppCompatActivity{
             Toast.makeText(NewEntryActivity.this,"Data is inserted",Toast.LENGTH_LONG).show();
         else
             Toast.makeText(NewEntryActivity.this,"Insertion failed",Toast.LENGTH_LONG).show();
+    }
+
+    private int id = 1;
+    public void AddNewCalf(View view) {
+        if(id > 3){
+            Toast.makeText(NewEntryActivity.this,"Max of four twin calves allowed!",Toast.LENGTH_LONG).show();
+            return;
+        }
+        EditText twinCalf = new EditText(this);
+        LinearLayout linearLayout = (LinearLayout)findViewById(R.id.linearLayout1);
+        twinCalf.setLayoutParams(new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        ));
+        twinCalf.setEms(10);
+        twinCalf.setHint("Twin Calf ID");
+        twinCalf.setId(id);
+        int pos = 3 + id;
+        id++;
+        linearLayout.addView(twinCalf,pos);
     }
 }
