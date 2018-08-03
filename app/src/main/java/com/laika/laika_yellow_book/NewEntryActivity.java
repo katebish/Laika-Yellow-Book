@@ -90,8 +90,10 @@ public class NewEntryActivity extends AppCompatActivity{
                 continue;
             }
             else if(v instanceof TextView) {
-                text[c] = ((TextView) v).getText().toString();
-                c++;
+                if(findViewById(R.id.tv_addTwinCalf)!=v) {
+                    text[c] = ((TextView) v).getText().toString();
+                    c++;
+                }
             }
         }
         initTTS();
@@ -273,7 +275,7 @@ public class NewEntryActivity extends AppCompatActivity{
                     case 2: cow.dueCalveDate = formater.parse(textInput); break;
                     case 3: cow.sireOfCalf = Integer.parseInt(textInput); break;
                     case 4: cow.calfBW = Double.parseDouble(textInput); break;
-                    case 5: cow.calvingDate = new Date(textInput); break;
+                    case 5: cow.calvingDate = formater.parse(textInput); break;
                     case 6: cow.calvingDiff = textInput; break;
                     case 7: cow.condition = textInput; break;
                     case 8: cow.sex = textInput; break;
