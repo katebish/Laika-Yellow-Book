@@ -33,7 +33,7 @@ public class DbHelper extends SQLiteOpenHelper{
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        sqLiteDatabase.execSQL("CREATE TABLE " + TABLE_NAME + " (ID PRIMARY KEY AUTOINCREMENT, "+COL1+" INTEGER, "+COL2+" DATE, "+COL3+" INTEGER, "+COL4+" DOUBLE, "+COL5+" DATE, "+COL6+" TEXT, "+COL7+" TEXT, "+COL8+" TEXT, "+COL9+" TEXT, "+COL10+" INTEGER, "+COL11+" TEXT)");
+        sqLiteDatabase.execSQL("CREATE TABLE " + TABLE_NAME + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, "+COL1+" INTEGER, "+COL2+" DATE, "+COL3+" INTEGER, "+COL4+" DOUBLE, "+COL5+" DATE, "+COL6+" TEXT, "+COL7+" TEXT, "+COL8+" TEXT, "+COL9+" TEXT, "+COL10+" INTEGER, "+COL11+" TEXT)");
     }
 
     @Override
