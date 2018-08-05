@@ -46,7 +46,6 @@ import static android.speech.tts.TextToSpeech.QUEUE_FLUSH;
 public class NewEntryActivity extends AppCompatActivity{
     private DbHelper myDb;
     private TextToSpeech mTTS;
-    private EditText edit_CowNumber, edit_DueCalveDate, edit_SireIfCalf, edit_CalfBW, edit_CalvingDate, edit_CalvingDiff, edit_Condition, edit_Sex, edit_Fate, edit_CalfIndent,edit_Remarks;
     private Button voiceInput;
     private LinearLayout layout;
     private int childCount;
@@ -226,6 +225,7 @@ public class NewEntryActivity extends AppCompatActivity{
         id++;
         linearLayout.addView(twinCalf,pos);
     }
+
     private class ValidateResults extends AsyncTask<ArrayList<String>, Void, String> {
         int index = 0;
 
