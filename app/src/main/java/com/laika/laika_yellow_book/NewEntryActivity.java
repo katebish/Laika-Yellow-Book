@@ -2,6 +2,7 @@ package com.laika.laika_yellow_book;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.speech.RecognizerIntent;
@@ -39,6 +40,7 @@ import java.util.Locale;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import static android.graphics.Color.YELLOW;
 import static android.speech.tts.TextToSpeech.QUEUE_ADD;
 import static android.speech.tts.TextToSpeech.QUEUE_FLUSH;
 
@@ -56,6 +58,7 @@ public class NewEntryActivity extends AppCompatActivity{
     private EditText[] editTexts;
     private DataFields cow;
     private int reponsesPending =0;
+    private Drawable def;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +80,7 @@ public class NewEntryActivity extends AppCompatActivity{
         editTexts[9] = (EditText) findViewById(R.id.edit_Fate);
         editTexts[10] = (EditText) findViewById(R.id.edit_Remarks);
         voiceInput = (Button) findViewById(R.id.btn_VoiceInput);
+        def = editTexts[0].getBackground();
 
         //get all textview values
         layout = (LinearLayout) findViewById(R.id.linearLayout1);
@@ -276,26 +280,50 @@ public class NewEntryActivity extends AppCompatActivity{
                 } catch (Exception e) {
                     Log.e("SpeechTest",Log.getStackTraceString(e));
                 }
-                switch(index) {
-                    case 0: cow.cowNum = Integer.parseInt(textInput); break;
-                    case 1: cow.calfIndentNo = Integer.parseInt(textInput); break;
-                    case 2: cow.dueCalveDate = formater.parse(textInput); break;
-                    case 3: cow.sireOfCalf = Integer.parseInt(textInput); break;
-                    case 4: cow.calfBW = Double.parseDouble(textInput); break;
-                    case 5: cow.calvingDate = formater.parse(textInput); break;
-                    case 6: cow.calvingDiff = textInput; break;
-                    case 7: cow.condition = textInput; break;
-                    case 8: cow.sex = textInput; break;
-                    case 9: cow.fate = textInput; break;
-                    case 10: cow.remarks = textInput; break;
-                }
-                editTexts[index].setText(textInput);
+                try {
+                    switch (index) {
+                        case 0:
+                            cow.cowNum = Integer.parseInt(textInput);
+                            break;
+                        case 1:
+                            cow.calfIndentNo = Integer.parseInt(textInput);
+                            break;
+                        case 2:
+                            cow.dueCalveDate = formater.parse(textInput);
+                            break;
+                        case 3:
+                            cow.sireOfCalf = Integer.parseInt(textInput);
+                            break;
+                        case 4:
+                            cow.calfBW = Double.parseDouble(textInput);
+                            break;
+                        case 5:
+                            cow.calvingDate = formater.parse(textInput);
+                            break;
+                        case 6:
+                            cow.calvingDiff = textInput;
+                            break;
+                        case 7:
+                            cow.condition = textInput;
+                            break;
+                        case 8:
+                            cow.sex = textInput;
+                            break;
+                        case 9:
+                            cow.fate = textInput;
+                            break;
+                        case 10:
+                            cow.remarks = textInput;
+                            break;
+                    }
+                    editTexts[index].setText(textInput);
+                    editTexts[index].setBackgroundDrawable(def);
+                }catch (Exception e) {
+                        editTexts[index].setText(textInput);
+                        editTexts[index].setBackgroundColor(YELLOW);
+                    }
             } catch (Exception e) {
                 Log.e("SpeechTest",Log.getStackTraceString(e));
-                if(index==0){
-                    askSpeechInput(voiceInput);
-                    Toast.makeText(NewEntryActivity.this, "Invalid cow number", Toast.LENGTH_LONG).show();
-                }
             }
             reponsesPending--;
         }
