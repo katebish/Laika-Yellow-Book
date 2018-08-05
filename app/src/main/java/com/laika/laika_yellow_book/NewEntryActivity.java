@@ -55,6 +55,7 @@ public class NewEntryActivity extends AppCompatActivity{
     private int editPos = 0;
     private EditText[] editTexts;
     private DataFields cow;
+    private int reponsesPending =0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -199,11 +200,16 @@ public class NewEntryActivity extends AppCompatActivity{
     }
 
     public void AddData(View view) throws ParseException {
-        boolean isSuccessful = myDb.insertData(cow.cowNum, cow.dueCalveDate, cow.sireOfCalf, cow.calfBW, cow.calvingDate, cow.calvingDiff, cow.condition, cow.sex, cow.fate, cow.calfIndentNo, cow.remarks);
-        if (isSuccessful)
-            Toast.makeText(NewEntryActivity.this, "Data is inserted", Toast.LENGTH_LONG).show();
-        else
-            Toast.makeText(NewEntryActivity.this, "Insertion failed", Toast.LENGTH_LONG).show();
+        if(reponsesPending==0) {
+            boolean isSuccessful = myDb.insertData(cow.cowNum, cow.dueCalveDate, cow.sireOfCalf, cow.calfBW, cow.calvingDate, cow.calvingDiff, cow.condition, cow.sex, cow.fate, cow.calfIndentNo, cow.remarks);
+            if (isSuccessful)
+                Toast.makeText(NewEntryActivity.this, "Data is inserted", Toast.LENGTH_LONG).show();
+            else
+                Toast.makeText(NewEntryActivity.this, "Insertion failed", Toast.LENGTH_LONG).show();
+        }
+        else{
+            Toast.makeText(NewEntryActivity.this, "Not saved, waiting on network", Toast.LENGTH_LONG).show();
+        }
     }
 
     private int id = 1;
@@ -232,6 +238,7 @@ public class NewEntryActivity extends AppCompatActivity{
         @Override
         protected String doInBackground(ArrayList<String>... results) {
             String cleaned = "";
+            reponsesPending++;
             try {
                 URL request = new URL("https://api.wit.ai/message?v=20180802&q=" + results[0].get(1));
                 HttpsURLConnection connection = (HttpsURLConnection) request.openConnection();
@@ -290,6 +297,7 @@ public class NewEntryActivity extends AppCompatActivity{
                     Toast.makeText(NewEntryActivity.this, "Invalid cow number", Toast.LENGTH_LONG).show();
                 }
             }
+            reponsesPending--;
         }
     }
 }
