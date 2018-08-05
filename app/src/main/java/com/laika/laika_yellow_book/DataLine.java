@@ -2,6 +2,7 @@ package com.laika.laika_yellow_book;
 
 import java.util.Date;
 
+//new cow entry has int values at -1
 class DataFields {
     int cowNum =-1;
     Date dueCalveDate;

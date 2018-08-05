@@ -46,6 +46,7 @@ public class DbHelper extends SQLiteOpenHelper{
     }
 
     public boolean insertData(int CowNum, Date DueCalveDate, int SireOfCalf, double CalfBW, Date CalvingDate, String CalvingDiff, String Condition, String Sex, String Fate, int CalfIndentNo, String Remarks) {
+        if(CowNum==-1)return false;
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = addValues(CowNum,DueCalveDate,SireOfCalf,CalfBW,CalvingDate,CalvingDiff,Condition,Sex,Fate,CalfIndentNo,Remarks);
         long result = db.insert(TABLE_NAME, null,contentValues);
@@ -56,6 +57,7 @@ public class DbHelper extends SQLiteOpenHelper{
     }
 
     public boolean updateData(String id, int CowNum, Date DueCalveDate, int SireOfCalf, double CalfBW, Date CalvingDate, String CalvingDiff, String Condition, String Sex, String Fate, int CalfIndentNo, String Remarks) {
+        if(CowNum==-1)return false;
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = addValues(CowNum,DueCalveDate,SireOfCalf,CalfBW,CalvingDate,CalvingDiff,Condition,Sex,Fate,CalfIndentNo,Remarks);
         long result = db.update(TABLE_NAME,contentValues,"ID = ?",new String[] {id});
