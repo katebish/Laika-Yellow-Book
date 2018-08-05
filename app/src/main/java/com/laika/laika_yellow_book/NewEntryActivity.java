@@ -285,6 +285,10 @@ public class NewEntryActivity extends AppCompatActivity{
                 editTexts[index].setText(textInput);
             } catch (Exception e) {
                 Log.e("SpeechTest",Log.getStackTraceString(e));
+                if(index==0){
+                    askSpeechInput(voiceInput);
+                    Toast.makeText(NewEntryActivity.this, "Invalid cow number", Toast.LENGTH_LONG).show();
+                }
             }
         }
     }

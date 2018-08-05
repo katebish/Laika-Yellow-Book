@@ -3,16 +3,16 @@ package com.laika.laika_yellow_book;
 import java.util.Date;
 
 class DataFields {
-    int cowNum;
+    int cowNum =-1;
     Date dueCalveDate;
-    int sireOfCalf;
-    double calfBW;
+    int sireOfCalf =-1;
+    double calfBW =-1;
     Date calvingDate;
     String calvingDiff;
     String condition;
     String sex;
     String fate;
-    int calfIndentNo;
+    int calfIndentNo =-1;
     String remarks;
 
     public void DataFields() {
