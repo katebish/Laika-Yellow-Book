@@ -3,6 +3,7 @@ package com.laika.laika_yellow_book;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.speech.RecognizerIntent;
@@ -11,10 +12,12 @@ import android.speech.tts.UtteranceProgressListener;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,7 +51,7 @@ import static android.speech.tts.TextToSpeech.QUEUE_FLUSH;
 public class NewEntryActivity extends AppCompatActivity{
     private DbHelper myDb;
     private TextToSpeech mTTS;
-    private Button voiceInput;
+    private ImageButton voiceInput;
     private LinearLayout layout;
     private int childCount;
     private String[] text;
@@ -58,6 +61,8 @@ public class NewEntryActivity extends AppCompatActivity{
     private EditText[] editTexts;
     private DataFields cow;
     private int reponsesPending =0;
+    private boolean isIndividual = false;
+
     private Drawable def;
 
     @Override
@@ -79,7 +84,26 @@ public class NewEntryActivity extends AppCompatActivity{
         editTexts[8] = (EditText) findViewById(R.id.edit_Sex);
         editTexts[9] = (EditText) findViewById(R.id.edit_Fate);
         editTexts[10] = (EditText) findViewById(R.id.edit_Remarks);
-        voiceInput = (Button) findViewById(R.id.btn_VoiceInput);
+        voiceInput = (ImageButton) findViewById(R.id.btn_VoiceInput);
+
+        for (final EditText et: editTexts) {
+            et.setOnTouchListener(new View.OnTouchListener(){
+                @Override
+                public boolean onTouch(View view, MotionEvent motionEvent) {
+                    if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                        if(motionEvent.getRawX() >= (et.getRight() - et.getCompoundDrawables()[2].getBounds().width())) {
+                            // your action here
+                            isIndividual = true;
+                            view.requestFocus();
+                            currEditText = et;
+                            askSpeechInput(view);
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+            });
+        }
         def = editTexts[0].getBackground();
 
         //get all textview values
@@ -116,7 +140,7 @@ public class NewEntryActivity extends AppCompatActivity{
                         @Override
                         public void onDone(String s) {
                             if(s.equals("input")) {
-                                if (currEditText != null) {
+                                if (!isIndividual && currEditText != null) {
                                     //read next label
                                     HashMap<String, String> map = new HashMap<String, String>();
                                     map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "label");
@@ -163,8 +187,9 @@ public class NewEntryActivity extends AppCompatActivity{
         if(view == voiceInput) {
             i = 0;
             editPos = 0;
+            isIndividual = false;
             currEditText = editTexts[0];
-            editTexts[0].requestFocus();
+            currEditText.requestFocus();
 
             HashMap<String, String> map = new HashMap<String, String>();
             map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "label");
@@ -188,21 +213,11 @@ public class NewEntryActivity extends AppCompatActivity{
                     result.add(0, Integer.toString(editPos));
                     ValidateResults validate = new ValidateResults();
                     validate.execute(result);
-                    HashMap<String, String> map = new HashMap<String, String>();
-                    map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "input");
-                    mTTS.speak(currEditText.getText().toString(),QUEUE_ADD ,map);
-                    currEditText = findViewById(currEditText.getNextFocusDownId());
-                    if(currEditText != null) {
-                        //not working in UtteranceProgressListener
-                        currEditText.requestFocus();
-                        editPos++;
-                    }
                 }
                 break;
             }
         }
     }
-
     public void AddData(View view) throws ParseException {
         if(reponsesPending==0) {
             boolean isSuccessful = myDb.insertData(cow.cowNum, cow.dueCalveDate, cow.sireOfCalf, cow.calfBW, cow.calvingDate, cow.calvingDiff, cow.condition, cow.sex, cow.fate, cow.calfIndentNo, cow.remarks);
@@ -222,8 +237,8 @@ public class NewEntryActivity extends AppCompatActivity{
             Toast.makeText(NewEntryActivity.this,"Max of four twin calves allowed!",Toast.LENGTH_LONG).show();
             return;
         }
-        EditText twinCalf = new EditText(this);
-        LinearLayout linearLayout = (LinearLayout)findViewById(R.id.linearLayout1);
+        final EditText twinCalf = new EditText(this);
+        final LinearLayout linearLayout = (LinearLayout)findViewById(R.id.linearLayout1);
         twinCalf.setLayoutParams(new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
@@ -231,13 +246,28 @@ public class NewEntryActivity extends AppCompatActivity{
         twinCalf.setEms(10);
         twinCalf.setHint("Twin Calf ID");
         twinCalf.setId(id);
+        twinCalf.setCompoundDrawablesWithIntrinsicBounds(0,0, R.drawable.closs_button,0);
+        twinCalf.setOnTouchListener(new View.OnTouchListener(){
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                    if(motionEvent.getRawX() >= (twinCalf.getRight() - twinCalf.getCompoundDrawables()[2].getBounds().width())) {
+                        // your action here
+                        linearLayout.removeView(twinCalf);
+                        id--;
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
+
         int pos = 3 + id;
         id++;
         linearLayout.addView(twinCalf,pos);
     }
-
+    int index = 0;
     private class ValidateResults extends AsyncTask<ArrayList<String>, Void, String> {
-        int index = 0;
 
         @Override
         protected String doInBackground(ArrayList<String>... results) {
@@ -270,7 +300,7 @@ public class NewEntryActivity extends AppCompatActivity{
             try {
                 JSONObject jsob = new JSONObject(result);
                 String textInput = jsob.getString("_text");
-                DateFormat formater = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+                DateFormat formater = new SimpleDateFormat("yyyy-MM-dd");
                 try {
                     JSONObject entities = jsob.getJSONObject("entities");
                     Iterator<String> keys = entities.keys();
@@ -280,6 +310,7 @@ public class NewEntryActivity extends AppCompatActivity{
                 } catch (Exception e) {
                     Log.e("SpeechTest",Log.getStackTraceString(e));
                 }
+
                 try {
                     switch (index) {
                         case 0:
@@ -316,8 +347,19 @@ public class NewEntryActivity extends AppCompatActivity{
                             cow.remarks = textInput;
                             break;
                     }
-                    editTexts[index].setText(textInput);
-                    editTexts[index].setBackgroundDrawable(def);
+                    currEditText = editTexts[index];
+                    currEditText.setText(textInput);
+                    HashMap<String, String> map = new HashMap<String, String>();
+                    map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "input");
+                    mTTS.speak(currEditText.getText().toString(),QUEUE_ADD ,map);
+                    if(!isIndividual) {
+                        currEditText = findViewById(currEditText.getNextFocusDownId());
+                        if (currEditText != null) {
+                            //not working in UtteranceProgressListener
+                            currEditText.requestFocus();
+                            editPos++;
+                        }
+                    currEditText.setBackgroundDrawable(def);
                 }catch (Exception e) {
                         editTexts[index].setText(textInput);
                         editTexts[index].setBackgroundColor(YELLOW);
