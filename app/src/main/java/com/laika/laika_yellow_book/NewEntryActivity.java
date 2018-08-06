@@ -43,6 +43,7 @@ import java.util.Locale;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import static android.graphics.Color.YELLOW;
 import static android.speech.tts.TextToSpeech.QUEUE_ADD;
 import static android.speech.tts.TextToSpeech.QUEUE_FLUSH;
 
@@ -62,10 +63,7 @@ public class NewEntryActivity extends AppCompatActivity{
     private int reponsesPending =0;
     private boolean isIndividual = false;
 
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        return super.onTouchEvent(event);
-    }
+    private Drawable def;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,6 +104,7 @@ public class NewEntryActivity extends AppCompatActivity{
                 }
             });
         }
+        def = editTexts[0].getBackground();
 
         //get all textview values
         layout = (LinearLayout) findViewById(R.id.linearLayout1);
@@ -311,38 +310,62 @@ public class NewEntryActivity extends AppCompatActivity{
                 } catch (Exception e) {
                     Log.e("SpeechTest",Log.getStackTraceString(e));
                 }
-                switch(index) {
-                    case 0: cow.cowNum = Integer.parseInt(textInput); break;
-                    case 1: cow.calfIndentNo = Integer.parseInt(textInput); break;
-                    case 2: cow.dueCalveDate = formater.parse(textInput); break;
-                    case 3: cow.sireOfCalf = Integer.parseInt(textInput); break;
-                    case 4: cow.calfBW = Double.parseDouble(textInput); break;
-                    case 5: cow.calvingDate = formater.parse(textInput); break;
-                    case 6: cow.calvingDiff = textInput; break;
-                    case 7: cow.condition = textInput; break;
-                    case 8: cow.sex = textInput; break;
-                    case 9: cow.fate = textInput; break;
-                    case 10: cow.remarks = textInput; break;
-                }
-                currEditText = editTexts[index];
-                currEditText.setText(textInput);
-                HashMap<String, String> map = new HashMap<String, String>();
-                map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "input");
-                mTTS.speak(currEditText.getText().toString(),QUEUE_ADD ,map);
-                if(!isIndividual) {
-                    currEditText = findViewById(currEditText.getNextFocusDownId());
-                    if (currEditText != null) {
-                        //not working in UtteranceProgressListener
-                        currEditText.requestFocus();
-                        editPos++;
+
+                try {
+                    switch (index) {
+                        case 0:
+                            cow.cowNum = Integer.parseInt(textInput);
+                            break;
+                        case 1:
+                            cow.calfIndentNo = Integer.parseInt(textInput);
+                            break;
+                        case 2:
+                            cow.dueCalveDate = formater.parse(textInput);
+                            break;
+                        case 3:
+                            cow.sireOfCalf = Integer.parseInt(textInput);
+                            break;
+                        case 4:
+                            cow.calfBW = Double.parseDouble(textInput);
+                            break;
+                        case 5:
+                            cow.calvingDate = formater.parse(textInput);
+                            break;
+                        case 6:
+                            cow.calvingDiff = textInput;
+                            break;
+                        case 7:
+                            cow.condition = textInput;
+                            break;
+                        case 8:
+                            cow.sex = textInput;
+                            break;
+                        case 9:
+                            cow.fate = textInput;
+                            break;
+                        case 10:
+                            cow.remarks = textInput;
+                            break;
                     }
-                }
+                    currEditText = editTexts[index];
+                    currEditText.setText(textInput);
+                    HashMap<String, String> map = new HashMap<String, String>();
+                    map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "input");
+                    mTTS.speak(currEditText.getText().toString(),QUEUE_ADD ,map);
+                    if(!isIndividual) {
+                        currEditText = findViewById(currEditText.getNextFocusDownId());
+                        if (currEditText != null) {
+                            //not working in UtteranceProgressListener
+                            currEditText.requestFocus();
+                            editPos++;
+                        }
+                    currEditText.setBackgroundDrawable(def);
+                }catch (Exception e) {
+                        editTexts[index].setText(textInput);
+                        editTexts[index].setBackgroundColor(YELLOW);
+                    }
             } catch (Exception e) {
                 Log.e("SpeechTest",Log.getStackTraceString(e));
-                if(index==0){
-                    askSpeechInput(voiceInput);
-                    Toast.makeText(NewEntryActivity.this, "Invalid cow number", Toast.LENGTH_LONG).show();
-                }
             }
             reponsesPending--;
         }
