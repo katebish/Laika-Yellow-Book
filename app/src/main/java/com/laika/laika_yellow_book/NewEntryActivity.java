@@ -63,6 +63,7 @@ public class NewEntryActivity extends AppCompatActivity{
     private int reponsesPending =0;
     private boolean isIndividual = false;
 
+    int index = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,16 +85,23 @@ public class NewEntryActivity extends AppCompatActivity{
         editTexts[10] = (EditText) findViewById(R.id.edit_Remarks);
         voiceInput = (ImageButton) findViewById(R.id.btn_VoiceInput);
 
+        int tag = 0;
         for (final EditText et: editTexts) {
+            et.setTag(tag);
+            tag++;
             et.setOnTouchListener(new View.OnTouchListener(){
                 @Override
                 public boolean onTouch(View view, MotionEvent motionEvent) {
+                    editTexts[index].setBackgroundResource(android.R.drawable.edit_text);
                     if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
                         if(motionEvent.getRawX() >= (et.getRight() - et.getCompoundDrawables()[2].getBounds().width())) {
                             // your action here
                             isIndividual = true;
                             view.requestFocus();
-                            currEditText = et;
+                            if(view.getTag() != null) {
+                                editPos = (int) view.getTag();
+                                i = editPos;
+                            }
                             askSpeechInput(view);
                             return true;
                         }
@@ -228,8 +236,9 @@ public class NewEntryActivity extends AppCompatActivity{
     }
 
     private int id = 1;
+    private int count = 1;
     public void AddNewCalf(View view) {
-        if(id > 3){
+        if(count > 3){
             Toast.makeText(NewEntryActivity.this,"Max of four twin calves allowed!",Toast.LENGTH_LONG).show();
             return;
         }
@@ -250,7 +259,7 @@ public class NewEntryActivity extends AppCompatActivity{
                     if(motionEvent.getRawX() >= (twinCalf.getRight() - twinCalf.getCompoundDrawables()[2].getBounds().width())) {
                         // your action here
                         linearLayout.removeView(twinCalf);
-                        id--;
+                        count--;
                         return true;
                     }
                 }
@@ -258,11 +267,11 @@ public class NewEntryActivity extends AppCompatActivity{
             }
         });
 
-        int pos = 3 + id;
+        int pos = 3 + count;
         id++;
+        count++;
         linearLayout.addView(twinCalf,pos);
     }
-    int index = 0;
     private class ValidateResults extends AsyncTask<ArrayList<String>, Void, String> {
 
         @Override
@@ -317,6 +326,7 @@ public class NewEntryActivity extends AppCompatActivity{
                             break;
                         case 2:
                             cow.dueCalveDate = formater.parse(textInput);
+                            textInput = formater.format(cow.dueCalveDate);
                             break;
                         case 3:
                             cow.sireOfCalf = Integer.parseInt(textInput);
@@ -326,6 +336,7 @@ public class NewEntryActivity extends AppCompatActivity{
                             break;
                         case 5:
                             cow.calvingDate = formater.parse(textInput);
+                            textInput = formater.format(cow.calvingDate);
                             break;
                         case 6:
                             cow.calvingDiff = textInput;
