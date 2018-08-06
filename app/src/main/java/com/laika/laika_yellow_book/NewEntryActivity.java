@@ -63,8 +63,6 @@ public class NewEntryActivity extends AppCompatActivity{
     private int reponsesPending =0;
     private boolean isIndividual = false;
 
-    private Drawable def;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,8 +102,6 @@ public class NewEntryActivity extends AppCompatActivity{
                 }
             });
         }
-        def = editTexts[0].getBackground();
-
         //get all textview values
         layout = (LinearLayout) findViewById(R.id.linearLayout1);
         childCount = layout.getChildCount();
@@ -359,10 +355,10 @@ public class NewEntryActivity extends AppCompatActivity{
                             currEditText.requestFocus();
                             editPos++;
                         }
-                    currEditText.setBackgroundDrawable(def);
+                    }
                 }catch (Exception e) {
                         editTexts[index].setText(textInput);
-                        editTexts[index].setBackgroundColor(YELLOW);
+                        editTexts[index].setBackgroundResource(R.drawable.edittext_error);
                     }
             } catch (Exception e) {
                 Log.e("SpeechTest",Log.getStackTraceString(e));
