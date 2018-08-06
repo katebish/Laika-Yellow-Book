@@ -238,8 +238,8 @@ public class NewEntryActivity extends AppCompatActivity{
             Toast.makeText(NewEntryActivity.this,"Max of four twin calves allowed!",Toast.LENGTH_LONG).show();
             return;
         }
-        EditText twinCalf = new EditText(this);
-        LinearLayout linearLayout = (LinearLayout)findViewById(R.id.linearLayout1);
+        final EditText twinCalf = new EditText(this);
+        final LinearLayout linearLayout = (LinearLayout)findViewById(R.id.linearLayout1);
         twinCalf.setLayoutParams(new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
@@ -248,6 +248,20 @@ public class NewEntryActivity extends AppCompatActivity{
         twinCalf.setHint("Twin Calf ID");
         twinCalf.setId(id);
         twinCalf.setCompoundDrawablesWithIntrinsicBounds(0,0, R.drawable.closs_button,0);
+        twinCalf.setOnTouchListener(new View.OnTouchListener(){
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                    if(motionEvent.getRawX() >= (twinCalf.getRight() - twinCalf.getCompoundDrawables()[2].getBounds().width())) {
+                        // your action here
+                        linearLayout.removeView(twinCalf);
+                        id--;
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
 
         int pos = 3 + id;
         id++;
