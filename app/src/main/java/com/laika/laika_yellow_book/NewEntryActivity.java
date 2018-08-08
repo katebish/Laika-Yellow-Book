@@ -34,7 +34,6 @@ import java.net.URL;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -43,7 +42,6 @@ import java.util.Locale;
 
 import javax.net.ssl.HttpsURLConnection;
 
-import static android.graphics.Color.YELLOW;
 import static android.speech.tts.TextToSpeech.QUEUE_ADD;
 import static android.speech.tts.TextToSpeech.QUEUE_FLUSH;
 
@@ -203,6 +201,21 @@ public class NewEntryActivity extends AppCompatActivity{
         }
         initSTT();
     }
+    //Call after valid result returns
+    private void speakResult(View view){
+        currEditText=(EditText) view;
+        HashMap<String, String> map = new HashMap<String, String>();
+        map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "input");
+        mTTS.speak(currEditText.getText().toString(),QUEUE_ADD ,map);
+        if(!isIndividual) {
+            currEditText = findViewById(currEditText.getNextFocusDownId());
+            if (currEditText != null) {
+                //not working in UtteranceProgressListener
+                currEditText.requestFocus();
+                editPos++;
+            }
+        }
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -214,9 +227,7 @@ public class NewEntryActivity extends AppCompatActivity{
                 if (resultCode == RESULT_OK && null != data) {
                     ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                     //validate results
-                    result.add(0, Integer.toString(editPos));
-                    ValidateResults validate = new ValidateResults();
-                    validate.execute(result);
+                    runValidator(result.get(0), editPos);
                 }
                 break;
             }
@@ -272,14 +283,76 @@ public class NewEntryActivity extends AppCompatActivity{
         count++;
         linearLayout.addView(twinCalf,pos);
     }
-    private class ValidateResults extends AsyncTask<ArrayList<String>, Void, String> {
+    //Runs the validation code
+    private void runValidator(String result, int index) {
+        if (index == 2 || index == 5) {
+            Object[] params = new Object[2];
+            params[0] = result;
+            params[1] = index;
+            ValidateResultsAPI validate = new ValidateResultsAPI();
+            validate.execute(params);
+            return;
+        }
+        validateResults(result, index);
+    }
+    private void validateResults(String textInput, int index){
+        DateFormat formater = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            switch (index) {
+                case 0:
+                    cow.cowNum = Integer.parseInt(textInput);
+                    break;
+                case 1:
+                    cow.calfIndentNo = Integer.parseInt(textInput);
+                    break;
+                case 2:
 
+                    cow.dueCalveDate = formater.parse(textInput);
+                    textInput = formater.format(cow.dueCalveDate);
+                    break;
+                case 3:
+                    cow.sireOfCalf = Integer.parseInt(textInput);
+                    break;
+                case 4:
+                    cow.calfBW = Double.parseDouble(textInput);
+                    break;
+                case 5:
+                    cow.calvingDate = formater.parse(textInput);
+                    textInput = formater.format(cow.calvingDate);
+                    break;
+                case 6:
+                    cow.calvingDiff = textInput;
+                    break;
+                case 7:
+                    cow.condition = textInput;
+                    break;
+                case 8:
+                    cow.sex = textInput;
+                    break;
+                case 9:
+                    cow.fate = textInput;
+                    break;
+                case 10:
+                    cow.remarks = textInput;
+                    break;
+            }
+            editTexts[index].setText(textInput);
+            speakResult(editTexts[index]);
+
+        }catch (Exception e) {
+            editTexts[index].setText(textInput);
+            editTexts[index].setBackgroundResource(R.drawable.edittext_error);
+        }
+    }
+
+    private class ValidateResultsAPI extends AsyncTask<Object, Void, String> {
+        int index=0;
         @Override
-        protected String doInBackground(ArrayList<String>... results) {
+        protected String doInBackground(Object... results) {
             String cleaned = "";
             reponsesPending++;
             try {
-                URL request = new URL("https://api.wit.ai/message?v=20180802&q=" + results[0].get(1));
+                URL request = new URL("https://api.wit.ai/message?v=20180802&q=" + (String) results[0]);
                 HttpsURLConnection connection = (HttpsURLConnection) request.openConnection();
                 connection.setRequestMethod("GET");
                 connection.setRequestProperty("Accept", "application/json");
@@ -292,11 +365,11 @@ public class NewEntryActivity extends AppCompatActivity{
                     cleaned = output;
                 }
             } catch (MalformedURLException e) {
-                System.out.print("url erro");
+                Log.e("cURL",Log.getStackTraceString(e));
             } catch (IOException e) {
-                System.out.print("IO error");
+                Log.e("cURL",Log.getStackTraceString(e));
             }
-            index = Integer.parseInt(results[0].get(0));
+            index = (int) results[1];
             return cleaned;
         }
 
@@ -305,7 +378,7 @@ public class NewEntryActivity extends AppCompatActivity{
             try {
                 JSONObject jsob = new JSONObject(result);
                 String textInput = jsob.getString("_text");
-                DateFormat formater = new SimpleDateFormat("yyyy-MM-dd");
+
                 try {
                     JSONObject entities = jsob.getJSONObject("entities");
                     Iterator<String> keys = entities.keys();
@@ -313,66 +386,11 @@ public class NewEntryActivity extends AppCompatActivity{
                     entities = curr.getJSONObject(0);
                     textInput = entities.getString("value");
                 } catch (Exception e) {
-                    Log.e("SpeechTest",Log.getStackTraceString(e));
+                    Log.e("cURL",Log.getStackTraceString(e));
                 }
-
-                try {
-                    switch (index) {
-                        case 0:
-                            cow.cowNum = Integer.parseInt(textInput);
-                            break;
-                        case 1:
-                            cow.calfIndentNo = Integer.parseInt(textInput);
-                            break;
-                        case 2:
-                            cow.dueCalveDate = formater.parse(textInput);
-                            textInput = formater.format(cow.dueCalveDate);
-                            break;
-                        case 3:
-                            cow.sireOfCalf = Integer.parseInt(textInput);
-                            break;
-                        case 4:
-                            cow.calfBW = Double.parseDouble(textInput);
-                            break;
-                        case 5:
-                            cow.calvingDate = formater.parse(textInput);
-                            textInput = formater.format(cow.calvingDate);
-                            break;
-                        case 6:
-                            cow.calvingDiff = textInput;
-                            break;
-                        case 7:
-                            cow.condition = textInput;
-                            break;
-                        case 8:
-                            cow.sex = textInput;
-                            break;
-                        case 9:
-                            cow.fate = textInput;
-                            break;
-                        case 10:
-                            cow.remarks = textInput;
-                            break;
-                    }
-                    currEditText = editTexts[index];
-                    currEditText.setText(textInput);
-                    HashMap<String, String> map = new HashMap<String, String>();
-                    map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "input");
-                    mTTS.speak(currEditText.getText().toString(),QUEUE_ADD ,map);
-                    if(!isIndividual) {
-                        currEditText = findViewById(currEditText.getNextFocusDownId());
-                        if (currEditText != null) {
-                            //not working in UtteranceProgressListener
-                            currEditText.requestFocus();
-                            editPos++;
-                        }
-                    }
-                }catch (Exception e) {
-                        editTexts[index].setText(textInput);
-                        editTexts[index].setBackgroundResource(R.drawable.edittext_error);
-                    }
+                validateResults(textInput, index);
             } catch (Exception e) {
-                Log.e("SpeechTest",Log.getStackTraceString(e));
+                Log.e("cURL",Log.getStackTraceString(e));
             }
             reponsesPending--;
         }
