@@ -90,7 +90,7 @@ public class NewEntryActivity extends AppCompatActivity{
             et.setOnTouchListener(new View.OnTouchListener(){
                 @Override
                 public boolean onTouch(View view, MotionEvent motionEvent) {
-                    editTexts[index].setBackgroundResource(android.R.drawable.edit_text);
+                    //editTexts[index].setBackgroundResource(android.R.drawable.edit_text);
                     if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
                         if(motionEvent.getRawX() >= (et.getRight() - et.getCompoundDrawables()[2].getBounds().width())) {
                             // your action here
@@ -295,6 +295,7 @@ public class NewEntryActivity extends AppCompatActivity{
         }
         validateResults(result, index);
     }
+
     private void validateResults(String textInput, int index){
         DateFormat formater = new SimpleDateFormat("yyyy-MM-dd");
         try {
@@ -306,7 +307,6 @@ public class NewEntryActivity extends AppCompatActivity{
                     cow.calfIndentNo = Integer.parseInt(textInput);
                     break;
                 case 2:
-
                     cow.dueCalveDate = formater.parse(textInput);
                     textInput = formater.format(cow.dueCalveDate);
                     break;
@@ -342,6 +342,7 @@ public class NewEntryActivity extends AppCompatActivity{
         }catch (Exception e) {
             editTexts[index].setText(textInput);
             editTexts[index].setBackgroundResource(R.drawable.edittext_error);
+            speakResult(editTexts[index]);
         }
     }
 
