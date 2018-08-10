@@ -312,9 +312,15 @@ public class NewEntryActivity extends AppCompatActivity{
             switch (index) {
                 case 0:
                     cow.cowNum = Integer.parseInt(textInput);
+                    if(cow.cowNum<0){
+                        throw new ValidationError("Cow number cannot be negative");
+                    }
                     break;
                 case 1:
                     cow.calfIndentNo = Integer.parseInt(textInput);
+                    if(cow.calfIndentNo<0){
+                        throw new ValidationError("calf number cannot be negative");
+                    }
                     break;
                 case 2:
                     cow.dueCalveDate = formater.parse(textInput);
@@ -355,6 +361,9 @@ public class NewEntryActivity extends AppCompatActivity{
         }catch (Exception e) {
             editTexts[index].setText(textInput);
             editTexts[index].setBackgroundResource(R.drawable.edittext_error);
+            //print attached error to log
+            //need to attach this to a textfield
+            Log.e("Error msg", e.getMessage());
             if(!editTexts[index].isEnabled()) {
                 editTexts[index].setEnabled(true);
                 speakResult(editTexts[index]);
@@ -411,6 +420,14 @@ public class NewEntryActivity extends AppCompatActivity{
             }
             reponsesPending--;
         }
+    }
+}
+class ValidationError extends Exception
+{
+    public ValidationError() {}
+    public ValidationError(String message)
+    {
+        super(message);
     }
 }
 
