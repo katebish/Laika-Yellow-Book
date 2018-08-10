@@ -107,6 +107,14 @@ public class NewEntryActivity extends AppCompatActivity{
                     return false;
                 }
             });
+            et.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View view, boolean b) {
+                    if(!b) {
+                        runValidator(et.getText().toString(), (int) et.getTag());
+                    }
+                }
+            });
         }
         //get all textview values
         layout = (LinearLayout) findViewById(R.id.linearLayout1);
@@ -227,7 +235,9 @@ public class NewEntryActivity extends AppCompatActivity{
                 if (resultCode == RESULT_OK && null != data) {
                     ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                     //validate results
-                    runValidator(result.get(0), editPos);
+                    editTexts[editPos].setEnabled(false);
+                    editTexts[editPos].setText(result.get(0));
+                    findViewById(editTexts[editPos].getNextFocusDownId()).requestFocus();
                 }
                 break;
             }
@@ -337,12 +347,18 @@ public class NewEntryActivity extends AppCompatActivity{
                     break;
             }
             editTexts[index].setText(textInput);
-            speakResult(editTexts[index]);
+            if(!editTexts[index].isEnabled()) {
+                editTexts[index].setEnabled(true);
+                speakResult(editTexts[index]);
+            }
 
         }catch (Exception e) {
             editTexts[index].setText(textInput);
             editTexts[index].setBackgroundResource(R.drawable.edittext_error);
-            speakResult(editTexts[index]);
+            if(!editTexts[index].isEnabled()) {
+                editTexts[index].setEnabled(true);
+                speakResult(editTexts[index]);
+            }
         }
     }
 
