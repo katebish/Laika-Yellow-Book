@@ -295,6 +295,7 @@ public class NewEntryActivity extends AppCompatActivity{
     }
     //Runs the validation code
     private void runValidator(String result, int index) {
+        //Run date entry through wit.ai
         if (index == 2 || index == 5) {
             Object[] params = new Object[2];
             params[0] = result;
@@ -331,6 +332,9 @@ public class NewEntryActivity extends AppCompatActivity{
                     break;
                 case 4:
                     cow.calfBW = Double.parseDouble(textInput);
+                    if(cow.calfBW<0){
+                        throw new ValidationError("calf BW cannot be negative");
+                    }
                     break;
                 case 5:
                     cow.calvingDate = formater.parse(textInput);
@@ -343,7 +347,14 @@ public class NewEntryActivity extends AppCompatActivity{
                     cow.condition = textInput;
                     break;
                 case 8:
-                    cow.sex = textInput;
+                    if(textInput.matches("(?i)bull|male|b")){
+                        cow.sex = "Bull";
+                    }
+                    else if(textInput.matches("(?i)heifer|female|f")){
+                        cow.sex = "Heifer";
+                    } else {
+                        throw new ValidationError("Cow sex invalid");
+                    }
                     break;
                 case 9:
                     cow.fate = textInput;
@@ -356,6 +367,9 @@ public class NewEntryActivity extends AppCompatActivity{
             if(!editTexts[index].isEnabled()) {
                 editTexts[index].setEnabled(true);
                 speakResult(editTexts[index]);
+            }
+            if(!textInput.isEmpty()) {
+                editTexts[index].setBackgroundResource(R.drawable.edittext_valid);
             }
 
         }catch (Exception e) {
