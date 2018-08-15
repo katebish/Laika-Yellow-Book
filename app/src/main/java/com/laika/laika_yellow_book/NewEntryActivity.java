@@ -27,7 +27,7 @@ import java.util.concurrent.ExecutionException;
 import static android.speech.tts.TextToSpeech.QUEUE_ADD;
 
 
-public class NewEntryActivity extends AppCompatActivity {
+public class NewEntryActivity extends AppCompatActivity implements AsyncResponse {
     private DbHelper myDb;
     private TextToSpeech mTTS;
     private ImageButton voiceInput;
@@ -42,14 +42,11 @@ public class NewEntryActivity extends AppCompatActivity {
     private int reponsesPending = 0;
     private boolean isIndividual = false;
 
-    int index = 0;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_entry);
         myDb = new DbHelper(this);
-
         data = new DataLine();
 
         editTexts = new EditText[11];
@@ -64,6 +61,7 @@ public class NewEntryActivity extends AppCompatActivity {
         editTexts[8] = (EditText) findViewById(R.id.edit_Sex);
         editTexts[9] = (EditText) findViewById(R.id.edit_Fate);
         editTexts[10] = (EditText) findViewById(R.id.edit_Remarks);
+
         voiceInput = (ImageButton) findViewById(R.id.btn_VoiceInput);
 
         int tag = 0;
@@ -237,43 +235,33 @@ public class NewEntryActivity extends AppCompatActivity {
                     //check internet connection
                     try {
                         if(currEditText == editTexts[2]){
-                            SpeechToDate speechToDate = new SpeechToDate();
-                            data.dueCalveDate = speechToDate.parseDate(result.get(0), true);
-                            this.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-                                    String testDate = format.format(data.dueCalveDate);
-                                    currEditText.setText(testDate);
-                                }
-                            });
+                            currEditText.setText(result.get(0));
+                            currEditText.setEnabled(false);
+                            ValidateResultsAPI validateResult = new ValidateResultsAPI();
+                            validateResult.delegate = this;
+                            validateResult.execute(result.get(0));
                         }
                         else if(currEditText == editTexts[5]) {
-                            SpeechToDate speechToDate = new SpeechToDate();
-                            data.calvingDate = speechToDate.parseDate(result.get(0), true);
-                            this.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-                                    String testDate = format.format(data.calvingDate);
-                                    currEditText.setText(testDate);
-                                }
-                            });
+                            currEditText.setText(result.get(0));
+                            currEditText.setEnabled(false);
+                            ValidateResultsAPI validateResult = new ValidateResultsAPI();
+                            validateResult.delegate = this;
+                            validateResult.execute(result.get(0));
                         }
                         else {
                             currEditText.setText(result.get(0));
+                            speakResult(currEditText);
                         }
                     }catch (Exception e) {
                         Log.e("Speech To Date Error: ", e.getMessage());
                     }
-                    speakResult(currEditText);
                 }
                 break;
             }
         }
     }
 
-    public void AddData(View view) throws ParseException {
+    public void AddData(View view) {
         if (reponsesPending == 0) {
             boolean isSuccessful = myDb.insertData(data.cowNum, data.dueCalveDate, data.sireOfCalf, data.calfBW, data.calvingDate, data.calvingDiff, data.condition, data.sex, data.fate, data.calfIndentNo, data.remarks);
             if (isSuccessful)
@@ -324,8 +312,6 @@ public class NewEntryActivity extends AppCompatActivity {
     }
 
     private void InputValidation(String textInput, int index) {
-        SpeechToDate speechToDate = new SpeechToDate();
-
         try {
             switch (index) {
                 case 0:
@@ -341,8 +327,11 @@ public class NewEntryActivity extends AppCompatActivity {
                     }
                     break;
                 case 2:
-                    if(data.dueCalveDate == null)
-                        data.dueCalveDate = speechToDate.parseDate(textInput, true);
+                    if(data.dueCalveDate == null) {
+                        ValidateResultsAPI validateResult = new ValidateResultsAPI();
+                        validateResult.delegate = this;
+                        validateResult.execute(editTexts[2].getText().toString());
+                    }
                     break;
                 case 3:
                     data.sireOfCalf = Integer.parseInt(textInput);
@@ -354,7 +343,11 @@ public class NewEntryActivity extends AppCompatActivity {
                     }
                     break;
                 case 5:
-                    data.calvingDate = speechToDate.parseDate(textInput, true);
+                    if(data.calvingDate == null) {
+                        ValidateResultsAPI validateResult = new ValidateResultsAPI();
+                        validateResult.delegate = this;
+                        validateResult.execute(editTexts[5].getText().toString());
+                    }
                     break;
                 case 6:
                     data.calvingDiff = textInput;
@@ -383,6 +376,20 @@ public class NewEntryActivity extends AppCompatActivity {
             Log.e("Error msg", e.getMessage());
             //set error message
             //e.getMessage();
+        }
+    }
+
+    @Override
+    public void processFinish(final String output) {
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            data.dueCalveDate = format.parse(output);
+            currEditText.setText(format.format(data.dueCalveDate));
+            if(!currEditText.isEnabled())
+                currEditText.setEnabled(true);
+            speakResult(currEditText);
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
     }
 }
