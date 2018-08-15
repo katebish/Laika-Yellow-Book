@@ -31,15 +31,11 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
     private DbHelper myDb;
     private TextToSpeech mTTS;
     private ImageButton voiceInput;
-    private LinearLayout layout;
-    private int childCount;
     private String[] text;
     private int i = 0;
     private EditText currEditText;
-    private int editPos = 0;
     private EditText[] editTexts;
     private DataLine data;
-    private int reponsesPending = 0;
     private boolean isIndividual = false;
 
     @Override
@@ -64,6 +60,9 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
 
         voiceInput = (ImageButton) findViewById(R.id.btn_VoiceInput);
 
+        final InputValidation inputValidation = new InputValidation();
+        inputValidation.setData(data);
+
         int tag = 0;
         for (final EditText et : editTexts) {
             et.setTag(tag);
@@ -71,7 +70,6 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
             et.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View view, MotionEvent motionEvent) {
-                    //editTexts[index].setBackgroundResource(android.R.drawable.edit_text);
                     if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
                         if (motionEvent.getRawX() >= (et.getRight() - et.getCompoundDrawables()[2].getBounds().width())) {
                             // your action here
@@ -79,8 +77,7 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
                             currEditText = (EditText) view;
                             currEditText.requestFocus();
                             if (currEditText.getTag() != null) {
-                                editPos = (int) currEditText.getTag();
-                                i = editPos;
+                                i = (int) currEditText.getTag();
                             }
                             askSpeechInput(currEditText);
                             return true;
@@ -100,7 +97,10 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
                             int curr = -1;
                             if (view.getTag() != null)
                                 curr = (int) et.getTag();
-                            InputValidation(et.getText().toString(), curr);
+                            String err = inputValidation.validate(input,curr);
+                            //###################################
+                            //if err not null, set error message
+                            //###################################
                         }
                     }
                 }
@@ -108,8 +108,8 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
         }
 
         //get all label values
-        layout = (LinearLayout) findViewById(R.id.linearLayout1);
-        childCount = layout.getChildCount();
+        LinearLayout layout = (LinearLayout) findViewById(R.id.linearLayout1);
+        int childCount = layout.getChildCount();
         text = new String[childCount];
         int c = 0;
         for (int i = 0; i < childCount; i++) {
@@ -134,8 +134,7 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
                 if (status == TextToSpeech.SUCCESS) {
                     mTTS.setOnUtteranceProgressListener(new UtteranceProgressListener() {
                         @Override
-                        public void onStart(String s) {
-                        }
+                        public void onStart(String s) {}
 
                         @Override
                         public void onDone(String s) {
@@ -157,13 +156,11 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
                         }
 
                         @Override
-                        public void onError(String s) {
-                        }
+                        public void onError(String s) {}
                     });
                     int result = mTTS.setLanguage(Locale.getDefault());
                     if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
                         Log.e("TTS", "Language not supported");
-                    } else {
                     }
                 } else {
                     Log.e("TTS", "Initialization failed");
@@ -177,7 +174,6 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
     public void askSpeechInput(View view) {
         if (view == voiceInput) {
             i = 0;
-            editPos = 0;
             isIndividual = false;
             currEditText = editTexts[0];
             currEditText.requestFocus();
@@ -188,7 +184,7 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException ex) {
-                android.util.Log.d("new entry", ex.toString());
+                Log.e("new entry", ex.toString());
             }
         }
         initSTT();
@@ -203,6 +199,7 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
         try {
             startActivityForResult(intent, REQ_CODE_SPEECH_INPUT);
         } catch (ActivityNotFoundException a) {
+            Log.e("STT", "Initialization failed " + a.getMessage());
         }
     }
 
@@ -218,14 +215,12 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
             currEditText = findViewById(currEditText.getNextFocusDownId());
             if (currEditText != null) {
                 currEditText.requestFocus();
-                editPos++;
             }
         }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
-
         super.onActivityResult(requestCode, resultCode, intent);
 
         switch (requestCode) {
@@ -253,7 +248,7 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
                             speakResult(currEditText);
                         }
                     }catch (Exception e) {
-                        Log.e("Speech To Date Error: ", e.getMessage());
+                        Log.e("STT", e.getMessage());
                     }
                 }
                 break;
@@ -262,15 +257,11 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
     }
 
     public void AddData(View view) {
-        if (reponsesPending == 0) {
-            boolean isSuccessful = myDb.insertData(data.cowNum, data.dueCalveDate, data.sireOfCalf, data.calfBW, data.calvingDate, data.calvingDiff, data.condition, data.sex, data.fate, data.calfIndentNo, data.remarks);
-            if (isSuccessful)
-                Toast.makeText(NewEntryActivity.this, "Data is inserted", Toast.LENGTH_LONG).show();
-            else
-                Toast.makeText(NewEntryActivity.this, "Insertion failed", Toast.LENGTH_LONG).show();
-        } else {
-            Toast.makeText(NewEntryActivity.this, "Not saved, waiting on network", Toast.LENGTH_LONG).show();
-        }
+        boolean isSuccessful = myDb.insertData(data.cowNum, data.dueCalveDate, data.sireOfCalf, data.calfBW, data.calvingDate, data.calvingDiff, data.condition, data.sex, data.fate, data.calfIndentNo, data.remarks);
+        if (isSuccessful)
+            Toast.makeText(NewEntryActivity.this, "Data is inserted", Toast.LENGTH_LONG).show();
+        else
+            Toast.makeText(NewEntryActivity.this, "Insertion failed", Toast.LENGTH_LONG).show();
     }
 
     private int id = 1;
@@ -311,74 +302,6 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
         linearLayout.addView(twinCalf, pos);
     }
 
-    private void InputValidation(String textInput, int index) {
-        try {
-            switch (index) {
-                case 0:
-                    data.cowNum = Integer.parseInt(textInput);
-                    if (data.cowNum < 0) {
-                        throw new ValidationError("Cow number cannot be negative");
-                    }
-                    break;
-                case 1:
-                    data.calfIndentNo = Integer.parseInt(textInput);
-                    if (data.calfIndentNo < 0) {
-                        throw new ValidationError("calf number cannot be negative");
-                    }
-                    break;
-                case 2:
-                    if(data.dueCalveDate == null) {
-                        ValidateResultsAPI validateResult = new ValidateResultsAPI();
-                        validateResult.delegate = this;
-                        validateResult.execute(editTexts[2].getText().toString());
-                    }
-                    break;
-                case 3:
-                    data.sireOfCalf = Integer.parseInt(textInput);
-                    break;
-                case 4:
-                    data.calfBW = Double.parseDouble(textInput);
-                    if (data.calfBW < 0) {
-                        throw new ValidationError("calf BW cannot be negative");
-                    }
-                    break;
-                case 5:
-                    if(data.calvingDate == null) {
-                        ValidateResultsAPI validateResult = new ValidateResultsAPI();
-                        validateResult.delegate = this;
-                        validateResult.execute(editTexts[5].getText().toString());
-                    }
-                    break;
-                case 6:
-                    data.calvingDiff = textInput;
-                    break;
-                case 7:
-                    data.condition = textInput;
-                    break;
-                case 8:
-                    if (textInput.matches("(?i)bull|male|b")) {
-                        data.sex = "Bull";
-                    } else if (textInput.matches("(?i)heifer|female|f")) {
-                        data.sex = "Heifer";
-                    } else {
-                        throw new ValidationError("Cow sex invalid");
-                    }
-                    break;
-                case 9:
-                    data.fate = textInput;
-                    break;
-                case 10:
-                    data.remarks = textInput;
-                    break;
-            }
-        } catch (Exception e) {
-            editTexts[index].setBackgroundResource(R.drawable.edittext_error);
-            Log.e("Error msg", e.getMessage());
-            //set error message
-            //e.getMessage();
-        }
-    }
-
     @Override
     public void processFinish(final String output) {
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
@@ -389,15 +312,12 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
                 currEditText.setEnabled(true);
             speakResult(currEditText);
         } catch (ParseException e) {
+            currEditText.setBackgroundResource(R.drawable.edittext_error);
             e.printStackTrace();
+            //###################################
+            //set error message
+            //errormessage = e.getMessage();
+            //###################################
         }
     }
 }
-
-class ValidationError extends Exception {
-    public ValidationError(String message)
-    {
-        super(message);
-    }
-}
-
