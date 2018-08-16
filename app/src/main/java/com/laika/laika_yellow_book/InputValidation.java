@@ -1,12 +1,12 @@
 package com.laika.laika_yellow_book;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 public class InputValidation {
     private DataLine data;
     private DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-
     public void setData(DataLine data) {
         this.data = data;
     }
@@ -16,8 +16,9 @@ public class InputValidation {
             switch (index) {
                 case 0:
                     data.cowNum = Integer.parseInt(textInput);
+
                     if (data.cowNum < 0) {
-                        return "Cow number cannot be negative";
+                        throw new ValidationError("Cow number cannot be negative");
                     }
                     break;
                 case 1:
@@ -65,9 +66,19 @@ public class InputValidation {
                     data.remarks = textInput;
                     break;
             }
-        } catch (Exception e) {
+        }
+        catch (ParseException e) {
             return e.getMessage();
         }
+        catch (ValidationError validationError) {
+            return validationError.getMessage();
+        }
         return null;
+    }
+
+    private class ValidationError extends Throwable {
+        public ValidationError(String error) {
+            super(error);
+        }
     }
 }

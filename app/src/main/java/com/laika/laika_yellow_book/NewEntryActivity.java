@@ -98,9 +98,13 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
                             if (view.getTag() != null)
                                 curr = (int) et.getTag();
                             String err = inputValidation.validate(input,curr);
-                            //###################################
-                            //if err not null, set error message
-                            //###################################
+                            if(!err.isEmpty()){
+                                //###################################
+                                //if err not null, set error message
+                                //###################################
+                                currEditText.setBackgroundResource(R.drawable.edittext_error);
+                            }
+
                         }
                     }
                 }
@@ -257,6 +261,30 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
     }
 
     public void AddData(View view) {
+        //current textbox focus is unchanged,
+        //but still triggers its listener for validation
+        currEditText.getOnFocusChangeListener().onFocusChange(currEditText,false);
+        if(editTexts[0].getText().toString().isEmpty()){
+            //##############################
+            //sets error message
+            //##############################
+            editTexts[0].setBackgroundResource(R.drawable.edittext_error);
+            editTexts[0].requestFocus();
+            Toast.makeText(NewEntryActivity.this, "Error, Cow Number cannot be blank!", Toast.LENGTH_LONG).show();
+            return;
+        }
+        else if(editTexts[5].getText().toString().isEmpty()) {
+            //##############################
+            //sets error message
+            //##############################
+            editTexts[5].setBackgroundResource(R.drawable.edittext_error);
+            editTexts[0].requestFocus();
+            Toast.makeText(NewEntryActivity.this, "Error, Calving Date cannot be blank!", Toast.LENGTH_LONG).show();
+            return;
+        }
+        //##############################
+        //also check if has invalid inputs
+        //##############################
         boolean isSuccessful = myDb.insertData(data.cowNum, data.dueCalveDate, data.sireOfCalf, data.calfBW, data.calvingDate, data.calvingDiff, data.condition, data.sex, data.fate, data.calfIndentNo, data.remarks);
         if (isSuccessful)
             Toast.makeText(NewEntryActivity.this, "Data is inserted", Toast.LENGTH_LONG).show();
@@ -313,7 +341,6 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
             speakResult(currEditText);
         } catch (ParseException e) {
             currEditText.setBackgroundResource(R.drawable.edittext_error);
-            e.printStackTrace();
             //###################################
             //set error message
             //errormessage = e.getMessage();
