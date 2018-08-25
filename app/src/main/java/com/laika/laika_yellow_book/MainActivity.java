@@ -20,8 +20,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void SpeechTest(View view) {
-        Intent intent = new Intent(this, SpeechTest.class);
-        startActivity(intent);
+       // Intent intent = new Intent(this, SpeechTest.class);
+        //startActivity(intent);
     }
 
 
