@@ -8,17 +8,23 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.content.Intent;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import org.json.*;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Locale;
@@ -130,7 +136,7 @@ public class SpeechTest extends AppCompatActivity implements RecognitionListener
         protected String doInBackground(ArrayList<String>... results) {
             String cleaned = "";
             try {
-                URL request = new URL("https://api.wit.ai/message?v=20180801&q="+results[0].get(0));
+                URL request = new URL("https://api.wit.ai/message?v=20180801&q="+ URLEncoder.encode("3rd July"));
                 HttpsURLConnection connection = (HttpsURLConnection) request.openConnection();
                 connection.setRequestMethod("GET");
                 connection.setRequestProperty("Accept", "application/json");
@@ -154,16 +160,22 @@ public class SpeechTest extends AppCompatActivity implements RecognitionListener
         protected void onPostExecute(String result) {
             try {
                 JSONObject jsob = new JSONObject(result);
-                String text = jsob.getString("_text");
+                String textInput = jsob.getString("_text");
+
                 TextView textV = (TextView) findViewById(R.id.TextView);
-                textV.setText(text);
+                try{
+                    JSONObject entities = jsob.getJSONObject("entities");
+                    Iterator<String> keys = entities.keys();
+                    JSONArray curr = entities.getJSONArray(keys.next());
+                    entities = curr.getJSONObject(0);
+                    textInput = entities.getString("value");
+                }
+                catch (Exception e) {
+                    Log.e("SpeechTest",Log.getStackTraceString(e));
+                }
+                textV.setText(textInput);
             }
             catch (Exception e){}
-
         }
-
     }
 }
-
-
-
