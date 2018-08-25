@@ -7,20 +7,19 @@
     tools:context=".NewEntryActivity">
 
     <ScrollView
-        android:layout_width="352dp"
-        android:layout_height="399dp"
+        android:layout_width="353dp"
+        android:layout_height="397dp"
         android:layout_marginBottom="32dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginStart="16dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.437">
+        app:layout_constraintVertical_bias="0.645">
 
         <LinearLayout
             android:id="@+id/linearLayout1"
@@ -33,7 +32,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:labelFor="@id/edit_CowNumber"
-                android:text="Cow Number"/>
+                android:text="Cow Number" />
 
             <EditText
                 android:id="@+id/edit_CowNumber"
@@ -41,37 +40,38 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:hint="Cow Number"
+                android:imeOptions="actionNext"
                 android:inputType="number"
                 android:nextFocusDown="@+id/edit_CalfIndent"
-                android:imeOptions="actionNext"/>
+                android:drawableRight="@drawable/voicebutton"/>
 
             <TextView
                 android:id="@+id/textView9"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:labelFor="@id/edit_CalfIndent"
-                android:text="Calf Indent. No. TAT/TAG" />
+                android:text="Calf ID" />
 
             <EditText
                 android:id="@+id/edit_CalfIndent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:hint="Calf Indent. No. TAT/TAG"
+                android:hint="Calf ID"
+                android:imeOptions="actionNext"
                 android:inputType="number"
                 android:nextFocusDown="@+id/edit_DueCalveDate"
-                android:imeOptions="actionNext"/>
+                android:drawableRight="@drawable/voicebutton"/>
 
             <TextView
                 android:id="@+id/tv_addTwinCalf"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:clickable="true"
                 android:gravity="right"
                 android:labelFor="@id/edit_CalfIndent"
                 android:onClick="AddNewCalf"
-                android:text="@string/addNewCalf"
-                android:clickable="true" />
-
+                android:text="@string/addNewCalf" />
 
 
             <TextView
@@ -87,9 +87,10 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:hint="Due Calve Date"
+                android:imeOptions="actionNext"
                 android:inputType="date"
                 android:nextFocusDown="@+id/edit_SireIfCalf"
-                android:imeOptions="actionNext"/>
+                android:drawableRight="@drawable/voicebutton"/>
 
             <TextView
                 android:id="@+id/textView11"
@@ -104,9 +105,10 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:hint="Sire of Calf"
+                android:imeOptions="actionNext"
                 android:inputType="date"
                 android:nextFocusDown="@+id/edit_CalfBW"
-                android:imeOptions="actionNext"/>
+                android:drawableRight="@drawable/voicebutton"/>
 
             <TextView
                 android:id="@+id/textView3"
@@ -121,9 +123,10 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:hint="Calf B.W."
+                android:imeOptions="actionNext"
                 android:inputType="numberDecimal"
                 android:nextFocusDown="@+id/edit_CalvingDate"
-                android:imeOptions="actionNext"/>
+                android:drawableRight="@drawable/voicebutton"/>
 
             <TextView
                 android:id="@+id/textView4"
@@ -138,9 +141,10 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:hint="Calving Date"
+                android:imeOptions="actionNext"
                 android:inputType="date"
                 android:nextFocusDown="@+id/edit_CalvingDiff"
-                android:imeOptions="actionNext"/>
+                android:drawableRight="@drawable/voicebutton"/>
 
             <TextView
                 android:id="@+id/textView5"
@@ -155,9 +159,10 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:hint="Calving Diff."
+                android:imeOptions="actionNext"
                 android:inputType="text"
                 android:nextFocusDown="@+id/edit_Condition"
-                android:imeOptions="actionNext"/>
+                android:drawableRight="@drawable/voicebutton"/>
 
             <TextView
                 android:id="@+id/textView6"
@@ -172,9 +177,10 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:hint="Condition"
+                android:imeOptions="actionNext"
                 android:inputType="text"
                 android:nextFocusDown="@+id/edit_Sex"
-                android:imeOptions="actionNext"/>
+                android:drawableRight="@drawable/voicebutton"/>
 
             <TextView
                 android:id="@+id/textView7"
@@ -189,9 +195,10 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:hint="Sex"
+                android:imeOptions="actionNext"
                 android:inputType="text"
                 android:nextFocusDown="@+id/edit_Fate"
-                android:imeOptions="actionNext"/>
+                android:drawableRight="@drawable/voicebutton"/>
 
             <TextView
                 android:id="@+id/textView8"
@@ -206,9 +213,10 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:hint="Fate"
+                android:imeOptions="actionNext"
                 android:inputType="text"
                 android:nextFocusDown="@+id/edit_Remarks"
-                android:imeOptions="actionNext"/>
+                android:drawableRight="@drawable/voicebutton"/>
 
             <TextView
                 android:id="@+id/textView10"
@@ -223,32 +231,41 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:hint="Remarks"
+                android:imeOptions="actionDone"
                 android:inputType="text"
-                android:imeOptions="actionDone"/>
+                android:drawableRight="@drawable/voicebutton"/>
         </LinearLayout>
     </ScrollView>
-
-    <Button
-        android:id="@+id/btn_VoiceInput"
-        android:layout_width="136dp"
-        android:layout_height="42dp"
-        android:layout_marginBottom="16dp"
-        android:layout_marginLeft="32dp"
-        android:layout_marginStart="32dp"
-        android:onClick="askSpeechInput"
-        android:text="Voice Input"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/btn_Save"
         android:layout_width="136dp"
         android:layout_height="42dp"
         android:layout_marginBottom="16dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginRight="32dp"
+        android:layout_marginEnd="136dp"
+        android:layout_marginLeft="136dp"
+        android:layout_marginRight="136dp"
+        android:layout_marginStart="136dp"
         android:onClick="AddData"
         android:text="Save"
+        android:theme="@style/AppTheme.Button"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.333"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageButton
+        android:id="@+id/btn_VoiceInput"
+        android:layout_width="84dp"
+        android:layout_height="84dp"
+        android:layout_marginEnd="28dp"
+        android:layout_marginRight="28dp"
+        android:layout_marginTop="16dp"
+        android:background="@android:color/transparent"
+        android:onClick="askSpeechInput"
+        android:scaleType="centerInside"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/microphone" />
+
 </android.support.constraint.ConstraintLayout>
