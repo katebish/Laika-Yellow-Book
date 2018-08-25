@@ -6,6 +6,7 @@ import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -31,7 +32,7 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
     private DbHelper myDb;
     private TextToSpeech mTTS;
     private ImageButton voiceInput;
-    private String[] text;
+    private String[] labels;
     private int i = 0;
     private EditText currEditText;
     private EditText[] editTexts;
@@ -72,7 +73,6 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
                 public boolean onTouch(View view, MotionEvent motionEvent) {
                     if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
                         if (motionEvent.getRawX() >= (et.getRight() - et.getCompoundDrawables()[2].getBounds().width())) {
-                            // your action here
                             isIndividual = true;
                             currEditText = (EditText) view;
                             currEditText.requestFocus();
@@ -114,18 +114,13 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
         //get all label values
         LinearLayout layout = (LinearLayout) findViewById(R.id.linearLayout1);
         int childCount = layout.getChildCount();
-        text = new String[childCount];
+        labels = new String[childCount];
         int c = 0;
         for (int i = 0; i < childCount; i++) {
             View v = layout.getChildAt(i);
-            //EditText extends TextView
-            if (v instanceof EditText) {
-                continue;
-            } else if (v instanceof TextView) {
-                if (findViewById(R.id.tv_addTwinCalf) != v) {
-                    text[c] = ((TextView) v).getText().toString();
-                    c++;
-                }
+            if(v instanceof TextInputLayout) {
+                labels[c] = ((TextInputLayout) v).getHint().toString();
+                c++;
             }
         }
         initTTS();
@@ -142,12 +137,13 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
 
                         @Override
                         public void onDone(String s) {
+
                             if (s.equals("input")) {
                                 if (!isIndividual && currEditText != null) {
                                     //read next label
                                     HashMap<String, String> map = new HashMap<String, String>();
                                     map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "label");
-                                    mTTS.speak(text[i], QUEUE_ADD, map);
+                                    mTTS.speak(labels[i], QUEUE_ADD, map);
                                     //pause for 1 sec before speech starts
                                     try {
                                         Thread.sleep(1000);
@@ -184,7 +180,7 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
 
             HashMap<String, String> map = new HashMap<String, String>();
             map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "label");
-            mTTS.speak(text[i], QUEUE_ADD, map);
+            mTTS.speak(labels[i], QUEUE_ADD, map);
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException ex) {
@@ -198,7 +194,7 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
-        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, text[i]);
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, labels[i]);
         i++;
         try {
             startActivityForResult(intent, REQ_CODE_SPEECH_INPUT);
@@ -223,6 +219,7 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
         }
     }
 
+   
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
@@ -231,6 +228,7 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
             case REQ_CODE_SPEECH_INPUT: {
                 if (resultCode == RESULT_OK && null != intent) {
                     ArrayList<String> result = intent.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                    
                     //check internet connection
                     try {
                         if(currEditText == editTexts[2]){
