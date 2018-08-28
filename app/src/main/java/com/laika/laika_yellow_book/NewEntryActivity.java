@@ -48,9 +48,9 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
 
         editTexts = new EditText[11];
         editTexts[0] = (EditText) findViewById(R.id.edit_CowNumber);
-        editTexts[1] = (EditText) findViewById(R.id.edit_CalfIndent);
+        editTexts[1] = (EditText) findViewById(R.id.edit_CalfID);
         editTexts[2] = (EditText) findViewById(R.id.edit_DueCalveDate);
-        editTexts[3] = (EditText) findViewById(R.id.edit_SireIfCalf);
+        editTexts[3] = (EditText) findViewById(R.id.edit_SireOfCalf);
         editTexts[4] = (EditText) findViewById(R.id.edit_CalfBW);
         editTexts[5] = (EditText) findViewById(R.id.edit_CalvingDate);
         editTexts[6] = (EditText) findViewById(R.id.edit_CalvingDiff);
