@@ -77,11 +77,11 @@ public class InputValidation {
                     break;
             }
         }
-        catch (ParseException e) {
-            return e.getMessage();
-        }
         catch (ValidationError validationError) {
             return validationError.getMessage();
+        }
+        catch (Exception e) {
+            return e.getMessage();
         }
         return null;
     }

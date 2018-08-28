@@ -98,13 +98,14 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
                             if (view.getTag() != null)
                                 curr = (int) et.getTag();
                             String err = inputValidation.validate(input,curr);
-                            if(!err.isEmpty()){
+                            if(err!=null){
                                 //###################################
                                 //if err not null, set error message
                                 //###################################
-                                currEditText.setBackgroundResource(R.drawable.edittext_error);
+                                et.setBackgroundResource(R.drawable.edittext_error);
+                                Toast.makeText(NewEntryActivity.this, err, Toast.LENGTH_LONG).show();
                             }
-
+                            et.setBackgroundResource(R.drawable.edittext_valid);
                         }
                     }
                 }
