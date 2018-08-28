@@ -104,9 +104,10 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
                                 //###################################
                                 currEditText.setBackgroundResource(R.drawable.edittext_error);
                             }
-
                         }
                     }
+                    else
+                        currEditText = (EditText) view;
                 }
             });
         }
@@ -209,7 +210,6 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
         HashMap<String, String> map = new HashMap<String, String>();
         map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "input");
         mTTS.speak(currEditText.getText().toString(), QUEUE_ADD, map);
-
         if (!isIndividual) {
             //iterate through all textboxes
             currEditText = findViewById(currEditText.getNextFocusDownId());
@@ -219,7 +219,7 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
         }
     }
 
-   
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
@@ -228,7 +228,7 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
             case REQ_CODE_SPEECH_INPUT: {
                 if (resultCode == RESULT_OK && null != intent) {
                     ArrayList<String> result = intent.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                    
+
                     //check internet connection
                     try {
                         if(currEditText == editTexts[2]){
@@ -261,7 +261,22 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
     public void AddData(View view) {
         //current textbox focus is unchanged,
         //but still triggers its listener for validation
-        currEditText.getOnFocusChangeListener().onFocusChange(currEditText,false);
+        String input = currEditText.getText().toString();
+        if (!input.isEmpty()) {
+            final InputValidation inputValidation = new InputValidation();
+            if (!input.isEmpty()) {
+                int curr = -1;
+                if (view.getTag() != null)
+                    curr = (int) currEditText.getTag();
+                String err = inputValidation.validate(input,curr);
+                if(!err.isEmpty()){
+                    //###################################
+                    //if err not null, set error message
+                    //###################################
+                    currEditText.setBackgroundResource(R.drawable.edittext_error);
+                }
+            }
+        }
         if(editTexts[0].getText().toString().isEmpty()){
             //##############################
             //sets error message

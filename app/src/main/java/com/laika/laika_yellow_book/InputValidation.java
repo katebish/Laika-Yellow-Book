@@ -28,8 +28,10 @@ public class InputValidation {
                     }
                     break;
                 case 2:
-                    if(data.dueCalveDate == null)
+                    if(data.dueCalveDate == null) {
+                        textInput = textInput.replaceAll("/","-");
                         data.dueCalveDate = format.parse(textInput);
+                    }
                     break;
                 case 3:
                     data.sireOfCalf = Integer.parseInt(textInput);
@@ -73,7 +75,7 @@ public class InputValidation {
         catch (ValidationError validationError) {
             return validationError.getMessage();
         }
-        return null;
+        return "";
     }
 
     private class ValidationError extends Throwable {
