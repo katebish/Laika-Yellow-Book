@@ -1,5 +1,6 @@
 package com.laika.laika_yellow_book;
 
+import android.app.DatePickerDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.speech.RecognizerIntent;
@@ -12,6 +13,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -21,6 +23,8 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.concurrent.ExecutionException;
@@ -60,6 +64,9 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
         editTexts[10] = (EditText) findViewById(R.id.edit_Remarks);
 
         voiceInput = (ImageButton) findViewById(R.id.btn_VoiceInput);
+
+        setDateTimePicker(editTexts[2],2);
+        setDateTimePicker(editTexts[5],5);
 
         final InputValidation inputValidation = new InputValidation();
         inputValidation.setData(data);
@@ -125,6 +132,32 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
             }
         }
         initTTS();
+    }
+
+    private void setDateTimePicker(final EditText ed, final int index) {
+        final Calendar myCalendar = Calendar.getInstance();
+        final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                myCalendar.set(Calendar.YEAR, year);
+                myCalendar.set(Calendar.MONTH, month);
+                myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+                DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                ed.setText(format.format(myCalendar.getTime()));
+                if(index == 2)
+                    data.dueCalveDate = myCalendar.getTime();
+                else if(index == 5)
+                    data.calvingDate = myCalendar.getTime();
+            }
+        };
+
+        ed.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new DatePickerDialog(NewEntryActivity.this,date,myCalendar.get(Calendar.YEAR),myCalendar.get(Calendar.MONTH),myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+            }
+        });
     }
 
     private void initTTS() {
