@@ -42,7 +42,7 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
     private EditText[] editTexts;
     private DataLine data;
     private boolean isIndividual = false;
-
+    private TextInputLayout[] textInputLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +64,21 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
         editTexts[10] = (EditText) findViewById(R.id.edit_Remarks);
 
         voiceInput = (ImageButton) findViewById(R.id.btn_VoiceInput);
+
+        textInputLayout = new TextInputLayout[11];
+        //get all label values
+        LinearLayout layout = (LinearLayout) findViewById(R.id.linearLayout1);
+        int childCount = layout.getChildCount();
+        labels = new String[childCount];
+        int c = 0;
+        for (int i = 0; i < childCount; i++) {
+            View v = layout.getChildAt(i);
+            if(v instanceof TextInputLayout) {
+                textInputLayout[c] = (TextInputLayout)v;
+                labels[c] = ((TextInputLayout) v).getHint().toString();
+                c++;
+            }
+        }
 
         setDateTimePicker(editTexts[2],2);
         setDateTimePicker(editTexts[5],5);
@@ -106,10 +121,7 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
                                 curr = (int) et.getTag();
                             String err = inputValidation.validate(input,curr);
                             if(!err.isEmpty()){
-                                //###################################
-                                //if err not null, set error message
-                                //###################################
-                                currEditText.setBackgroundResource(R.drawable.edittext_error);
+                                textInputLayout[curr].setError(err);
                             }
                         }
                     }
@@ -119,18 +131,6 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
             });
         }
 
-        //get all label values
-        LinearLayout layout = (LinearLayout) findViewById(R.id.linearLayout1);
-        int childCount = layout.getChildCount();
-        labels = new String[childCount];
-        int c = 0;
-        for (int i = 0; i < childCount; i++) {
-            View v = layout.getChildAt(i);
-            if(v instanceof TextInputLayout) {
-                labels[c] = ((TextInputLayout) v).getHint().toString();
-                c++;
-            }
-        }
         initTTS();
     }
 
@@ -292,8 +292,6 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
     }
 
     public void AddData(View view) {
-        //current textbox focus is unchanged,
-        //but still triggers its listener for validation
         String input = currEditText.getText().toString();
         if (!input.isEmpty()) {
             final InputValidation inputValidation = new InputValidation();
@@ -303,27 +301,18 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
                     curr = (int) currEditText.getTag();
                 String err = inputValidation.validate(input,curr);
                 if(!err.isEmpty()){
-                    //###################################
-                    //if err not null, set error message
-                    //###################################
-                    currEditText.setBackgroundResource(R.drawable.edittext_error);
+                    textInputLayout[curr].setError(err);
                 }
             }
         }
         if(editTexts[0].getText().toString().isEmpty()){
-            //##############################
-            //sets error message
-            //##############################
-            editTexts[0].setBackgroundResource(R.drawable.edittext_error);
+            textInputLayout[0].setError("Cow number cannot be blank!");
             editTexts[0].requestFocus();
             Toast.makeText(NewEntryActivity.this, "Error, Cow Number cannot be blank!", Toast.LENGTH_LONG).show();
             return;
         }
         else if(editTexts[5].getText().toString().isEmpty()) {
-            //##############################
-            //sets error message
-            //##############################
-            editTexts[5].setBackgroundResource(R.drawable.edittext_error);
+            textInputLayout[5].setError("Calving date cannot be blank!");
             editTexts[0].requestFocus();
             Toast.makeText(NewEntryActivity.this, "Error, Calving Date cannot be blank!", Toast.LENGTH_LONG).show();
             return;
@@ -386,11 +375,10 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
                 currEditText.setEnabled(true);
             speakResult(currEditText);
         } catch (ParseException e) {
-            currEditText.setBackgroundResource(R.drawable.edittext_error);
-            //###################################
-            //set error message
-            //errormessage = e.getMessage();
-            //###################################
+           if(currEditText.getTag() != null){
+               int tag = (int) currEditText.getTag();
+               textInputLayout[tag].setError(e.getMessage());
+           }
         }
     }
 }
