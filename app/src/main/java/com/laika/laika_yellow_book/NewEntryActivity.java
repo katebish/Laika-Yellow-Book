@@ -2,9 +2,11 @@ package com.laika.laika_yellow_book;
 
 import android.app.DatePickerDialog;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.speech.RecognizerIntent;
-import android.speech.SpeechRecognizer;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
 import android.support.design.widget.TextInputLayout;
@@ -17,7 +19,6 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -27,7 +28,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
-import java.util.concurrent.ExecutionException;
 
 import static android.speech.tts.TextToSpeech.QUEUE_ADD;
 
@@ -43,6 +43,8 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
     private DataLine data;
     private boolean isIndividual = false;
     private TextInputLayout[] textInputLayout;
+    private InputValidation inputValidation = new InputValidation();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,23 +53,23 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
         data = new DataLine();
 
         editTexts = new EditText[11];
-        editTexts[0] = (EditText) findViewById(R.id.edit_CowNumber);
-        editTexts[1] = (EditText) findViewById(R.id.edit_CalfID);
-        editTexts[2] = (EditText) findViewById(R.id.edit_DueCalveDate);
-        editTexts[3] = (EditText) findViewById(R.id.edit_SireOfCalf);
-        editTexts[4] = (EditText) findViewById(R.id.edit_CalfBW);
-        editTexts[5] = (EditText) findViewById(R.id.edit_CalvingDate);
-        editTexts[6] = (EditText) findViewById(R.id.edit_CalvingDiff);
-        editTexts[7] = (EditText) findViewById(R.id.edit_Condition);
-        editTexts[8] = (EditText) findViewById(R.id.edit_Sex);
-        editTexts[9] = (EditText) findViewById(R.id.edit_Fate);
-        editTexts[10] = (EditText) findViewById(R.id.edit_Remarks);
+        editTexts[0] = findViewById(R.id.edit_CowNumber);
+        editTexts[1] = findViewById(R.id.edit_CalfID);
+        editTexts[2] = findViewById(R.id.edit_DueCalveDate);
+        editTexts[3] = findViewById(R.id.edit_SireOfCalf);
+        editTexts[4] = findViewById(R.id.edit_CalfBW);
+        editTexts[5] = findViewById(R.id.edit_CalvingDate);
+        editTexts[6] = findViewById(R.id.edit_CalvingDiff);
+        editTexts[7] = findViewById(R.id.edit_Condition);
+        editTexts[8] = findViewById(R.id.edit_Sex);
+        editTexts[9] = findViewById(R.id.edit_Fate);
+        editTexts[10] =findViewById(R.id.edit_Remarks);
 
-        voiceInput = (ImageButton) findViewById(R.id.btn_VoiceInput);
+        voiceInput = findViewById(R.id.btn_VoiceInput);
 
         textInputLayout = new TextInputLayout[11];
         //get all label values
-        LinearLayout layout = (LinearLayout) findViewById(R.id.linearLayout1);
+        LinearLayout layout = findViewById(R.id.linearLayout1);
         int childCount = layout.getChildCount();
         labels = new String[childCount];
         int c = 0;
@@ -83,7 +85,7 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
         setDateTimePicker(editTexts[2],2);
         setDateTimePicker(editTexts[5],5);
 
-        final InputValidation inputValidation = new InputValidation();
+        //final InputValidation inputValidation = new InputValidation();
         inputValidation.setData(data);
 
         int tag = 0;
@@ -125,8 +127,12 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
                             }
                         }
                     }
-                    else
+                    else {
+                        EditText currFocus = (EditText) getCurrentFocus();
+                        if(currFocus != null & currFocus != view)
+                            currFocus.clearFocus();
                         currEditText = (EditText) view;
+                    }
                 }
             });
         }
@@ -253,6 +259,19 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
     }
 
 
+    private boolean hasInternet() {
+        boolean hasInternet;
+        ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+        if(connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
+            //we are connected to a network
+            hasInternet = true;
+        }
+        else
+            hasInternet = false;
+        return hasInternet;
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
@@ -265,18 +284,48 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
                     //check internet connection
                     try {
                         if(currEditText == editTexts[2]){
-                            currEditText.setText(result.get(0));
-                            currEditText.setEnabled(false);
-                            ValidateResultsAPI validateResult = new ValidateResultsAPI();
-                            validateResult.delegate = this;
-                            validateResult.execute(result.get(0));
+                            boolean hasInternet = hasInternet();
+                            if(hasInternet) {
+                                currEditText.setText(result.get(0));
+                                currEditText.setEnabled(false);
+                                ValidateResultsAPI validateResult = new ValidateResultsAPI();
+                                validateResult.delegate = this;
+                                validateResult.execute(result.get(0));
+                            }
+                            else {
+                                Date date = inputValidation.parseDate(result.get(0));
+                                if(date == null) {
+                                    textInputLayout[1].setError("Format: first of August 2018");
+                                    currEditText.setText(result.get(0));
+                                }
+                                else {
+                                    data.dueCalveDate = date;
+                                    currEditText.setText(new SimpleDateFormat("yyyy-MM-dd").format(date));
+                                }
+                                speakResult(currEditText);
+                            }
                         }
                         else if(currEditText == editTexts[5]) {
-                            currEditText.setText(result.get(0));
-                            currEditText.setEnabled(false);
-                            ValidateResultsAPI validateResult = new ValidateResultsAPI();
-                            validateResult.delegate = this;
-                            validateResult.execute(result.get(0));
+                            boolean hasInternet = hasInternet();
+                            if(hasInternet) {
+                                currEditText.setText(result.get(0));
+                                currEditText.setEnabled(false);
+                                ValidateResultsAPI validateResult = new ValidateResultsAPI();
+                                validateResult.delegate = this;
+                                validateResult.execute(result.get(0));
+                            }
+                            else {
+                                Date date = inputValidation.parseDate(result.get(0));
+                                if(date == null) {
+                                    textInputLayout[4].setError("Format: first of August 2018");
+                                    currEditText.setText(result.get(0));
+                                }
+                                else {
+                                    data.calvingDate = date;
+                                    currEditText.setText(new SimpleDateFormat("yyyy-MM-dd").format(date));
+                                }
+                                speakResult(currEditText);
+                            }
                         }
                         else {
                             currEditText.setText(result.get(0));
