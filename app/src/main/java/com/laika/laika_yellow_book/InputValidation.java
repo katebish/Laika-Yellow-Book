@@ -3,6 +3,10 @@ package com.laika.laika_yellow_book;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.Locale;
 
 public class InputValidation {
     private DataLine data;
@@ -76,6 +80,33 @@ public class InputValidation {
             return validationError.getMessage();
         }
         return "";
+    }
+
+    public Date parseDate(String text) {
+        //e.g. first of August 2018
+        text = text.replace(" of","");
+        String[] date = text.split(" ");
+        switch (date[0]) {
+            case "first":
+                date[0] = "1";
+                break;
+            case "second":
+                date[0] = "2";
+                break;
+            case "third":
+                date[0] = "3";
+                break;
+        }
+        date[0] = date[0].replace("st","").replace("nd","").replace("rd","").replace("th","");
+        String finalDate = Arrays.toString(date).replaceAll(",","").replace("[","").replace("]","");
+        try {
+            Date parsedDate = new SimpleDateFormat("dd MMMM yyyy").parse(finalDate);
+            finalDate = format.format(parsedDate);
+            parsedDate = format.parse(finalDate);
+            return parsedDate;
+        } catch (ParseException e) {
+            return null;
+        }
     }
 
     private class ValidationError extends Throwable {
