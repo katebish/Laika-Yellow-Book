@@ -66,18 +66,28 @@ public class InputValidation {
                     }
                     break;
                 case 9:
-                    data.fate = textInput;
+                    if(textInput.matches("(?i)reared|r|are")) {
+                        data.fate = "R";
+                    } else if(textInput.matches("(?i)bobbied|b|be|bee")) {
+                        data.fate = "B";
+                    } else if(textInput.matches("(?i)sold|moved for rearing|s|moved")) {
+                        data.fate = "S";
+                    } else if(textInput.matches("(?i)died|d")) {
+                        data.fate = "D";
+                    } else {
+                        return "Cow sex invalid";
+                    }
                     break;
                 case 10:
                     data.remarks = textInput;
                     break;
             }
         }
-        catch (ParseException e) {
-            return e.getMessage();
-        }
         catch (ValidationError validationError) {
             return validationError.getMessage();
+        }
+        catch (Exception e) {
+            return e.getMessage();
         }
         return "";
     }
