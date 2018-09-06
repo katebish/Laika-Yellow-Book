@@ -20,43 +20,33 @@ public class InputValidation {
             switch (index) {
                 case 0:
                     data.cowNum = Integer.parseInt(textInput);
-
                     if (data.cowNum < 0) {
                         return "Cow number cannot be negative";
                     }
                     break;
                 case 1:
-                    data.calfIndentNo = Integer.parseInt(textInput);
-                    if (data.calfIndentNo < 0) {
-                        return "calf number cannot be negative";
-                    }
-                    break;
-                case 2:
                     if(data.dueCalveDate == null) {
                         textInput = textInput.replaceAll("/","-");
                         data.dueCalveDate = format.parse(textInput);
                     }
                     break;
-                case 3:
+                case 2:
                     data.sireOfCalf = Integer.parseInt(textInput);
+                    if(data.sireOfCalf < 0) {
+                        return "Sire id cannot be negative";
+                    }
                     break;
-                case 4:
+                case 3:
                     data.calfBW = Double.parseDouble(textInput);
                     if (data.calfBW < 0) {
                         return "calf BW cannot be negative";
                     }
                     break;
-                case 5:
+                case 4:
                     if(data.calvingDate == null)
                         data.calvingDate = format.parse(textInput);
                     break;
-                case 6:
-                    data.calvingDiff = textInput;
-                    break;
-                case 7:
-                    data.condition = textInput;
-                    break;
-                case 8:
+                case 5:
                     if (textInput.matches("(?i)bull|male|b")) {
                         data.sex = "Bull";
                     } else if (textInput.matches("(?i)heifer|female|f")) {
@@ -65,7 +55,7 @@ public class InputValidation {
                         return "Cow sex invalid";
                     }
                     break;
-                case 9:
+                case 6:
                     if(textInput.matches("(?i)reared|r|are")) {
                         data.fate = "R";
                     } else if(textInput.matches("(?i)bobbied|b|be|bee")) {
@@ -77,6 +67,18 @@ public class InputValidation {
                     } else {
                         return "Invalid fate.";
                     }
+                    break;
+                case 7:
+                    data.calfIndentNo = Integer.parseInt(textInput);
+                    if (data.calfIndentNo < 0) {
+                        return "calf number cannot be negative";
+                    }
+                    break;
+                case 8:
+                    data.calvingDiff = textInput;
+                    break;
+                case 9:
+                    data.condition = textInput;
                     break;
                 case 10:
                     data.remarks = textInput;
