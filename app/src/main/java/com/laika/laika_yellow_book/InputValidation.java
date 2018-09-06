@@ -22,7 +22,7 @@ public class InputValidation {
                     data.cowNum = Integer.parseInt(textInput);
 
                     if (data.cowNum < 0) {
-                        throw new ValidationError("Cow number cannot be negative");
+                        return "Cow number cannot be negative";
                     }
                     break;
                 case 1:
@@ -75,7 +75,7 @@ public class InputValidation {
                     } else if(textInput.matches("(?i)died|d")) {
                         data.fate = "D";
                     } else {
-                        return "Cow sex invalid";
+                        return "Invalid fate.";
                     }
                     break;
                 case 10:
@@ -83,11 +83,11 @@ public class InputValidation {
                     break;
             }
         }
-        catch (ValidationError validationError) {
-            return validationError.getMessage();
+        catch (NumberFormatException e) {
+            return "Invalid integer, please try again.";
         }
-        catch (Exception e) {
-            return e.getMessage();
+        catch (ParseException e) {
+            return "Invalid date format, please try again.";
         }
         return "";
     }
@@ -119,9 +119,4 @@ public class InputValidation {
         }
     }
 
-    private class ValidationError extends Throwable {
-        public ValidationError(String error) {
-            super(error);
-        }
-    }
 }
