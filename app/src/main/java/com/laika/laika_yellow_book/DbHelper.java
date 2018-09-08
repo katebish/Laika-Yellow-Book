@@ -6,11 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import java.lang.reflect.Array;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 
 public class DbHelper extends SQLiteOpenHelper{
@@ -124,4 +121,6 @@ public class DbHelper extends SQLiteOpenHelper{
         Cursor res = db.rawQuery("select * from "+TABLE_NAME + " WHERE CowNum = ?",new String[] {id});
         return res;
     }
+
+
 }
