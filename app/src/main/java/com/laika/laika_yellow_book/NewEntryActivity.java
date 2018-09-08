@@ -286,6 +286,36 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
         return hasInternet;
     }
 
+    private boolean isKeyword (View view, String text) {
+        currEditText = (EditText) view;
+        String keyword = text.trim();
+        String[] keywords = keyword.split(" ");
+        if(keywords.length == 1) {
+            switch (keyword) {
+                case "skip":
+                    if(findViewById(currEditText.getNextFocusDownId()) != null){
+                        currEditText = findViewById(currEditText.getNextFocusDownId());
+                        currEditText.requestFocus();
+                        if (!isIndividual && currEditText != null) {
+                            //read next label
+                            HashMap<String, String> map = new HashMap<String, String>();
+                            map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "label");
+                            mTTS.speak(labels[index], QUEUE_ADD, map);
+                            //pause for 1 sec before speech starts
+                            try {
+                                Thread.sleep(1000);
+                            } catch (InterruptedException ex) {
+                                android.util.Log.d("new entry", ex.toString());
+                            }
+                            askSpeechInput(currEditText);
+                        }
+                    }
+                    return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
@@ -294,63 +324,61 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
             case REQ_CODE_SPEECH_INPUT: {
                 if (resultCode == RESULT_OK && null != intent) {
                     ArrayList<String> result = intent.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                    //check keywords
+                    boolean isKeyword = isKeyword(currEditText, result.get(0));
 
-                    //check internet connection
-                    try {
-                        if(currEditText == editTexts[1]){
-                            boolean hasInternet = hasInternet();
-                            if(hasInternet) {
-                                currEditText.setText(result.get(0));
-                                currEditText.setEnabled(false);
-                                ValidateResultsAPI validateResult = new ValidateResultsAPI();
-                                validateResult.delegate = this;
-                                validateResult.execute(result.get(0));
-                            }
-                            else {
-                                Date date = inputValidation.parseDate(result.get(0));
-                                if(date == null) {
-                                    textInputLayout[1].setError("Format: first of August 2018");
+                    if(!isKeyword) {
+                        //check internet connection
+                        try {
+                            if (currEditText == editTexts[1]) {
+                                boolean hasInternet = hasInternet();
+                                if (hasInternet) {
                                     currEditText.setText(result.get(0));
+                                    currEditText.setEnabled(false);
+                                    ValidateResultsAPI validateResult = new ValidateResultsAPI();
+                                    validateResult.delegate = this;
+                                    validateResult.execute(result.get(0));
+                                } else {
+                                    Date date = inputValidation.parseDate(result.get(0));
+                                    if (date == null) {
+                                        textInputLayout[1].setError("Format: first of August 2018");
+                                        currEditText.setText(result.get(0));
+                                    } else {
+                                        data.dueCalveDate = date;
+                                        currEditText.setText(new SimpleDateFormat("yyyy-MM-dd").format(date));
+                                    }
+                                    speakResult(currEditText);
                                 }
-                                else {
-                                    data.dueCalveDate = date;
-                                    currEditText.setText(new SimpleDateFormat("yyyy-MM-dd").format(date));
+                            } else if (currEditText == editTexts[4]) {
+                                boolean hasInternet = hasInternet();
+                                if (hasInternet) {
+                                    currEditText.setText(result.get(0));
+                                    currEditText.setEnabled(false);
+                                    ValidateResultsAPI validateResult = new ValidateResultsAPI();
+                                    validateResult.delegate = this;
+                                    validateResult.execute(result.get(0));
+                                } else {
+                                    Date date = inputValidation.parseDate(result.get(0));
+                                    if (date == null) {
+                                        textInputLayout[4].setError("Format: first of August 2018");
+                                        currEditText.setText(result.get(0));
+                                    } else {
+                                        data.calvingDate = date;
+                                        currEditText.setText(new SimpleDateFormat("yyyy-MM-dd").format(date));
+                                    }
+                                    speakResult(currEditText);
                                 }
+                            } else {
+                                currEditText.setText(result.get(0));
                                 speakResult(currEditText);
                             }
+                        } catch (Exception e) {
+                            Log.e("STT", e.getMessage());
                         }
-                        else if(currEditText == editTexts[4]) {
-                            boolean hasInternet = hasInternet();
-                            if(hasInternet) {
-                                currEditText.setText(result.get(0));
-                                currEditText.setEnabled(false);
-                                ValidateResultsAPI validateResult = new ValidateResultsAPI();
-                                validateResult.delegate = this;
-                                validateResult.execute(result.get(0));
-                            }
-                            else {
-                                Date date = inputValidation.parseDate(result.get(0));
-                                if(date == null) {
-                                    textInputLayout[4].setError("Format: first of August 2018");
-                                    currEditText.setText(result.get(0));
-                                }
-                                else {
-                                    data.calvingDate = date;
-                                    currEditText.setText(new SimpleDateFormat("yyyy-MM-dd").format(date));
-                                }
-                                speakResult(currEditText);
-                            }
-                        }
-                        else {
-                            currEditText.setText(result.get(0));
-                            speakResult(currEditText);
-                        }
-                    }catch (Exception e) {
-                        Log.e("STT", e.getMessage());
                     }
                 }
-                break;
             }
+            break;
         }
     }
 
