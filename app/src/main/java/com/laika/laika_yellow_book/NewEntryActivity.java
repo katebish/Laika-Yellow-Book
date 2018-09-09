@@ -464,12 +464,12 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
         try {
             data.dueCalveDate = format.parse(output);
             currEditText.setText(format.format(data.dueCalveDate));
-            if(!currEditText.isEnabled())
-                currEditText.setEnabled(true);
             textInputLayout[i].setError(null);
+            currEditText.setEnabled(true);
             speakResult(currEditText);
         } catch (ParseException e) {
            textInputLayout[i].setError("Invalid date, please try again.");
+           currEditText.setEnabled(true);
         }
     }
 }
