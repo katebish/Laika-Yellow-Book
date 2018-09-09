@@ -60,7 +60,8 @@
                     android:imeOptions="actionNext"
                     android:inputType="date"
                     android:drawableRight="@drawable/voicebutton"
-                    android:nextFocusDown="@+id/edit_SireOfCalf"/>
+                    android:nextFocusDown="@+id/edit_SireOfCalf"
+                    android:nextFocusUp="@id/edit_CowNumber"/>
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
@@ -78,7 +79,8 @@
                     android:imeOptions="actionNext"
                     android:inputType="date"
                     android:nextFocusDown="@+id/edit_CalfBW"
-                    android:drawableRight="@drawable/voicebutton"/>
+                    android:drawableRight="@drawable/voicebutton"
+                    android:nextFocusUp="@id/edit_DueCalveDate"/>
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
@@ -96,7 +98,8 @@
                     android:imeOptions="actionNext"
                     android:inputType="numberDecimal"
                     android:nextFocusDown="@+id/edit_CalvingDate"
-                    android:drawableRight="@drawable/voicebutton"/>
+                    android:drawableRight="@drawable/voicebutton"
+                    android:nextFocusUp="@id/edit_SireOfCalf"/>
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
@@ -115,7 +118,8 @@
                     android:focusable="false"
                     android:inputType="date"
                     android:nextFocusDown="@+id/edit_Sex"
-                    android:drawableRight="@drawable/voicebutton"/>
+                    android:drawableRight="@drawable/voicebutton"
+                    android:nextFocusUp="@id/edit_CalfBW"/>
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
@@ -133,7 +137,8 @@
                     android:imeOptions="actionNext"
                     android:inputType="text"
                     android:nextFocusDown="@+id/edit_Fate"
-                    android:drawableRight="@drawable/voicebutton"/>
+                    android:drawableRight="@drawable/voicebutton"
+                    android:nextFocusUp="@id/edit_CalvingDate"/>
             </android.support.design.widget.TextInputLayout>
 
 
@@ -152,7 +157,8 @@
                     android:imeOptions="actionNext"
                     android:inputType="text"
                     android:nextFocusDown="@+id/edit_CalfID"
-                    android:drawableRight="@drawable/voicebutton"/>
+                    android:drawableRight="@drawable/voicebutton"
+                    android:nextFocusUp="@id/edit_Sex"/>
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
@@ -170,7 +176,8 @@
                     android:imeOptions="actionNext"
                     android:inputType="number"
                     android:nextFocusDown="@+id/edit_CalvingDiff"
-                    android:drawableRight="@drawable/voicebutton"/>
+                    android:drawableRight="@drawable/voicebutton"
+                    android:nextFocusUp="@id/edit_Fate"/>
             </android.support.design.widget.TextInputLayout>
 
             <TextView
@@ -198,7 +205,8 @@
                     android:imeOptions="actionNext"
                     android:inputType="text"
                     android:nextFocusDown="@+id/edit_Condition"
-                    android:drawableRight="@drawable/voicebutton"/>
+                    android:drawableRight="@drawable/voicebutton"
+                    android:nextFocusUp="@id/edit_CalfID"/>
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
@@ -216,7 +224,8 @@
                     android:imeOptions="actionNext"
                     android:inputType="text"
                     android:nextFocusDown="@+id/edit_Remarks"
-                    android:drawableRight="@drawable/voicebutton"/>
+                    android:drawableRight="@drawable/voicebutton"
+                    android:nextFocusUp="@id/edit_CalvingDiff"/>
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
@@ -233,7 +242,8 @@
                     android:hint="Remarks"
                     android:imeOptions="actionDone"
                     android:inputType="text"
-                    android:drawableRight="@drawable/voicebutton"/>
+                    android:drawableRight="@drawable/voicebutton"
+                    android:nextFocusUp="@id/edit_Condition"/>
             </android.support.design.widget.TextInputLayout>
         </LinearLayout>
     </ScrollView>
