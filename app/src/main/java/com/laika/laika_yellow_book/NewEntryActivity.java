@@ -311,9 +311,57 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
                         }
                     }
                     return true;
+                case "previous":
+                    if(findViewById(currEditText.getNextFocusUpId()) != null){
+                        currEditText = findViewById(currEditText.getNextFocusUpId());
+                        currEditText.requestFocus();
+                        if (!isIndividual && currEditText != null) {
+                            if(currEditText.getTag() != null)
+                                index = (int) currEditText.getTag();
+                            //read previous label
+                            HashMap<String, String> map = new HashMap<String, String>();
+                            map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "label");
+                            mTTS.speak(labels[index], QUEUE_ADD, map);
+                            //pause for 1 sec before speech starts
+                            try {
+                                Thread.sleep(1000);
+                            } catch (InterruptedException ex) {
+                                android.util.Log.d("new entry", ex.toString());
+                            }
+                            askSpeechInput(currEditText);
+                        }
+                    }
+                    return true;
+                case "save":
+                    boolean isSuccess = AddData(currEditText);
+                    HashMap<String, String> map = new HashMap<String, String>();
+                    map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "message");
+                    if(isSuccess) {
+                        mTTS.speak("New entry saved", QUEUE_ADD, map);
+                        clearEditText();
+                    }
+                    else{
+                        mTTS.speak("Please ensure that all fields are valid", QUEUE_ADD, map);
+                    }
+                    return true;
+                case "discard":
+                    //alert
+                    map = new HashMap<String, String>();
+                    map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "message");
+                    mTTS.speak("Current entry is discarded", QUEUE_ADD, map);
+                    data = new DataLine();
+                    clearEditText();
+                    return true;
             }
         }
         return false;
+    }
+
+    private void clearEditText() {
+        for(EditText et : editTexts) {
+            et.setText("");
+        }
+        editTexts[0].requestFocus();
     }
 
     @Override
@@ -326,55 +374,55 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
                     ArrayList<String> result = intent.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                     //check keywords
                     boolean isKeyword = isKeyword(currEditText, result.get(0));
+                    if(isKeyword)
+                        return;
 
-                    if(!isKeyword) {
-                        //check internet connection
-                        try {
-                            if (currEditText == editTexts[1]) {
-                                boolean hasInternet = hasInternet();
-                                if (hasInternet) {
-                                    currEditText.setText(result.get(0));
-                                    currEditText.setEnabled(false);
-                                    ValidateResultsAPI validateResult = new ValidateResultsAPI();
-                                    validateResult.delegate = this;
-                                    validateResult.execute(result.get(0));
-                                } else {
-                                    Date date = inputValidation.parseDate(result.get(0));
-                                    if (date == null) {
-                                        textInputLayout[1].setError("Format: first of August 2018");
-                                        currEditText.setText(result.get(0));
-                                    } else {
-                                        data.dueCalveDate = date;
-                                        currEditText.setText(new SimpleDateFormat("yyyy-MM-dd").format(date));
-                                    }
-                                    speakResult(currEditText);
-                                }
-                            } else if (currEditText == editTexts[4]) {
-                                boolean hasInternet = hasInternet();
-                                if (hasInternet) {
-                                    currEditText.setText(result.get(0));
-                                    currEditText.setEnabled(false);
-                                    ValidateResultsAPI validateResult = new ValidateResultsAPI();
-                                    validateResult.delegate = this;
-                                    validateResult.execute(result.get(0));
-                                } else {
-                                    Date date = inputValidation.parseDate(result.get(0));
-                                    if (date == null) {
-                                        textInputLayout[4].setError("Format: first of August 2018");
-                                        currEditText.setText(result.get(0));
-                                    } else {
-                                        data.calvingDate = date;
-                                        currEditText.setText(new SimpleDateFormat("yyyy-MM-dd").format(date));
-                                    }
-                                    speakResult(currEditText);
-                                }
-                            } else {
+                    //check internet connection
+                    try {
+                        if (currEditText == editTexts[1]) {
+                            boolean hasInternet = hasInternet();
+                            if (hasInternet) {
                                 currEditText.setText(result.get(0));
+                                currEditText.setEnabled(false);
+                                ValidateResultsAPI validateResult = new ValidateResultsAPI();
+                                validateResult.delegate = this;
+                                validateResult.execute(result.get(0));
+                            } else {
+                                Date date = inputValidation.parseDate(result.get(0));
+                                if (date == null) {
+                                    textInputLayout[1].setError("Format: first of August 2018");
+                                    currEditText.setText(result.get(0));
+                                } else {
+                                    data.dueCalveDate = date;
+                                    currEditText.setText(new SimpleDateFormat("yyyy-MM-dd").format(date));
+                                }
                                 speakResult(currEditText);
                             }
-                        } catch (Exception e) {
-                            Log.e("STT", e.getMessage());
+                        } else if (currEditText == editTexts[4]) {
+                            boolean hasInternet = hasInternet();
+                            if (hasInternet) {
+                                currEditText.setText(result.get(0));
+                                currEditText.setEnabled(false);
+                                ValidateResultsAPI validateResult = new ValidateResultsAPI();
+                                validateResult.delegate = this;
+                                validateResult.execute(result.get(0));
+                            } else {
+                                Date date = inputValidation.parseDate(result.get(0));
+                                if (date == null) {
+                                    textInputLayout[4].setError("Format: first of August 2018");
+                                    currEditText.setText(result.get(0));
+                                } else {
+                                    data.calvingDate = date;
+                                    currEditText.setText(new SimpleDateFormat("yyyy-MM-dd").format(date));
+                                }
+                                speakResult(currEditText);
+                            }
+                        } else {
+                            currEditText.setText(result.get(0));
+                            speakResult(currEditText);
                         }
+                    } catch (Exception e) {
+                        Log.e("STT", e.getMessage());
                     }
                 }
             }
@@ -382,18 +430,18 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
         }
     }
 
-    public void AddData(View view) {
+    public boolean AddData(View view) {
         if(editTexts[0].getText().toString().isEmpty()){
             textInputLayout[0].setError("Cow number cannot be blank!");
             editTexts[0].requestFocus();
             Toast.makeText(NewEntryActivity.this, "Error, Cow Number cannot be blank!", Toast.LENGTH_LONG).show();
-            return;
+            return false;
         }
         else if(editTexts[4].getText().toString().isEmpty()) {
             textInputLayout[4].setError("Calving date cannot be blank!");
             editTexts[4].requestFocus();
             Toast.makeText(NewEntryActivity.this, "Error, Calving Date cannot be blank!", Toast.LENGTH_LONG).show();
-            return;
+            return false;
         }
 
 
@@ -407,14 +455,18 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
             if(!TextUtils.isEmpty(layout.getError())) {
                 layout.getEditText().requestFocus();
                 Toast.makeText(NewEntryActivity.this, "Please make sure that all fields are valid!", Toast.LENGTH_LONG).show();
-                return;
+                return false;
             }
         }
         boolean isSuccessful = myDb.insertData(data.cowNum, data.dueCalveDate, data.sireOfCalf, data.calfBW, data.calvingDate, data.calvingDiff, data.condition, data.sex, data.fate, data.calfIndentNo, data.remarks);
-        if (isSuccessful)
+        if (isSuccessful) {
             Toast.makeText(NewEntryActivity.this, "Data is inserted", Toast.LENGTH_LONG).show();
-        else
+            return true;
+        }
+        else {
             Toast.makeText(NewEntryActivity.this, "Insertion failed", Toast.LENGTH_LONG).show();
+            return false;
+        }
     }
 
     private int id = 1;
