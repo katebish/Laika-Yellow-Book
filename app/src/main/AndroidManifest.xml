@@ -27,10 +27,6 @@
             android:label="New Entry"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize|adjustPan"></activity>
-        <activity
-            android:name=".SpeechTest"
-            android:label="Speech Test"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustResize|adjustPan"></activity>
         <activity android:name=".SearchResults"></activity>
     </application>
 
