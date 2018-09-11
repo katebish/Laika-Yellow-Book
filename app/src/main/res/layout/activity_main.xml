@@ -51,23 +51,6 @@
         app:layout_constraintStart_toStartOf="@+id/guidelineLHS"
         app:layout_constraintTop_toBottomOf="@+id/textViewWelcome" />
 
-    <EditText
-        android:id="@+id/editTextSearch"
-        android:layout_width="0dp"
-        android:layout_height="64dp"
-        android:layout_marginEnd="26dp"
-        android:layout_marginRight="26dp"
-        android:layout_marginTop="16dp"
-        android:ems="10"
-        android:hint="Search by cow number"
-        android:inputType="textPersonName"
-        android:selectAllOnFocus="true"
-        android:singleLine="true"
-        android:textSize="14sp"
-        app:layout_constraintEnd_toStartOf="@+id/buttonGo"
-        app:layout_constraintStart_toStartOf="@+id/guidelineLHS"
-        app:layout_constraintTop_toBottomOf="@+id/buttonMostRecent" />
-
     <Button
         android:id="@+id/buttonGo"
         android:layout_width="64dp"
@@ -77,7 +60,8 @@
         android:text="GO"
         android:textSize="24sp"
         app:layout_constraintEnd_toStartOf="@+id/guidelineRHS"
-        app:layout_constraintStart_toEndOf="@+id/editTextSearch"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/autoCompleteTextView"
         app:layout_constraintTop_toBottomOf="@+id/buttonMostRecent" />
 
     <Button
@@ -91,5 +75,23 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guidelineRHS"
         app:layout_constraintStart_toStartOf="@+id/guidelineLHS" />
+
+    <AutoCompleteTextView
+        android:id="@+id/autoCompleteTextView"
+        android:layout_width="0dp"
+        android:layout_height="64dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="16dp"
+        android:background="@android:drawable/editbox_background"
+        android:dropDownHeight="wrap_content"
+        android:hint="Search by cow number"
+        android:inputType="number"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toStartOf="@+id/buttonGo"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/guidelineLHS"
+        app:layout_constraintTop_toBottomOf="@+id/buttonMostRecent" />
+
 
 </android.support.constraint.ConstraintLayout>
