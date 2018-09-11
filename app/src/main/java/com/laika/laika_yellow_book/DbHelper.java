@@ -118,7 +118,7 @@ public class DbHelper extends SQLiteOpenHelper{
 
     public Cursor getDataByID(String id) {
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor res = db.rawQuery("select * from "+TABLE_NAME + " WHERE CowNum = ?",new String[] {id});
+        Cursor res = db.rawQuery("select * from "+TABLE_NAME + " WHERE "+ COL1 +" = ? OR " + COL10 + " = ? OR " + COL3 + " = ? ",new String[] {id,id,id});
         return res;
     }
 
