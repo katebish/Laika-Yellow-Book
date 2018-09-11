@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class DbHelper extends SQLiteOpenHelper{
@@ -120,6 +121,19 @@ public class DbHelper extends SQLiteOpenHelper{
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor res = db.rawQuery("select * from "+TABLE_NAME + " WHERE "+ COL1 +" = ? OR " + COL10 + " = ? OR " + COL3 + " = ? ",new String[] {id,id,id});
         return res;
+    }
+
+    public String[] returnIds() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor res = db.rawQuery("select "+COL1+" from "+TABLE_NAME + " WHERE 1", null);
+        res.moveToFirst();
+        ArrayList<String> ids = new ArrayList<String>();
+        while(!res.isAfterLast()) {
+            ids.add(res.getString(0));
+            res.moveToNext();
+        }
+        res.close();
+        return ids.toArray(new String[ids.size()]);
     }
 
 
