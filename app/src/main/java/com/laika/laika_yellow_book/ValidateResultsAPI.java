@@ -11,11 +11,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Iterator;
-import java.util.concurrent.ExecutionException;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -48,21 +44,22 @@ public class ValidateResultsAPI extends AsyncTask<Object, Void, String> {
 
     @Override
     protected void onPostExecute(String result) {
+        String _date = "";
         try {
             JSONObject jsob = new JSONObject(result);
-            String _date = jsob.getString("_text");
+            _date = jsob.getString("_text");
             try {
                 JSONObject entities = jsob.getJSONObject("entities");
                 Iterator<String> keys = entities.keys();
                 JSONArray curr = entities.getJSONArray(keys.next());
                 entities = curr.getJSONObject(0);
                 _date = entities.getString("value");
-                delegate.processFinish(_date);
             } catch (Exception e) {
                 Log.e("cURL", Log.getStackTraceString(e));
             }
         } catch (Exception e) {
             Log.e("cURL", Log.getStackTraceString(e));
         }
+        delegate.processFinish(_date);
     }
 }

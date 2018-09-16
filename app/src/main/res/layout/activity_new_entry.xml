@@ -7,18 +7,18 @@
     tools:context=".NewEntryActivity">
 
     <ScrollView
-        android:layout_width="353dp"
-        android:layout_height="397dp"
-        android:layout_marginBottom="32dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
         android:layout_marginEnd="24dp"
         android:layout_marginLeft="24dp"
         android:layout_marginRight="24dp"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/btn_Save"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_VoiceInput"
         app:layout_constraintVertical_bias="0.645">
 
         <LinearLayout
@@ -30,33 +30,162 @@
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/CowNumber_text_input_layout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                app:errorEnabled="true">
+
                 <EditText
                     android:id="@+id/edit_CowNumber"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:drawableRight="@drawable/voicebutton"
                     android:ems="10"
                     android:hint="Cow Number"
                     android:imeOptions="actionNext"
                     android:inputType="number"
-                    android:nextFocusDown="@+id/edit_CalfIndent"
-                    android:drawableRight="@drawable/voicebutton"/>
+                    android:nextFocusDown="@+id/edit_DueCalveDate" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/DueCalveDate_text_input_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:errorEnabled="true"
+                app:errorTextAppearance="@style/MyErrorText">
+
+                <EditText
+                    android:id="@+id/edit_DueCalveDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableRight="@drawable/voicebutton"
+                    android:ems="10"
+                    android:focusable="false"
+                    android:hint="Due Calve Date"
+                    android:imeOptions="actionNext"
+                    android:inputType="date"
+                    android:nextFocusDown="@+id/edit_SireOfCalf"
+                    android:nextFocusUp="@id/edit_CowNumber" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/SireOfCalf_text_input_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:errorEnabled="true"
+                app:errorTextAppearance="@style/MyErrorText">
+
+                <EditText
+                    android:id="@+id/edit_SireOfCalf"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableRight="@drawable/voicebutton"
+                    android:ems="10"
+                    android:hint="Sire of Calf"
+                    android:imeOptions="actionNext"
+                    android:inputType="date"
+                    android:nextFocusDown="@+id/edit_CalfBW"
+                    android:nextFocusUp="@id/edit_DueCalveDate" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/CalfBW_text_input_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:errorEnabled="true"
+                app:errorTextAppearance="@style/MyErrorText">
+
+                <EditText
+                    android:id="@+id/edit_CalfBW"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableRight="@drawable/voicebutton"
+                    android:ems="10"
+                    android:hint="Calf Birth Weight"
+                    android:imeOptions="actionNext"
+                    android:inputType="numberDecimal"
+                    android:nextFocusDown="@+id/edit_CalvingDate"
+                    android:nextFocusUp="@id/edit_SireOfCalf" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/CalvingDate_text_input_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:errorEnabled="true"
+                app:errorTextAppearance="@style/MyErrorText">
+
+                <EditText
+                    android:id="@+id/edit_CalvingDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableRight="@drawable/voicebutton"
+                    android:ems="10"
+                    android:focusable="false"
+                    android:hint="Calving Date"
+                    android:imeOptions="actionNext"
+                    android:inputType="date"
+                    android:nextFocusDown="@+id/edit_Sex"
+                    android:nextFocusUp="@id/edit_CalfBW" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/sex_text_input_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:errorEnabled="true"
+                app:errorTextAppearance="@style/MyErrorText">
+
+                <EditText
+                    android:id="@+id/edit_Sex"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableRight="@drawable/voicebutton"
+                    android:ems="10"
+                    android:hint="Sex"
+                    android:imeOptions="actionNext"
+                    android:inputType="text"
+                    android:nextFocusDown="@+id/edit_Fate"
+                    android:nextFocusUp="@id/edit_CalvingDate" />
+            </android.support.design.widget.TextInputLayout>
+
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/fate_text_input_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:errorEnabled="true"
+                app:errorTextAppearance="@style/MyErrorText">
+
+                <EditText
+                    android:id="@+id/edit_Fate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableRight="@drawable/voicebutton"
+                    android:ems="10"
+                    android:hint="Fate"
+                    android:imeOptions="actionNext"
+                    android:inputType="text"
+                    android:nextFocusDown="@+id/edit_CalfID"
+                    android:nextFocusUp="@id/edit_Sex" />
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/CalfID_text_input_layout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                app:errorEnabled="true"
+                app:errorTextAppearance="@style/MyErrorText">
+
                 <EditText
                     android:id="@+id/edit_CalfID"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:drawableRight="@drawable/voicebutton"
                     android:ems="10"
                     android:hint="Calf ID"
                     android:imeOptions="actionNext"
                     android:inputType="number"
-                    android:nextFocusDown="@+id/edit_DueCalveDate"
-                    android:drawableRight="@drawable/voicebutton"/>
+                    android:nextFocusDown="@+id/edit_CalvingDiff"
+                    android:nextFocusUp="@id/edit_Fate" />
             </android.support.design.widget.TextInputLayout>
 
             <TextView
@@ -65,151 +194,67 @@
                 android:layout_height="wrap_content"
                 android:clickable="true"
                 android:gravity="right"
-                android:labelFor="@id/edit_CalfIndent"
+                android:labelFor="@id/edit_CalfID"
                 android:onClick="AddNewCalf"
                 android:text="@string/addNewCalf" />
 
             <android.support.design.widget.TextInputLayout
-                android:id="@+id/DueCalveDate_text_input_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <EditText
-                    android:id="@+id/edit_DueCalveDate"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:hint="Due Calve Date"
-                    android:imeOptions="actionNext"
-                    android:inputType="date"
-                    android:nextFocusDown="@+id/edit_SireIfCalf"
-                    android:drawableRight="@drawable/voicebutton"/>
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/SireOfCalf_text_input_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <EditText
-                    android:id="@+id/edit_SireOfCalf"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:hint="Sire of Calf"
-                    android:imeOptions="actionNext"
-                    android:inputType="date"
-                    android:nextFocusDown="@+id/edit_CalfBW"
-                    android:drawableRight="@drawable/voicebutton"/>
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/CalfBW_text_input_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <EditText
-                    android:id="@+id/edit_CalfBW"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:hint="Calf Birth Weight"
-                    android:imeOptions="actionNext"
-                    android:inputType="numberDecimal"
-                    android:nextFocusDown="@+id/edit_CalvingDate"
-                    android:drawableRight="@drawable/voicebutton"/>
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/CalvingDate_text_input_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <EditText
-                    android:id="@+id/edit_CalvingDate"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:hint="Calving Date"
-                    android:imeOptions="actionNext"
-                    android:inputType="date"
-                    android:nextFocusDown="@+id/edit_CalvingDiff"
-                    android:drawableRight="@drawable/voicebutton"/>
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
                 android:id="@+id/CalvingDiff_text_input_layout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                app:errorEnabled="true"
+                app:errorTextAppearance="@style/MyErrorText">
+
                 <EditText
                     android:id="@+id/edit_CalvingDiff"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:drawableRight="@drawable/voicebutton"
                     android:ems="10"
                     android:hint="Calving Difficulty"
                     android:imeOptions="actionNext"
                     android:inputType="text"
                     android:nextFocusDown="@+id/edit_Condition"
-                    android:drawableRight="@drawable/voicebutton"/>
+                    android:nextFocusUp="@id/edit_CalfID" />
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/condition_text_input_layout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                app:errorEnabled="true"
+                app:errorTextAppearance="@style/MyErrorText">
+
                 <EditText
                     android:id="@+id/edit_Condition"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:drawableRight="@drawable/voicebutton"
                     android:ems="10"
                     android:hint="Condition"
                     android:imeOptions="actionNext"
                     android:inputType="text"
-                    android:nextFocusDown="@+id/edit_Sex"
-                    android:drawableRight="@drawable/voicebutton"/>
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/sex_text_input_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <EditText
-                    android:id="@+id/edit_Sex"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:hint="Sex"
-                    android:imeOptions="actionNext"
-                    android:inputType="text"
-                    android:nextFocusDown="@+id/edit_Fate"
-                    android:drawableRight="@drawable/voicebutton"/>
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/fate_text_input_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <EditText
-                    android:id="@+id/edit_Fate"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:hint="Fate"
-                    android:imeOptions="actionNext"
-                    android:inputType="text"
                     android:nextFocusDown="@+id/edit_Remarks"
-                    android:drawableRight="@drawable/voicebutton"/>
+                    android:nextFocusUp="@id/edit_CalvingDiff" />
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/remarks_text_input_layout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                app:errorEnabled="true"
+                app:errorTextAppearance="@style/MyErrorText">
+
                 <EditText
                     android:id="@+id/edit_Remarks"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:drawableRight="@drawable/voicebutton"
                     android:ems="10"
                     android:hint="Remarks"
                     android:imeOptions="actionDone"
                     android:inputType="text"
-                    android:drawableRight="@drawable/voicebutton"/>
+                    android:nextFocusUp="@id/edit_Condition" />
             </android.support.design.widget.TextInputLayout>
         </LinearLayout>
     </ScrollView>
