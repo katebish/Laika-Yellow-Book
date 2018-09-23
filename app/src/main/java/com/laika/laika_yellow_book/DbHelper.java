@@ -123,6 +123,12 @@ public class DbHelper extends SQLiteOpenHelper{
         return res;
     }
 
+    public Cursor getDataByIDCowNum(String id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor res = db.rawQuery("select * from "+TABLE_NAME + " WHERE "+ COL1 +" = ? ",new String[] {id});
+        return res;
+    }
+
     public String[] returnIds() {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor res = db.rawQuery("select "+COL1+" from "+TABLE_NAME + " WHERE 1", null);

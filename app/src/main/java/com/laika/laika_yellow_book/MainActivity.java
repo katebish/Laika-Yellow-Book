@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             String calDate = "2018-09-11";
             Date date1 = new SimpleDateFormat("yyyy-MM-dd").parse(calDate);
-            myDb.insertData(35, null, 0, 0, date1, null, null, null, null, 0, null);
+            myDb.insertData(32, null, 0, 0, date1, null, null, null, null, 0, null);
             myDb.insertData(658, null, 32, 0, date1, null, null, null, null, 116, null);
             myDb.insertData(632, null, 32, 0, date1, null, null, null, null, 119, null);
             myDb.insertData(836, null, 32, 0, date1, null, null, null, null, 125, null);
