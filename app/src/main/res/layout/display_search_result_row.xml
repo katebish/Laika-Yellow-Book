@@ -5,7 +5,7 @@
     <TextView
         android:layout_width="70dp"
         android:layout_height="match_parent"
-        android:id="@+id/t_id"
+        android:id="@+id/t_cowNum"
         android:layout_alignParentLeft="true"
         android:text="12A"
         android:gravity="center"
@@ -15,8 +15,8 @@
     <TextView
         android:layout_width="150dp"
         android:layout_height="match_parent"
-        android:id="@+id/t_name"
-        android:layout_toRightOf="@id/t_id"
+        android:id="@+id/t_sire"
+        android:layout_toRightOf="@id/t_cowNum"
         android:text="Mobile"
         android:gravity="center"
         android:textAppearance="?android:textAppearanceLarge"
@@ -25,21 +25,12 @@
     <TextView
         android:layout_width="70dp"
         android:layout_height="match_parent"
-        android:id="@+id/t_price"
-        android:layout_toRightOf="@id/t_name"
+        android:id="@+id/t_calfID"
+        android:layout_toRightOf="@id/t_sire"
         android:text="5000"
         android:gravity="center"
         android:textAppearance="?android:textAppearanceLarge"
         />
 
-    <TextView
-        android:layout_width="70dp"
-        android:layout_height="match_parent"
-        android:id="@+id/t_qty"
-        android:layout_toRightOf="@id/t_price"
-        android:text="500"
-        android:gravity="center"
-        android:textAppearance="?android:textAppearanceLarge"
-        />
 
 </RelativeLayout>
