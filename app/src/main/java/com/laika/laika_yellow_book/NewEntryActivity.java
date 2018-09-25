@@ -207,6 +207,9 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
                                     askSpeechInput(currEditText);
                                 }
                             }
+                            else if(s.equals("finish")){
+                                finish();
+                            }
                         }
 
                         @Override
@@ -290,13 +293,20 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
         String[] keywords = keyword.split(" ");
         if(keywords.length == 1) {
             switch (keyword) {
+                case "clear":
+                    currEditText.setText("");
+                    HashMap<String, String> map = new HashMap<String, String>();
+                    map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "label");
+                    mTTS.speak(labels[index], QUEUE_ADD, map);
+                    askSpeechInput(currEditText);
+                    return true;
                 case "skip":
                     if(findViewById(currEditText.getNextFocusDownId()) != null){
                         currEditText = findViewById(currEditText.getNextFocusDownId());
                         currEditText.requestFocus();
                         if (!isIndividual && currEditText != null) {
                             //read next label
-                            HashMap<String, String> map = new HashMap<String, String>();
+                            map = new HashMap<String, String>();
                             map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "label");
                             mTTS.speak(labels[index], QUEUE_ADD, map);
                             //pause for 1 sec before speech starts
@@ -317,7 +327,7 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
                             if(currEditText.getTag() != null)
                                 index = (int) currEditText.getTag();
                             //read previous label
-                            HashMap<String, String> map = new HashMap<String, String>();
+                            map = new HashMap<String, String>();
                             map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "label");
                             mTTS.speak(labels[index], QUEUE_ADD, map);
                             //pause for 1 sec before speech starts
@@ -330,15 +340,19 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
                         }
                     }
                     return true;
+                case "safe":
                 case "save":
                     boolean isSuccess = AddData(currEditText);
-                    HashMap<String, String> map = new HashMap<String, String>();
-                    map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "message");
+                    map = new HashMap<String, String>();
+                    map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "finish");
                     if(isSuccess) {
+                        Intent intent = new Intent(this, MainActivity.class);
+                        startActivity(intent);
                         mTTS.speak("New entry saved", QUEUE_ADD, map);
-                        clearEditText();
                     }
                     else{
+                        map = new HashMap<String, String>();
+                        map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "error");
                         mTTS.speak("Please ensure that all fields are valid", QUEUE_ADD, map);
                     }
                     return true;
