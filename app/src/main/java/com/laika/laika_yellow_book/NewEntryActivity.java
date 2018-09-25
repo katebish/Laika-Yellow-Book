@@ -515,7 +515,7 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
             }
         });
 
-        int pos = 3 + count;
+        int pos = 7 + count;
         id++;
         count++;
         linearLayout.addView(twinCalf, pos);

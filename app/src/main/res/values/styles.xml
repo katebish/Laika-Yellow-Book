@@ -1,5 +1,5 @@
 <resources>
-
+    px dp
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
@@ -10,18 +10,24 @@
 
     <!--Customized Button Style-->
     <style name="AppTheme.Button" parent="Widget.AppCompat.Button.Colored">
-        <item name="colorButtonNormal">@color/colorPrimary</item>
+        <item name="colorButtonNormal">@color/DarkBlue</item>
         <item name="android:textColor">@color/colorWhite</item>
     </style>
 
+    <!--TEXT FIELDS-->
     <!--Error label text style-->
     <style name="MyErrorText" parent="TextAppearance.AppCompat.Small">
-        <item name="android:textColor">@color/pink</item>
+        <item name="android:textColor">@color/red</item>
+    </style>
+
+    <!--Floating label text style-->
+    <style name="MyHintText" parent="TextAppearance.AppCompat.Small">
+        <item name="android:textColor">@color/DarkBlue</item>
     </style>
 
     <!--Input field style-->
     <style name="MyEditText" parent="Theme.AppCompat.Light">
-        <!--<item name="colorControlNormal">@color/indigo</item>-->
-        <item name="colorControlActivated">@color/pink</item>
+        <item name="colorControlNormal">@color/DarkBlue</item>
+        <item name="colorControlActivated">@color/DarkBlue</item>
     </style>
 </resources>
