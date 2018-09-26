@@ -129,6 +129,29 @@ public class DbHelper extends SQLiteOpenHelper{
         return res;
     }
 
+    public ArrayList<CowSearched> getSearchResults(String text) {
+
+        ArrayList<CowSearched> listItems = new ArrayList<CowSearched>();
+
+        Cursor cursor = getDataByIDCowNum(text);
+
+        if (cursor.moveToFirst()) {
+            do {
+                CowSearched searchInput = new CowSearched();
+
+                searchInput.cowNum = cursor.getInt(cursor.getColumnIndex("CowNum"));
+                searchInput.sire = cursor.getInt(cursor.getColumnIndex("SireOfCalf"));
+                searchInput.calfID = cursor.getInt(cursor.getColumnIndex("CalfID"));
+
+                listItems.add(searchInput);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+
+        return listItems;
+    }
+
     public String[] returnIds() {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor res = db.rawQuery("select "+COL1+" from "+TABLE_NAME + " WHERE 1", null);
