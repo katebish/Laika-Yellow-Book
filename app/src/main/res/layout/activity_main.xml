@@ -47,6 +47,7 @@
         android:layout_marginTop="64dp"
         android:text="Most Recent"
         android:textSize="18sp"
+        android:theme="@style/AppTheme.Button"
         app:layout_constraintEnd_toStartOf="@+id/guidelineRHS"
         app:layout_constraintStart_toStartOf="@+id/guidelineLHS"
         app:layout_constraintTop_toBottomOf="@+id/textViewWelcome" />
@@ -59,6 +60,7 @@
         android:onClick="SearchResults"
         android:text="GO"
         android:textSize="24sp"
+        android:theme="@style/AppTheme.Button"
         app:layout_constraintEnd_toStartOf="@+id/guidelineRHS"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/autoCompleteTextView"
@@ -72,6 +74,7 @@
         android:onClick="NewEntryPage"
         android:text="New Entry"
         android:textSize="18sp"
+        android:theme="@style/AppTheme.Button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guidelineRHS"
         app:layout_constraintStart_toStartOf="@+id/guidelineLHS" />

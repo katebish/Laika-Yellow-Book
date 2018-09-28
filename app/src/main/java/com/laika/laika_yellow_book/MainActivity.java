@@ -20,6 +20,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+    }
+    @Override
+    protected void onResume(){
+        super.onResume();
         myDb = new DbHelper(this);
 
         String[] cIds = myDb.returnIds();
@@ -30,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
         AutoCompleteTextView actv = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextView);
         actv.setThreshold(1);
         actv.setAdapter(adapter);
+        Log.d("test", "updated autocomplete");
     }
 
     public void NewEntryPage(View view) {

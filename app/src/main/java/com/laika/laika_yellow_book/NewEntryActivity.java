@@ -45,6 +45,7 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
     private boolean isIndividual = false;
     private TextInputLayout[] textInputLayout;
     private InputValidation inputValidation;
+    private int apiIndex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -206,6 +207,9 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
                                     askSpeechInput(currEditText);
                                 }
                             }
+                            else if(s.equals("finish")){
+                                finish();
+                            }
                         }
 
                         @Override
@@ -273,16 +277,14 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
     }
 
     private boolean hasInternet() {
-        boolean hasInternet;
         ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
         if(connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
                 connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
             //we are connected to a network
-            hasInternet = true;
+            return true;
+        } else {
+            return false;
         }
-        else
-            hasInternet = false;
-        return hasInternet;
     }
 
     private boolean isKeyword (View view, String text) {
@@ -291,13 +293,20 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
         String[] keywords = keyword.split(" ");
         if(keywords.length == 1) {
             switch (keyword) {
+                case "clear":
+                    currEditText.setText("");
+                    HashMap<String, String> map = new HashMap<String, String>();
+                    map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "label");
+                    mTTS.speak(labels[index], QUEUE_ADD, map);
+                    askSpeechInput(currEditText);
+                    return true;
                 case "skip":
                     if(findViewById(currEditText.getNextFocusDownId()) != null){
                         currEditText = findViewById(currEditText.getNextFocusDownId());
                         currEditText.requestFocus();
                         if (!isIndividual && currEditText != null) {
                             //read next label
-                            HashMap<String, String> map = new HashMap<String, String>();
+                            map = new HashMap<String, String>();
                             map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "label");
                             mTTS.speak(labels[index], QUEUE_ADD, map);
                             //pause for 1 sec before speech starts
@@ -318,7 +327,7 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
                             if(currEditText.getTag() != null)
                                 index = (int) currEditText.getTag();
                             //read previous label
-                            HashMap<String, String> map = new HashMap<String, String>();
+                            map = new HashMap<String, String>();
                             map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "label");
                             mTTS.speak(labels[index], QUEUE_ADD, map);
                             //pause for 1 sec before speech starts
@@ -331,15 +340,19 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
                         }
                     }
                     return true;
+                case "safe":
                 case "save":
                     boolean isSuccess = AddData(currEditText);
-                    HashMap<String, String> map = new HashMap<String, String>();
-                    map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "message");
+                    map = new HashMap<String, String>();
+                    map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "finish");
                     if(isSuccess) {
+                        Intent intent = new Intent(this, MainActivity.class);
+                        startActivity(intent);
                         mTTS.speak("New entry saved", QUEUE_ADD, map);
-                        clearEditText();
                     }
                     else{
+                        map = new HashMap<String, String>();
+                        map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "error");
                         mTTS.speak("Please ensure that all fields are valid", QUEUE_ADD, map);
                     }
                     return true;
@@ -385,6 +398,7 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
                                 currEditText.setEnabled(false);
                                 ValidateResultsAPI validateResult = new ValidateResultsAPI();
                                 validateResult.delegate = this;
+                                apiIndex = 1;
                                 validateResult.execute(result.get(0));
                             } else {
                                 Date date = inputValidation.parseDate(result.get(0));
@@ -404,6 +418,7 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
                                 currEditText.setEnabled(false);
                                 ValidateResultsAPI validateResult = new ValidateResultsAPI();
                                 validateResult.delegate = this;
+                                apiIndex = 4;
                                 validateResult.execute(result.get(0));
                             } else {
                                 Date date = inputValidation.parseDate(result.get(0));
@@ -500,7 +515,7 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
             }
         });
 
-        int pos = 3 + count;
+        int pos = 7 + count;
         id++;
         count++;
         linearLayout.addView(twinCalf, pos);
@@ -509,18 +524,24 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
     @Override
     public void processFinish(final String output) {
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        int i = -1;
-        if(currEditText.getTag()!=null)
-            i = (int) currEditText.getTag();
         try {
-            data.dueCalveDate = format.parse(output);
-            currEditText.setText(format.format(data.dueCalveDate));
-            textInputLayout[i].setError(null);
-            currEditText.setEnabled(true);
-            speakResult(currEditText);
+            if(apiIndex==1) {
+                data.dueCalveDate = format.parse(output);
+                editTexts[apiIndex].setText(format.format(data.dueCalveDate));
+                textInputLayout[apiIndex].setError(null);
+                editTexts[apiIndex].setEnabled(true);
+                speakResult(editTexts[apiIndex]);
+            } if(apiIndex==4){
+                data.calvingDate = format.parse(output);
+                editTexts[apiIndex].setText(format.format(data.calvingDate));
+                textInputLayout[apiIndex].setError(null);
+                editTexts[apiIndex].setEnabled(true);
+                speakResult(editTexts[apiIndex]);
+            }
         } catch (ParseException e) {
-           textInputLayout[i].setError("Invalid date, please try again.");
-           currEditText.setEnabled(true);
+           textInputLayout[apiIndex].setError("Invalid date, please try again.");
+           editTexts[apiIndex].setEnabled(true);
+           speakResult(editTexts[apiIndex]);
         }
     }
 }
