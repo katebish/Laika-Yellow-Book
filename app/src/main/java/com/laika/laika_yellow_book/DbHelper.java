@@ -27,6 +27,7 @@ public class DbHelper extends SQLiteOpenHelper{
     public static final String COL10 = "CalfID";
     public static final String COL11 = "Remarks";
 
+
     public DbHelper(Context context) {
         super(context, DATABASE_NAME, null, 1);
         SQLiteDatabase db = this.getWritableDatabase();
@@ -129,28 +130,6 @@ public class DbHelper extends SQLiteOpenHelper{
         return res;
     }
 
-    public ArrayList<CowSearched> getSearchResults(String text) {
-
-        ArrayList<CowSearched> listItems = new ArrayList<CowSearched>();
-
-        Cursor cursor = getDataByIDCowNum(text);
-
-        if (cursor.moveToFirst()) {
-            do {
-                CowSearched searchInput = new CowSearched();
-
-                searchInput.cowNum = cursor.getInt(cursor.getColumnIndex("CowNum"));
-                searchInput.sire = cursor.getInt(cursor.getColumnIndex("SireOfCalf"));
-                searchInput.calfID = cursor.getInt(cursor.getColumnIndex("CalfID"));
-
-                listItems.add(searchInput);
-            } while (cursor.moveToNext());
-        }
-
-        cursor.close();
-
-        return listItems;
-    }
 
     public String[] returnIds() {
         SQLiteDatabase db = this.getWritableDatabase();

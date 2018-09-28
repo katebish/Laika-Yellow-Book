@@ -27,7 +27,7 @@ public class CowSearchedAdapter extends ArrayAdapter {
 
     @Override
     public int getCount() {
-        return super.getCount();
+        return list.size();
     }
 
     @Override
@@ -51,7 +51,13 @@ public class CowSearchedAdapter extends ArrayAdapter {
         else {
             cowSearchedHolder = (cowSearchedHolder) row.getTag();
         }
-        return super.getView(position, convertView, parent);
+
+        CowSearched cowSearched = (CowSearched) getItem(position);
+        cowSearchedHolder.tx_cowNum.setText(Integer.toString(cowSearched.getCowNum()));
+        cowSearchedHolder.tx_sire.setText(Integer.toString(cowSearched.getSire()));
+        cowSearchedHolder.tx_calfID.setText(Integer.toString(cowSearched.getCalfID()));
+
+        return row;
     }
 
     static class cowSearchedHolder
