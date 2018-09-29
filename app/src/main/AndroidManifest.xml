@@ -26,7 +26,9 @@
             android:name=".NewEntryActivity"
             android:label="New Entry"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustResize"></activity>
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
+            android:theme="@style/NewEntryTheme">
+        </activity>
         <activity android:name=".SearchResults"></activity>
     </application>
 

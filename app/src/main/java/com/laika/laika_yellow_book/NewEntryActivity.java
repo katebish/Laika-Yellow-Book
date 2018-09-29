@@ -13,6 +13,7 @@ import android.speech.tts.UtteranceProgressListener;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -59,6 +60,17 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
         inputValidation.setData(data);
         editTexts = new EditText[11];
         textInputLayout = new TextInputLayout[11];
+
+        //create toolbar
+        Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mToolbar.setTitle("New Entry");
+        mToolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         //get all label values
         LinearLayout layout = findViewById(R.id.linearLayout1);
