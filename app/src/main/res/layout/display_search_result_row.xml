@@ -3,34 +3,60 @@
     android:layout_width="match_parent" android:layout_height="75dp">
 
     <TextView
-        android:layout_width="100dp"
-        android:layout_height="match_parent"
         android:id="@+id/t_cowNum"
-        android:layout_alignParentLeft="true"
+        android:layout_width="74dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/CowNumLabel"
+        android:gravity="center"
         android:text="CowNUM"
-        android:gravity="center"
-        android:textAppearance="?android:textAppearanceLarge"
-        />
+        android:textAppearance="?android:textAppearanceLarge" />
 
     <TextView
-        android:layout_width="100dp"
-        android:layout_height="match_parent"
         android:id="@+id/t_sire"
-        android:layout_toRightOf="@id/t_cowNum"
-        android:text="SIRE"
+        android:layout_width="75dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/SireLabel"
         android:gravity="center"
-        android:textAppearance="?android:textAppearanceLarge"
-        />
+        android:text="SIRE"
+        android:textAppearance="?android:textAppearanceLarge" />
 
     <TextView
-        android:layout_width="100dp"
-        android:layout_height="match_parent"
         android:id="@+id/t_calfID"
-        android:layout_toRightOf="@id/t_sire"
-        android:text="CalfID"
+        android:layout_width="75dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
         android:gravity="center"
-        android:textAppearance="?android:textAppearanceLarge"
-        />
+        android:text="CalfID"
+        android:textAppearance="?android:textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/CowNumLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="11dp"
+        android:text="Cow Num:" />
+
+    <TextView
+        android:id="@+id/SireLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="158dp"
+        android:text="Sire:" />
+
+    <TextView
+        android:id="@+id/CalfIDLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="267dp"
+        android:text="CalfID:" />
 
 
 </RelativeLayout>
