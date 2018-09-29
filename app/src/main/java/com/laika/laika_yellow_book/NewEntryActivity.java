@@ -1,6 +1,7 @@
 package com.laika.laika_yellow_book;
 
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -349,6 +350,7 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
                         Intent intent = new Intent(this, MainActivity.class);
                         startActivity(intent);
                         mTTS.speak("New entry saved", QUEUE_ADD, map);
+
                     }
                     else{
                         map = new HashMap<String, String>();
@@ -375,6 +377,7 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
         }
         editTexts[0].requestFocus();
     }
+    boolean isKeyword = false;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
@@ -385,7 +388,7 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
                 if (resultCode == RESULT_OK && null != intent) {
                     ArrayList<String> result = intent.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                     //check keywords
-                    boolean isKeyword = isKeyword(currEditText, result.get(0));
+                    isKeyword = isKeyword(currEditText, result.get(0));
                     if(isKeyword)
                         return;
 
@@ -458,7 +461,6 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
             return false;
         }
 
-
         String input = currEditText.getText().toString();
         if (!input.isEmpty()) {
             currEditText.getOnFocusChangeListener().onFocusChange(currEditText,false);
@@ -474,7 +476,9 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
         }
         boolean isSuccessful = myDb.insertData(data.cowNum, data.dueCalveDate, data.sireOfCalf, data.calfBW, data.calvingDate, data.calvingDiff, data.condition, data.sex, data.fate, data.calfIndentNo, data.remarks);
         if (isSuccessful) {
-            Toast.makeText(NewEntryActivity.this, "Data is inserted", Toast.LENGTH_LONG).show();
+            if(!isKeyword)
+                openDialog();
+            clearEditText();
             return true;
         }
         else {
@@ -543,5 +547,11 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
            editTexts[apiIndex].setEnabled(true);
            speakResult(editTexts[apiIndex]);
         }
+    }
+
+    private void openDialog() {
+        PopupDialog dialog = new PopupDialog();
+        dialog.setContext(this);
+        dialog.show(getSupportFragmentManager(), "popup dialog");
     }
 }
