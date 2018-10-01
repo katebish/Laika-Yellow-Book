@@ -26,8 +26,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import org.json.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -46,6 +48,7 @@ public class SpeechTest extends AppCompatActivity {
         }
         speechR = SpeechRecognizer.createSpeechRecognizer(this);
         speechR.setRecognitionListener(new SpeechListener());
+
     }
 
     //Starts android speech on button click
@@ -81,10 +84,22 @@ public class SpeechTest extends AppCompatActivity {
 
         @Override
         public void onResults(Bundle results) {
+            ArrayList<String> data = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
             TextView textV = (TextView) findViewById(R.id.TextView);
-            String all = (String) textV.getText();
-            all += " END";
+            String all = "";
+            HashMap<String, String> vals = Parser.parse(data.get(0));
+            if(vals != null) {
+                for (String key : vals.keySet()) {
+                    all += key;
+                    all += " ";
+                    all += vals.get(key);
+                }
+            }
+            all += data;
             textV.setText(all);
+            //String all = (String) textV.getText();
+            //all += " END";
+            //textV.setText(all);
         }
 
         @Override
@@ -117,9 +132,12 @@ public class SpeechTest extends AppCompatActivity {
                 speechR.stopListening();
                 textV.setText("END?");
             }
-            String all = (String) textV.getText();
-            if(!data.isEmpty()) {
-                all = " "+data.get(0);
+            String all = "";
+            HashMap<String, String> vals = Parser.parse(data.get(0));
+            for(String key : vals.keySet()){
+                all += key;
+                all += " ";
+                all += vals.get(key);
             }
             textV.setText(all);
         }
