@@ -1,10 +1,14 @@
 package com.laika.laika_yellow_book;
 
 
+import android.Manifest;
 import android.content.ActivityNotFoundException;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.speech.RecognitionListener;
 import android.speech.SpeechRecognizer;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
@@ -36,6 +40,10 @@ public class SpeechTest extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_speechtest);
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO},99);
+        }
         speechR = SpeechRecognizer.createSpeechRecognizer(this);
         speechR.setRecognitionListener(new SpeechListener());
     }
