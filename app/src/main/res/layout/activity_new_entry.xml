@@ -236,6 +236,29 @@
                     android:inputType="number"
                     android:nextFocusDown="@+id/edit_CalvingDiff"
                     android:nextFocusUp="@id/edit_Fate" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/twin1"
+                        android:visibility="gone"
+                        android:layout_marginRight="20dp" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        android:id="@+id/twin2"
+                        android:layout_marginRight="20dp"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        android:id="@+id/twin3"
+                        android:layout_marginRight="20dp"/>
+                </LinearLayout>
             </android.support.design.widget.TextInputLayout>
 
             <TextView
@@ -246,7 +269,6 @@
                 android:gravity="right"
                 android:theme="@style/MyEditText"
                 android:labelFor="@id/edit_CalfID"
-                android:onClick="AddNewCalf"
                 android:text="@string/addNewCalf" />
 
             <android.support.design.widget.TextInputLayout

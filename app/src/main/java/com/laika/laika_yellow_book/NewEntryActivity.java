@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -11,6 +12,7 @@ import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
 import android.support.design.widget.TextInputLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -18,11 +20,13 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -36,7 +40,7 @@ import java.util.Locale;
 import static android.speech.tts.TextToSpeech.QUEUE_ADD;
 
 
-public class NewEntryActivity extends AppCompatActivity implements AsyncResponse {
+public class NewEntryActivity extends AppCompatActivity implements AsyncResponse,TwinCalfDialogListener {
     private DbHelper myDb;
     private TextToSpeech mTTS;
     private String[] labels;
@@ -48,6 +52,7 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
     private TextInputLayout[] textInputLayout;
     private InputValidation inputValidation;
     private int apiIndex;
+    private ArrayList<DataLine> twins;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,11 +60,20 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
         setContentView(R.layout.activity_new_entry);
         myDb = new DbHelper(this);
         data = new DataLine();
+        twins = new ArrayList<DataLine>();
 
         inputValidation = new InputValidation();
         inputValidation.setData(data);
         editTexts = new EditText[11];
         textInputLayout = new TextInputLayout[11];
+
+        TextView addTwinCalf = findViewById(R.id.tv_addTwinCalf);
+        addTwinCalf.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openTwinCalfDialog();
+            }
+        });
 
         //create toolbar
         Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -499,42 +513,10 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
         }
     }
 
-    private int id = 1;
-    private int count = 1;
-    public void AddNewCalf(View view) {
-        if (count > 3) {
-            Toast.makeText(NewEntryActivity.this, "Max of four twin calves allowed!", Toast.LENGTH_LONG).show();
-            return;
-        }
-        final EditText twinCalf = new EditText(this);
-        final LinearLayout linearLayout = (LinearLayout) findViewById(R.id.linearLayout1);
-        twinCalf.setLayoutParams(new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-        ));
-        twinCalf.setEms(10);
-        twinCalf.setHint("Twin Calf ID");
-        twinCalf.setId(id);
-        twinCalf.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.closs_button, 0);
-        twinCalf.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
-                    if (motionEvent.getRawX() >= (twinCalf.getRight() - twinCalf.getCompoundDrawables()[2].getBounds().width())) {
-                        // your action here
-                        linearLayout.removeView(twinCalf);
-                        count--;
-                        return true;
-                    }
-                }
-                return false;
-            }
-        });
-
-        int pos = 7 + count;
-        id++;
-        count++;
-        linearLayout.addView(twinCalf, pos);
+    private void openDialog() {
+        PopupDialog dialog = new PopupDialog();
+        dialog.setContext(this);
+        dialog.show(getSupportFragmentManager(), "popup dialog");
     }
 
     @Override
@@ -561,9 +543,28 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
         }
     }
 
-    private void openDialog() {
-        PopupDialog dialog = new PopupDialog();
-        dialog.setContext(this);
-        dialog.show(getSupportFragmentManager(), "popup dialog");
+    private void openTwinCalfDialog(){
+        TwinCalfDialog twinCalfDialog = new TwinCalfDialog();
+        twinCalfDialog.show(getSupportFragmentManager(), "twin dialog");
+    }
+    int count = 0;
+    @Override
+    public void passData(int calfID, String calfSex, Double calfBW, String calfCondition) {
+        switch (count) {
+            case 0:
+                TextView twin = findViewById(R.id.twin1);
+                twin.setText(calfID);
+                break;
+            case 1:
+                twin = findViewById(R.id.twin2);
+                twin.setText(calfID);
+                break;
+            case 2:
+                twin = findViewById(R.id.twin3);
+                twin.setText(calfID);
+                break;
+        }
+        DataLine twin = new DataLine(data.cowNum, data.dueCalveDate,data.sireOfCalf,calfBW,data.calvingDate,data.calvingDiff,calfCondition,calfSex,data.fate,calfID,data.remarks);
+        twins.add(twin);
     }
 }

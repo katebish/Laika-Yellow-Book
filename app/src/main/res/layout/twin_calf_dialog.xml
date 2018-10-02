@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/CalfID_text_input_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:errorEnabled="true"
+        app:errorTextAppearance="@style/MyErrorText"
+        app:hintTextAppearance="@style/MyHintText">
+
+        <EditText
+            android:id="@+id/edit_TwinCalfID"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableRight="@drawable/voicebutton"
+            android:ems="10"
+            android:hint="Calf ID"
+            android:theme="@style/MyEditText"
+            android:imeOptions="actionNext"
+            android:inputType="number"
+            android:nextFocusDown="@+id/edit_CalvingDiff"
+            android:nextFocusUp="@id/edit_Fate" />
+    </android.support.design.widget.TextInputLayout>
+
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/sex_text_input_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:errorEnabled="true"
+        app:errorTextAppearance="@style/MyErrorText"
+        app:hintTextAppearance="@style/MyHintText">
+
+        <EditText
+            android:id="@+id/edit_TwinSex"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableRight="@drawable/voicebutton"
+            android:ems="10"
+            android:hint="Sex"
+            android:theme="@style/MyEditText"
+            android:imeOptions="actionNext"
+            android:inputType="text"
+            android:nextFocusDown="@+id/edit_Fate"
+            android:nextFocusUp="@id/edit_CalvingDate" />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/CalfBW_text_input_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:errorEnabled="true"
+        app:errorTextAppearance="@style/MyErrorText"
+        app:hintTextAppearance="@style/MyHintText">
+
+        <EditText
+            android:id="@+id/edit_TwinCalfBW"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableRight="@drawable/voicebutton"
+            android:ems="10"
+            android:hint="Calf Birth Weight"
+            android:theme="@style/MyEditText"
+            android:imeOptions="actionNext"
+            android:inputType="numberDecimal"
+            android:nextFocusDown="@+id/edit_CalvingDate"
+            android:nextFocusUp="@id/edit_SireOfCalf" />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/condition_text_input_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:errorEnabled="true"
+        app:errorTextAppearance="@style/MyErrorText"
+        app:hintTextAppearance="@style/MyHintText">
+
+        <EditText
+            android:id="@+id/edit_TwinCondition"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableRight="@drawable/voicebutton"
+            android:ems="10"
+            android:hint="Condition"
+            android:theme="@style/MyEditText"
+            android:imeOptions="actionNext"
+            android:inputType="text"
+            android:nextFocusDown="@+id/edit_Remarks"
+            android:nextFocusUp="@id/edit_CalvingDiff" />
+    </android.support.design.widget.TextInputLayout>
+
+
+</LinearLayout>
