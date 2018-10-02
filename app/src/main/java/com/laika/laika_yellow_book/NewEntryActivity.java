@@ -1,15 +1,21 @@
 package com.laika.laika_yellow_book;
 
+import android.Manifest;
 import android.app.DatePickerDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
+import android.speech.SpeechRecognizer;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -21,6 +27,7 @@ import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -46,6 +53,8 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
     private TextInputLayout[] textInputLayout;
     private InputValidation inputValidation;
     private int apiIndex;
+    /*SPEECH TEST*/
+    private SpeechRecognizer speechR;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +67,13 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
         inputValidation.setData(data);
         editTexts = new EditText[11];
         textInputLayout = new TextInputLayout[11];
+
+        /*SPEECH TEST*/
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO},99);
+        }
+        speechR = SpeechRecognizer.createSpeechRecognizer(this);
+        speechR.setRecognitionListener(new SpeechListener());
 
         //get all label values
         LinearLayout layout = findViewById(R.id.linearLayout1);
@@ -528,6 +544,140 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
            textInputLayout[apiIndex].setError("Invalid date, please try again.");
            editTexts[apiIndex].setEnabled(true);
            speakResult(editTexts[apiIndex]);
+        }
+    }
+
+    /*SPEECH TEST*/
+    //Starts android speech on button click
+    public void startSpeech(View view) {
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+        intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 2);
+        intent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true);
+        intent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS, 2000);
+        intent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS, 2000);
+
+        speechR.startListening(intent);
+    }
+
+    class SpeechListener implements RecognitionListener {
+
+        @Override
+        public void onEndOfSpeech() {
+            //need to implement this
+            Log.d("Speech End", "True");
+        }
+
+        @Override
+        public void onReadyForSpeech(Bundle results) {
+            //need to implement this
+        }
+
+        @Override
+        public void onBufferReceived(byte[] b) {
+            //need to implement this
+        }
+
+        @Override
+        public void onResults(Bundle results) {
+            //Not implimented
+            //String all = (String) textV.getText();
+            //all += " END";
+            //textV.setText(all);
+        }
+
+        @Override
+        public void onError(int error) {
+            //need to implement
+            Log.d("Speech Error", Integer.toString(error));
+        }
+
+        @Override
+        public void onRmsChanged(float rms) {
+            //need to implement
+        }
+
+        @Override
+        public void onEvent(int bundle, Bundle results) {
+            //need to implement
+        }
+
+        @Override
+        public void onBeginningOfSpeech() {
+            //need to implement
+            Log.d("Speech Start", "True");
+        }
+
+        @Override
+        public void onPartialResults(Bundle results) {
+            ArrayList<String> data = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+            TextView textV = (TextView) findViewById(R.id.TextView);
+            if(!data.isEmpty()&&data.get(0).matches("(?i)submit")){
+                speechR.stopListening();
+                Toast.makeText(NewEntryActivity.this, "Speech Ended", Toast.LENGTH_SHORT).show();
+            }
+            String all = "";
+            HashMap<String, String> vals = Parser.parse(data.get(0));
+            for(String key : vals.keySet()){
+                switch (key) {
+                    case "cow number":
+                        editTexts[0].requestFocus();
+                        editTexts[0].setText(vals.get(key));
+                        editTexts[0].clearFocus();
+                        break;
+                    case "calf due date":
+                        editTexts[1].requestFocus();
+                        editTexts[1].setText(vals.get(key));
+                        editTexts[1].clearFocus();
+                        break;
+                    case "sire":
+                        editTexts[2].requestFocus();
+                        editTexts[2].setText(vals.get(key));
+                        editTexts[2].clearFocus();
+                        break;
+                    case "bw":
+                        editTexts[3].requestFocus();
+                        editTexts[3].setText(vals.get(key));
+                        editTexts[3].clearFocus();
+                        break;
+                    case "calving date":
+                        editTexts[4].requestFocus();
+                        editTexts[4].setText(vals.get(key));
+                        editTexts[4].clearFocus();
+                        break;
+                    case "sex":
+                        editTexts[5].requestFocus();
+                        editTexts[5].setText(vals.get(key));
+                        editTexts[5].clearFocus();
+                        break;
+                    case "fate":
+                        editTexts[6].requestFocus();
+                        editTexts[6].setText(vals.get(key));
+                        editTexts[6].clearFocus();
+                        break;
+                    case "calf number":
+                        editTexts[7].requestFocus();
+                        editTexts[7].setText(vals.get(key));
+                        editTexts[7].clearFocus();
+                        break;
+                    case "difficulty":
+                        editTexts[8].requestFocus();
+                        editTexts[8].setText(vals.get(key));
+                        editTexts[8].clearFocus();
+                        break;
+                    case "condition":
+                        editTexts[9].requestFocus();
+                        editTexts[9].setText(vals.get(key));
+                        editTexts[9].clearFocus();
+                        break;
+                    case "remarks":
+                        editTexts[10].requestFocus();
+                        editTexts[10].setText(vals.get(key));
+                        editTexts[10].clearFocus();
+                        break;
+                }
+            }
         }
     }
 }
