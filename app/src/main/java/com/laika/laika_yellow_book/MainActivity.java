@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
         actv.setAdapter(adapter);
 
 
+        //Inserting some test data on load, used to test search function
         try {
             String calDate = "2018-09-11";
             Date date1 = new SimpleDateFormat("yyyy-MM-dd").parse(calDate);
