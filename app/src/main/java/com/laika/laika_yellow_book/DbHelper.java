@@ -27,6 +27,7 @@ public class DbHelper extends SQLiteOpenHelper{
     public static final String COL10 = "CalfID";
     public static final String COL11 = "Remarks";
 
+
     public DbHelper(Context context) {
         super(context, DATABASE_NAME, null, 1);
         SQLiteDatabase db = this.getWritableDatabase();
@@ -122,6 +123,13 @@ public class DbHelper extends SQLiteOpenHelper{
         Cursor res = db.rawQuery("select * from "+TABLE_NAME + " WHERE "+ COL1 +" = ? OR " + COL10 + " = ? OR " + COL3 + " = ? ",new String[] {id,id,id});
         return res;
     }
+
+    public Cursor getDataByIDCowNum(String id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor res = db.rawQuery("select * from "+TABLE_NAME + " WHERE "+ COL1 +" = ? ",new String[] {id});
+        return res;
+    }
+
 
     public String[] returnIds() {
         SQLiteDatabase db = this.getWritableDatabase();
