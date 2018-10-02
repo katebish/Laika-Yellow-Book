@@ -236,40 +236,53 @@
                     android:inputType="number"
                     android:nextFocusDown="@+id/edit_CalvingDiff"
                     android:nextFocusUp="@id/edit_Fate" />
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/twin1"
-                        android:visibility="gone"
-                        android:layout_marginRight="20dp" />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:visibility="gone"
-                        android:id="@+id/twin2"
-                        android:layout_marginRight="20dp"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:visibility="gone"
-                        android:id="@+id/twin3"
-                        android:layout_marginRight="20dp"/>
-                </LinearLayout>
-            </android.support.design.widget.TextInputLayout>
 
-            <TextView
-                android:id="@+id/tv_addTwinCalf"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clickable="true"
-                android:gravity="right"
-                android:theme="@style/MyEditText"
-                android:labelFor="@id/edit_CalfID"
-                android:text="@string/addNewCalf" />
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:padding="10dp">
+
+                    <TextView
+                        android:id="@+id/twin1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentTop="true"
+                        android:clickable="true"
+                        android:theme="@style/MyEditText"/>
+
+                    <TextView
+                        android:id="@+id/twin2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginLeft= "50dp"
+                        android:clickable="true"
+                        android:theme="@style/MyEditText"/>
+
+                    <TextView
+                        android:id="@+id/twin3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginLeft= "100dp"
+                        android:clickable="true"
+                        android:theme="@style/MyEditText"/>
+
+                    <TextView
+                        android:id="@+id/tv_addTwinCalf"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight = "true"
+                        android:clickable="true"
+                        android:labelFor="@id/edit_CalfID"
+                        android:text="@string/addNewCalf"
+                        android:theme="@style/MyEditText" />
+
+                </RelativeLayout>
+            </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/CalvingDiff_text_input_layout"

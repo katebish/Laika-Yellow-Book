@@ -53,6 +53,7 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
     private InputValidation inputValidation;
     private int apiIndex;
     private ArrayList<DataLine> twins;
+    private int twinCount = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,12 +70,14 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
 
         TextView addTwinCalf = findViewById(R.id.tv_addTwinCalf);
         addTwinCalf.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+                @Override
+                public void onClick(View view) {
+            if(twinCount < 3)
                 openTwinCalfDialog();
-            }
+            else
+                Toast.makeText(NewEntryActivity.this, "Max of 3 twin calves allowed", Toast.LENGTH_LONG).show();
+                }
         });
-
         //create toolbar
         Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mToolbar.setTitle("New Entry");
@@ -102,7 +105,6 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
 
         setDateTimePicker(editTexts[1],1);
         setDateTimePicker(editTexts[4],4);
-
 
         int tag = 0;
         for (final EditText et : editTexts) {
@@ -547,23 +549,29 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
         TwinCalfDialog twinCalfDialog = new TwinCalfDialog();
         twinCalfDialog.show(getSupportFragmentManager(), "twin dialog");
     }
-    int count = 0;
+
     @Override
     public void passData(int calfID, String calfSex, Double calfBW, String calfCondition) {
-        switch (count) {
+        String id = String.valueOf(calfID);
+        switch (twinCount) {
             case 0:
-                TextView twin = findViewById(R.id.twin1);
-                twin.setText(calfID);
+                TextView twin1 = findViewById(R.id.twin1);
+                twin1.setVisibility(View.VISIBLE);
+                twin1.setText(id);
                 break;
             case 1:
-                twin = findViewById(R.id.twin2);
-                twin.setText(calfID);
+                TextView twin2 = findViewById(R.id.twin2);
+                twin2.setVisibility(View.VISIBLE);
+                twin2.setText(id);
                 break;
             case 2:
-                twin = findViewById(R.id.twin3);
-                twin.setText(calfID);
+                TextView twin3 = findViewById(R.id.twin3);
+                twin3.setVisibility(View.VISIBLE);
+                twin3.setText(id);
                 break;
         }
+        twinCount++;
+        editTexts[8].requestFocus();
         DataLine twin = new DataLine(data.cowNum, data.dueCalveDate,data.sireOfCalf,calfBW,data.calvingDate,data.calvingDiff,calfCondition,calfSex,data.fate,calfID,data.remarks);
         twins.add(twin);
     }

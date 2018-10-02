@@ -24,6 +24,11 @@ public class TwinCalfDialog extends AppCompatDialogFragment {
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.twin_calf_dialog, null);
 
+        calfID = view.findViewById(R.id.edit_TwinCalfID);
+        calfSex = view.findViewById(R.id.edit_TwinSex);
+        calfBW = view.findViewById(R.id.edit_TwinCalfBW);
+        calfCondition = view.findViewById(R.id.edit_TwinCondition);
+
         builder.setView(view)
             .setTitle("Twin Calves")
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -34,19 +39,24 @@ public class TwinCalfDialog extends AppCompatDialogFragment {
                 .setPositiveButton("Save", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        int ID = Integer.parseInt(calfID.getText().toString());
-                        String sex = calfSex.getText().toString();
-                        Double BW = Double.parseDouble(calfBW.getText().toString());
-                        String condition = calfCondition.getText().toString();
+                        int ID = -1;
+                        String sex = "";
+                        Double BW = 0.0;
+                        String condition = "";
+                        try {
+                            if(!calfID.getText().toString().isEmpty())
+                                ID = Integer.parseInt(calfID.getText().toString());
+                            if(!calfBW.getText().toString().isEmpty())
+                                BW = Double.parseDouble(calfBW.getText().toString());
+                            sex = calfSex.getText().toString();
+                            condition = calfCondition.getText().toString();
+                        } catch (NumberFormatException e) {
+                            e.printStackTrace();
+                        }
 
                         listener.passData(ID, sex, BW, condition);
                     }
                 });
-
-        calfID = view.findViewById(R.id.edit_TwinCalfID);
-        calfSex = view.findViewById(R.id.edit_TwinSex);
-        calfBW = view.findViewById(R.id.edit_TwinCalfBW);
-        calfCondition = view.findViewById(R.id.edit_TwinCondition);
 
         return builder.create();
     }
@@ -54,12 +64,10 @@ public class TwinCalfDialog extends AppCompatDialogFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
         try {
             listener = (TwinCalfDialogListener) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString() + "must implement TwinDialogListener");
         }
-
     }
 }
