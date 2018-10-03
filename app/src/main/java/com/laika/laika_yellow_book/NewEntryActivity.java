@@ -56,6 +56,21 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_entry);
+
+        if (getIntent().hasExtra("id")) {
+            String text = getIntent().getExtras().getString("id");
+            Toast toast = Toast.makeText(getApplicationContext(),
+                    "kate",
+                    Toast.LENGTH_LONG);
+
+            toast.show();
+
+        }
+
+
+
+
+
         myDb = new DbHelper(this);
         data = new DataLine();
         twins = new ArrayList<DataLine>();

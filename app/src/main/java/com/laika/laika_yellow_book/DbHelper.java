@@ -137,7 +137,6 @@ public class DbHelper extends SQLiteOpenHelper{
     public Cursor getMostRecentData() {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor res = db.query(TABLE_NAME,null,null,null,null,null,COL12 + " DESC","6");
-
         return res;
     }
 

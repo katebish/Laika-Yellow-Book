@@ -31,6 +31,7 @@
         </activity>
         <activity android:name=".SearchResults"></activity>
         <activity android:name=".MostRecent"></activity>
+        <activity android:name=".UpdateDelete"></activity>
     </application>
 
 </manifest>

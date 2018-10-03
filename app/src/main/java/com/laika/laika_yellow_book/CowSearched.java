@@ -2,15 +2,17 @@ package com.laika.laika_yellow_book;
 
 public class CowSearched {
 
-    public int cowNum, sire, calfID;
+    public int cowNum, sire, calfID, rowID;
 
 
-    public CowSearched(int cowNum, int sire, int calfID)
+    public CowSearched(int cowNum, int sire, int calfID, int rowID)
     {
         this.setCowNum(cowNum);
         this.setSire(sire);
         this.setCalfID(calfID);
+        this.setRowID(rowID);
     }
+
 
     public int getCowNum() {
         return cowNum;
@@ -34,5 +36,11 @@ public class CowSearched {
 
     public void setCalfID(int calfID) {
         this.calfID = calfID;
+    }
+
+    public int getRowID() { return rowID; }
+
+    public void setRowID(int rowID) {
+        this.rowID = rowID;
     }
 }

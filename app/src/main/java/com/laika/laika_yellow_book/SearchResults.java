@@ -4,6 +4,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -46,20 +47,34 @@ public class SearchResults extends AppCompatActivity {
 
     public void getSearchResults(String text) {
         listview = (ListView) findViewById(R.id.display_listview);
+        //listview.setOnItemClickListener(this);
         Cursor cursor = myDb.getDataByID(text);
         cowSearchedAdapter = new CowSearchedAdapter(this,R.layout.display_search_result_row);
-        int cowNum, sire, calfID;
+        int cowNum, sire, calfID, rowID;
 
         while (cursor.moveToNext()) {
             cowNum = cursor.getInt(cursor.getColumnIndex("CowNum"));
             sire = cursor.getInt(cursor.getColumnIndex("SireOfCalf"));
             calfID = cursor.getInt(cursor.getColumnIndex("CalfID"));
+            rowID = cursor.getInt(cursor.getColumnIndex("ID"));
 
-            CowSearched cowSearched = new CowSearched(cowNum,sire,calfID);
+            CowSearched cowSearched = new CowSearched(cowNum,sire,calfID,rowID);
             cowSearchedAdapter.add(cowSearched);
         }
 
         listview.setAdapter(cowSearchedAdapter);
+
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                int itemPosition = position;
+                CowSearched value = (CowSearched) listview.getItemAtPosition(position);
+                value.getRowID();
+
+
+                //Next step put extra intent pass to new entry
+            }
+        });
 
     }
 

@@ -22,14 +22,15 @@ public class MostRecent extends AppCompatActivity {
         listview = (ListView) findViewById(R.id.display_most_recent_listview);
         Cursor cursor = myDb.getMostRecentData();
         cowSearchedAdapter = new CowSearchedAdapter(this,R.layout.display_search_result_row);
-        int cowNum, sire, calfID;
+        int cowNum, sire, calfID, id;
 
         while (cursor.moveToNext()) {
             cowNum = cursor.getInt(cursor.getColumnIndex("CowNum"));
             sire = cursor.getInt(cursor.getColumnIndex("SireOfCalf"));
             calfID = cursor.getInt(cursor.getColumnIndex("CalfID"));
+            id = cursor.getInt(cursor.getColumnIndex("ID"));
 
-            CowSearched cowSearched = new CowSearched(cowNum,sire,calfID);
+            CowSearched cowSearched = new CowSearched(cowNum,sire,calfID,id);
             cowSearchedAdapter.add(cowSearched);
         }
 
