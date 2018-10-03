@@ -8,10 +8,6 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 public class MainActivity extends AppCompatActivity {
     private DbHelper myDb;
 
@@ -36,21 +32,27 @@ public class MainActivity extends AppCompatActivity {
 
 
         //Inserting some test data on load, used to test search function
-        try {
-            String calDate = "2018-09-11";
-            Date date1 = new SimpleDateFormat("yyyy-MM-dd").parse(calDate);
-            myDb.insertData(32, null, 0, 0, date1, null, null, null, null, 0, null);
-            myDb.insertData(658, null, 32, 0, date1, null, null, null, null, 116, null);
-            myDb.insertData(632, null, 32, 0, date1, null, null, null, null, 119, null);
-            myDb.insertData(836, null, 32, 0, date1, null, null, null, null, 125, null);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            String calDate = "2018-09-11";
+//            Date date1 = new SimpleDateFormat("yyyy-MM-dd").parse(calDate);
+//
+//            myDb.insertData(32, null, 35, 0, date1, "k", null, null, null, 0, null);
+//            myDb.insertData(658, null, 32, 0, date1, null, null, null, null, 116, null);
+//            myDb.insertData(632, null, 32, 0, date1, null, null, null, null, 119, null);
+//            myDb.insertData(836, null, 32, 0, date1, null, null, null, null, 125, null);
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
 
     }
 
     public void NewEntryPage(View view) {
         Intent intent = new Intent(this, NewEntryActivity.class);
+        startActivity(intent);
+    }
+
+    public void MostRecent(View view) {
+        Intent intent = new Intent(this, MostRecent.class);
         startActivity(intent);
     }
 
@@ -64,5 +66,7 @@ public class MainActivity extends AppCompatActivity {
 
         startActivity(intent);
     }
+
+
 
 }

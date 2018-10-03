@@ -26,6 +26,8 @@ public class DbHelper extends SQLiteOpenHelper{
     public static final String COL9 = "Fate";
     public static final String COL10 = "CalfID";
     public static final String COL11 = "Remarks";
+    public static final String COL12 = "Time";
+
 
 
     public DbHelper(Context context) {
@@ -35,7 +37,7 @@ public class DbHelper extends SQLiteOpenHelper{
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        sqLiteDatabase.execSQL("CREATE TABLE " + TABLE_NAME + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, "+COL1+" INTEGER, "+COL2+" DATE, "+COL3+" INTEGER, "+COL4+" DOUBLE, "+COL5+" DATE, "+COL6+" TEXT, "+COL7+" TEXT, "+COL8+" TEXT, "+COL9+" TEXT, "+COL10+" INTEGER, "+COL11+" TEXT)");
+        sqLiteDatabase.execSQL("CREATE TABLE " + TABLE_NAME + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, "+COL1+" INTEGER, "+COL2+" DATE, "+COL3+" INTEGER, "+COL4+" DOUBLE, "+COL5+" DATE, "+COL6+" TEXT, "+COL7+" TEXT, "+COL8+" TEXT, "+COL9+" TEXT, "+COL10+" INTEGER, "+COL11+" TEXT, "+COL12+" String)");
     }
 
     @Override
@@ -47,7 +49,8 @@ public class DbHelper extends SQLiteOpenHelper{
     public boolean insertData(int CowNum, Date DueCalveDate, int SireOfCalf, double CalfBW, Date CalvingDate, String CalvingDiff, String Condition, String Sex, String Fate, int CalfIndentNo, String Remarks) {
         if(CowNum<0)return false;
         SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues contentValues = addValues(CowNum,DueCalveDate,SireOfCalf,CalfBW,CalvingDate,CalvingDiff,Condition,Sex,Fate,CalfIndentNo,Remarks);
+        String Time_added = getTimeStamp();
+        ContentValues contentValues = addValues(CowNum,DueCalveDate,SireOfCalf,CalfBW,CalvingDate,CalvingDiff,Condition,Sex,Fate,CalfIndentNo,Remarks,Time_added);
         long result = db.insert(TABLE_NAME, null,contentValues);
         if(result == -1)
             return false;
@@ -58,14 +61,16 @@ public class DbHelper extends SQLiteOpenHelper{
     public boolean updateData(String id, int CowNum, Date DueCalveDate, int SireOfCalf, double CalfBW, Date CalvingDate, String CalvingDiff, String Condition, String Sex, String Fate, int CalfIndentNo, String Remarks) {
         if(CowNum<0)return false;
         SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues contentValues = addValues(CowNum,DueCalveDate,SireOfCalf,CalfBW,CalvingDate,CalvingDiff,Condition,Sex,Fate,CalfIndentNo,Remarks);
+        String Time_added = getTimeStamp();
+        ContentValues contentValues = addValues(CowNum,DueCalveDate,SireOfCalf,CalfBW,CalvingDate,CalvingDiff,Condition,Sex,Fate,CalfIndentNo,Remarks,Time_added);
         long result = db.update(TABLE_NAME,contentValues,"ID = ?",new String[] {id});
         if(result == -1)
             return false;
         else
             return true;
     }
-    private ContentValues addValues(int CowNum, Date DueCalveDate, int SireOfCalf, double CalfBW, Date CalvingDate, String CalvingDiff, String Condition, String Sex, String Fate, int CalfIndentNo, String Remarks) {
+
+    private ContentValues addValues(int CowNum, Date DueCalveDate, int SireOfCalf, double CalfBW, Date CalvingDate, String CalvingDiff, String Condition, String Sex, String Fate, int CalfIndentNo, String Remarks, String Time_added) {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         ContentValues contentValues = new ContentValues(11);
 
@@ -110,7 +115,12 @@ public class DbHelper extends SQLiteOpenHelper{
             contentValues.put(COL11, Remarks);
         }
         else contentValues.putNull(COL11);
+        if(Time_added!=null){
+            contentValues.put(COL12, Time_added);
+        }
+        else contentValues.putNull(COL12);
         return contentValues;
+
     }
 
     public Integer deleteData (String id) {
@@ -124,10 +134,16 @@ public class DbHelper extends SQLiteOpenHelper{
         return res;
     }
 
-    public Cursor getDataByIDCowNum(String id) {
+    public Cursor getMostRecentData() {
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor res = db.rawQuery("select * from "+TABLE_NAME + " WHERE "+ COL1 +" = ? ",new String[] {id});
+        Cursor res = db.query(TABLE_NAME,null,null,null,null,null,COL12 + " DESC","6");
+
         return res;
+    }
+
+    public String getTimeStamp(){
+        String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
+        return timeStamp;
     }
 
 
