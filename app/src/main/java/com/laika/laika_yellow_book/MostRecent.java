@@ -1,8 +1,11 @@
 package com.laika.laika_yellow_book;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 public class MostRecent extends AppCompatActivity {
@@ -35,6 +38,24 @@ public class MostRecent extends AppCompatActivity {
         }
 
         listview.setAdapter(cowSearchedAdapter);
+
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                int itemPosition = position;
+                CowSearched value = (CowSearched) listview.getItemAtPosition(position);
+                //int row_id = value.getRowID();
+                String row_id = Integer.toString(value.getRowID());
+
+                UpdateDeletePage(view, row_id);
+            }
+        });
+    }
+
+    public void UpdateDeletePage(View view, String row_id) {
+        Intent intent = new Intent(this, NewEntryActivity.class);
+        intent.putExtra("com.laika.laika_yellow_book.rowIDContent", row_id);
+        startActivity(intent);
     }
 
 }

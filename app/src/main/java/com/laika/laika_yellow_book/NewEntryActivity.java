@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -52,24 +53,14 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
     private ArrayList<DataLine> twins;
     private int twinCount = 0;
 
+    private String method = "newData";
+    private boolean isSuccessful;
+    private String ID;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_entry);
-
-        if (getIntent().hasExtra("id")) {
-            String text = getIntent().getExtras().getString("id");
-            Toast toast = Toast.makeText(getApplicationContext(),
-                    "kate",
-                    Toast.LENGTH_LONG);
-
-            toast.show();
-
-        }
-
-
-
-
 
         myDb = new DbHelper(this);
         data = new DataLine();
@@ -189,6 +180,51 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
         }
 
         initTTS();
+
+
+        //Update and Delete
+        if (getIntent().hasExtra("com.laika.laika_yellow_book.rowIDContent")) {
+            method = "updateData";
+            //get info from clicked row
+            String row_id_display = getIntent().getExtras().getString("com.laika.laika_yellow_book.rowIDContent");
+            //Query the database
+            Cursor cursor = null;
+
+            try {
+                cursor = myDb.getDataPopulateEntry(row_id_display);
+                if(cursor.getCount() > 0) {
+                    cursor.moveToFirst();
+                    ID = Integer.toString(cursor.getInt(cursor.getColumnIndex("ID")));
+                    editTexts[0].setText(Integer.toString(cursor.getInt(cursor.getColumnIndex("CowNum"))));
+                    data.cowNum = cursor.getInt(cursor.getColumnIndex("CowNum"));
+                    editTexts[1].setText(cursor.getString(cursor.getColumnIndex("DueCalveDate")));
+                    data.dueCalveDate = new Date (cursor.getLong(cursor.getColumnIndex("DueCalveDate")));
+                    editTexts[2].setText(Integer.toString(cursor.getInt(cursor.getColumnIndex("SireOfCalf"))));
+                    data.sireOfCalf = cursor.getInt(cursor.getColumnIndex("SireOfCalf"));
+                    editTexts[3].setText(Long.toString(cursor.getLong(cursor.getColumnIndex("CalfBW"))));
+                    data.calfBW = cursor.getLong(cursor.getColumnIndex("CalfBW"));
+                    editTexts[4].setText(cursor.getString(cursor.getColumnIndex("CalvingDate")));
+                    data.calvingDate = new Date (cursor.getLong(cursor.getColumnIndex("CalvingDate")));
+                    editTexts[5].setText(cursor.getString(cursor.getColumnIndex("CalvingDiff")));
+                    data.calvingDiff = cursor.getString(cursor.getColumnIndex("CalvingDiff"));
+                    editTexts[6].setText(cursor.getString(cursor.getColumnIndex("Condition")));
+                    data.condition = cursor.getString(cursor.getColumnIndex("Condition"));
+                    editTexts[7].setText(cursor.getString(cursor.getColumnIndex("Sex")));
+                    data.sex = cursor.getString(cursor.getColumnIndex("Sex"));
+                    editTexts[8].setText(cursor.getString(cursor.getColumnIndex("Fate")));
+                    data.fate = cursor.getString(cursor.getColumnIndex("Fate"));
+                    editTexts[9].setText(Integer.toString(cursor.getInt(cursor.getColumnIndex("CalfID"))));
+                    data.calfIndentNo = cursor.getInt(cursor.getColumnIndex("CalfID"));
+                    editTexts[10].setText(cursor.getString(cursor.getColumnIndex("Remarks")));
+                    data.remarks = cursor.getString(cursor.getColumnIndex("Remarks"));
+                }
+            }
+            finally {
+                cursor.close();
+            }
+
+        }
+
     }
 
     private void setDateTimePicker(final EditText ed, final int index) {
@@ -514,7 +550,14 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
                 return false;
             }
         }
-        boolean isSuccessful = myDb.insertData(data.cowNum, data.dueCalveDate, data.sireOfCalf, data.calfBW, data.calvingDate, data.calvingDiff, data.condition, data.sex, data.fate, data.calfIndentNo, data.remarks);
+
+        if(method == "newData") {
+            isSuccessful = myDb.insertData(data.cowNum, data.dueCalveDate, data.sireOfCalf, data.calfBW, data.calvingDate, data.calvingDiff, data.condition, data.sex, data.fate, data.calfIndentNo, data.remarks);
+        }
+        if(method == "updateData") {
+            isSuccessful = myDb.updateData(ID,data.cowNum, data.dueCalveDate, data.sireOfCalf, data.calfBW, data.calvingDate, data.calvingDiff, data.condition, data.sex, data.fate, data.calfIndentNo, data.remarks);
+        }
+
         if (isSuccessful) {
             if(!isKeyword)
                 openDialog();
@@ -525,6 +568,9 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
             Toast.makeText(NewEntryActivity.this, "Insertion failed", Toast.LENGTH_LONG).show();
             return false;
         }
+
+
+
     }
 
     private void openDialog() {

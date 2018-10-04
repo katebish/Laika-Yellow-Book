@@ -140,6 +140,12 @@ public class DbHelper extends SQLiteOpenHelper{
         return res;
     }
 
+    public Cursor getDataPopulateEntry(String id){
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor res = db.rawQuery("select * from "+TABLE_NAME + " WHERE ID = ?",new String[] {id});
+        return res;
+    }
+
     public String getTimeStamp(){
         String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
         return timeStamp;
@@ -158,6 +164,5 @@ public class DbHelper extends SQLiteOpenHelper{
         res.close();
         return ids.toArray(new String[ids.size()]);
     }
-
 
 }

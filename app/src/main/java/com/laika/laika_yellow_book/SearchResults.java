@@ -1,5 +1,6 @@
 package com.laika.laika_yellow_book;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -24,14 +25,13 @@ public class SearchResults extends AppCompatActivity {
         setContentView(R.layout.activity_search_results);
         EditText searchBox = findViewById(R.id.editTextSearch2);
 
-
-        myDb = new DbHelper(this);
-
+        //Get search Input from Main Activity
         if (getIntent().hasExtra("com.laika.laika_yellow_book.SearchContent")) {
             text = getIntent().getExtras().getString("com.laika.laika_yellow_book.SearchContent");
             searchBox.setText(text);
             getSearchResults(text);
         }
+
 
         final Button button = findViewById(R.id.buttonGo2);
         button.setOnClickListener(new View.OnClickListener() {
@@ -46,6 +46,7 @@ public class SearchResults extends AppCompatActivity {
 
 
     public void getSearchResults(String text) {
+        myDb = new DbHelper(this);
         listview = (ListView) findViewById(R.id.display_listview);
         //listview.setOnItemClickListener(this);
         Cursor cursor = myDb.getDataByID(text);
@@ -69,13 +70,19 @@ public class SearchResults extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 int itemPosition = position;
                 CowSearched value = (CowSearched) listview.getItemAtPosition(position);
-                value.getRowID();
+                //int row_id = value.getRowID();
+                String row_id = Integer.toString(value.getRowID());
 
-
-                //Next step put extra intent pass to new entry
+                UpdateDeletePage(view, row_id);
             }
         });
 
+    }
+
+    public void UpdateDeletePage(View view, String row_id) {
+        Intent intent = new Intent(this, NewEntryActivity.class);
+        intent.putExtra("com.laika.laika_yellow_book.rowIDContent", row_id);
+        startActivity(intent);
     }
 
 }
