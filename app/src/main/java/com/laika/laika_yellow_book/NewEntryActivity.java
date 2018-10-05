@@ -20,6 +20,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -70,6 +71,9 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
         inputValidation.setData(data);
         editTexts = new EditText[11];
         textInputLayout = new TextInputLayout[11];
+
+        Button deleteButton = (Button) findViewById(R.id.deleteButton);
+        deleteButton.setVisibility(View.GONE);
 
         TextView addTwinCalf = findViewById(R.id.tv_addTwinCalf);
         addTwinCalf.setOnClickListener(new View.OnClickListener() {
@@ -187,6 +191,7 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
             method = "updateData";
             //get info from clicked row
             String row_id_display = getIntent().getExtras().getString("com.laika.laika_yellow_book.rowIDContent");
+
             //Query the database
             Cursor cursor = null;
 
@@ -223,6 +228,19 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
                 cursor.close();
             }
 
+            //Display Delete Button
+            deleteButton.setVisibility(View.VISIBLE);
+            deleteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //Delete query
+                    myDb.deleteData(ID);
+
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    startActivity(intent);
+
+                }
+            });
         }
 
     }
