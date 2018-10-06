@@ -85,9 +85,13 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
                 Toast.makeText(NewEntryActivity.this, "Max of 3 twin calves allowed", Toast.LENGTH_LONG).show();
                 }
         });
+
         //create toolbar
         Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        mToolbar.setTitle("New Entry");
+        if(method == "newData")
+            mToolbar.setTitle("New Entry");
+        else if (method == "updateData")
+            mToolbar.setTitle("Update Entry");
         mToolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override

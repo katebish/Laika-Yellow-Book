@@ -28,7 +28,7 @@ public class SearchResults extends AppCompatActivity {
 
         //create toolbar
         Toolbar mToolbar = (Toolbar) findViewById(R.id.search_toolbar);
-        mToolbar.setTitle("New Entry");
+        mToolbar.setTitle("Search Results");
         mToolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
