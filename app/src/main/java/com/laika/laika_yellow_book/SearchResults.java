@@ -82,6 +82,7 @@ public class SearchResults extends AppCompatActivity {
     public void UpdateDeletePage(View view, String row_id) {
         Intent intent = new Intent(this, NewEntryActivity.class);
         intent.putExtra("com.laika.laika_yellow_book.rowIDContent", row_id);
+        finish();
         startActivity(intent);
     }
 

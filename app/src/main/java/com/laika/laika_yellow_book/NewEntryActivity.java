@@ -92,7 +92,7 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                    finish();
             }
         });
 
@@ -242,7 +242,6 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
                 }
             });
         }
-
     }
 
     private void setDateTimePicker(final EditText ed, final int index) {
@@ -586,15 +585,29 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
             Toast.makeText(NewEntryActivity.this, "Insertion failed", Toast.LENGTH_LONG).show();
             return false;
         }
-
-
-
     }
 
     private void openDialog() {
-        PopupDialog dialog = new PopupDialog();
-        dialog.setContext(this);
-        dialog.show(getSupportFragmentManager(), "popup dialog");
+        if(method == "newData") {
+            PopupDialog dialog = new PopupDialog();
+            dialog.setContext(this);
+            dialog.show(getSupportFragmentManager(), "popup dialog");
+        }
+        else if (method == "updateData") {
+            Toast.makeText(NewEntryActivity.this, "Entry updated!", Toast.LENGTH_LONG).show();
+
+            Intent intent = new Intent(this, SearchResults.class);
+            String searchContent = "";
+
+            if(data.calfIndentNo != 0)
+                searchContent = String.valueOf(data.calfIndentNo);
+            else
+                searchContent = String.valueOf(data.cowNum);
+            //pass search box information to searchResults activity
+            intent.putExtra("com.laika.laika_yellow_book.SearchContent", searchContent);
+            finish();
+            startActivity(intent);
+        }
     }
 
     @Override

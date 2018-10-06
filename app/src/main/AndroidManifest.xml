@@ -29,9 +29,12 @@
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
             android:theme="@style/NewEntryTheme">
         </activity>
-        <activity android:name=".SearchResults"></activity>
-        <activity android:name=".MostRecent"></activity>
-        <activity android:name=".UpdateDelete"></activity>
+        <activity android:name=".SearchResults"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".MostRecent"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".UpdateDelete"
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>
