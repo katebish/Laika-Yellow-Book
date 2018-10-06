@@ -30,7 +30,8 @@
             android:theme="@style/NewEntryTheme">
         </activity>
         <activity android:name=".SearchResults"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
         <activity android:name=".MostRecent"
             android:screenOrientation="portrait"></activity>
         <activity android:name=".UpdateDelete"

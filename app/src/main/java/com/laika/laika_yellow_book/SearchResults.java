@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -24,6 +25,17 @@ public class SearchResults extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_results);
         EditText searchBox = findViewById(R.id.editTextSearch2);
+
+        //create toolbar
+        Toolbar mToolbar = (Toolbar) findViewById(R.id.search_toolbar);
+        mToolbar.setTitle("New Entry");
+        mToolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         //Get search Input from Main Activity
         if (getIntent().hasExtra("com.laika.laika_yellow_book.SearchContent")) {

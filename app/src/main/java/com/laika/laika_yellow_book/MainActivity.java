@@ -19,6 +19,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume(){
         super.onResume();
+
+        EditText textSearchBox = (EditText) findViewById(R.id.autoCompleteTextView);
+        textSearchBox.setText("");
+
         myDb = new DbHelper(this);
 
         String[] cIds = myDb.returnIds();
@@ -62,7 +66,6 @@ public class MainActivity extends AppCompatActivity {
         String searchContent = textSearchBox.getText().toString();
         //pass search box information to searchResults activity
         intent.putExtra("com.laika.laika_yellow_book.SearchContent", searchContent);
-        textSearchBox.setText("");
         startActivity(intent);
     }
 }
