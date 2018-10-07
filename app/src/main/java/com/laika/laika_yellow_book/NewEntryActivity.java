@@ -572,8 +572,19 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
             }
         }
 
+        boolean insertTwin = false;
         if(method == "newData") {
-            isSuccessful = myDb.insertData(data.cowNum, data.dueCalveDate, data.sireOfCalf, data.calfBW, data.calvingDate, data.calvingDiff, data.condition, data.sex, data.fate, data.calfIndentNo, data.remarks);
+            if(twins.size() > 0) {
+                for (DataLine twinData: twins) {
+                    insertTwin = myDb.insertData(data.cowNum, data.dueCalveDate,data.sireOfCalf,twinData.calfBW,data.calvingDate,data.calvingDiff,twinData.condition,twinData.sex,data.fate,twinData.calfIndentNo,data.remarks);
+                    if(!insertTwin) {
+                        Toast.makeText(NewEntryActivity.this, twinData.calfIndentNo + " Insertion failed, please check that all fields are valid", Toast.LENGTH_LONG).show();
+                        break;
+                    }
+                }
+            }
+            if(insertTwin)
+                isSuccessful = myDb.insertData(data.cowNum, data.dueCalveDate, data.sireOfCalf, data.calfBW, data.calvingDate, data.calvingDiff, data.condition, data.sex, data.fate, data.calfIndentNo, data.remarks);
         }
         if(method == "updateData") {
             isSuccessful = myDb.updateData(ID,data.cowNum, data.dueCalveDate, data.sireOfCalf, data.calfBW, data.calvingDate, data.calvingDiff, data.condition, data.sex, data.fate, data.calfIndentNo, data.remarks);
