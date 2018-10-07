@@ -572,19 +572,35 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
             }
         }
 
-        boolean insertTwin = false;
         if(method == "newData") {
+            boolean insertTwin = true;
             if(twins.size() > 0) {
                 for (DataLine twinData: twins) {
-                    insertTwin = myDb.insertData(data.cowNum, data.dueCalveDate,data.sireOfCalf,twinData.calfBW,data.calvingDate,data.calvingDiff,twinData.condition,twinData.sex,data.fate,twinData.calfIndentNo,data.remarks);
-                    if(!insertTwin) {
-                        Toast.makeText(NewEntryActivity.this, twinData.calfIndentNo + " Insertion failed, please check that all fields are valid", Toast.LENGTH_LONG).show();
+                    boolean hasEntry = myDb.hasCalf(String.valueOf(twinData.calfIndentNo));
+                    if(!hasEntry) {
+                        insertTwin = myDb.insertData(data.cowNum, data.dueCalveDate, data.sireOfCalf, twinData.calfBW, data.calvingDate, data.calvingDiff, twinData.condition, twinData.sex, data.fate, twinData.calfIndentNo, data.remarks);
+                        if (!insertTwin) {
+                            Toast.makeText(NewEntryActivity.this, twinData.calfIndentNo + " Insertion failed, please check that all fields are valid", Toast.LENGTH_LONG).show();
+                            break;
+                        }
+                    }
+                    else {
+                        Toast.makeText(NewEntryActivity.this, twinData.calfIndentNo + " already existed, do you want to override it with current entry?", Toast.LENGTH_LONG).show();
                         break;
                     }
                 }
             }
-            if(insertTwin)
-                isSuccessful = myDb.insertData(data.cowNum, data.dueCalveDate, data.sireOfCalf, data.calfBW, data.calvingDate, data.calvingDiff, data.condition, data.sex, data.fate, data.calfIndentNo, data.remarks);
+            if(insertTwin) {
+                Boolean hasEntry = true;
+                if(data.calfIndentNo != 0)
+                    hasEntry = myDb.hasCalf(String.valueOf(data.calfIndentNo));
+                if(hasEntry == false)
+                    isSuccessful = myDb.insertData(data.cowNum, data.dueCalveDate, data.sireOfCalf, data.calfBW, data.calvingDate, data.calvingDiff, data.condition, data.sex, data.fate, data.calfIndentNo, data.remarks);
+                else if(hasEntry == true) {
+                    isSuccessful = false;
+                    Toast.makeText(NewEntryActivity.this, data.calfIndentNo + " already existed, do you want to override it with current entry?", Toast.LENGTH_LONG).show();
+                }
+            }
         }
         if(method == "updateData") {
             isSuccessful = myDb.updateData(ID,data.cowNum, data.dueCalveDate, data.sireOfCalf, data.calfBW, data.calvingDate, data.calvingDiff, data.condition, data.sex, data.fate, data.calfIndentNo, data.remarks);

@@ -134,6 +134,14 @@ public class DbHelper extends SQLiteOpenHelper{
         return res;
     }
 
+    public boolean hasCalf(String id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor res = db.rawQuery("select * from "+TABLE_NAME + " WHERE " + COL10 + " = ?",new String[] {id});
+        if(res.getCount() > 0)
+            return true;
+        else return false;
+    }
+
     public Cursor getMostRecentData() {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor res = db.query(TABLE_NAME,null,null,null,null,null,COL12 + " DESC","6");
