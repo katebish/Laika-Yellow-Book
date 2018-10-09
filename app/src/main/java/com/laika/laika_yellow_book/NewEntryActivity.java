@@ -204,28 +204,40 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
                 if(cursor.getCount() > 0) {
                     cursor.moveToFirst();
                     ID = Integer.toString(cursor.getInt(cursor.getColumnIndex("ID")));
-                    editTexts[0].setText(Integer.toString(cursor.getInt(cursor.getColumnIndex("CowNum"))));
-                    data.cowNum = cursor.getInt(cursor.getColumnIndex("CowNum"));
-                    editTexts[1].setText(cursor.getString(cursor.getColumnIndex("DueCalveDate")));
-                    data.dueCalveDate = new Date (cursor.getLong(cursor.getColumnIndex("DueCalveDate")));
-                    editTexts[2].setText(Integer.toString(cursor.getInt(cursor.getColumnIndex("SireOfCalf"))));
-                    data.sireOfCalf = cursor.getInt(cursor.getColumnIndex("SireOfCalf"));
-                    editTexts[3].setText(Long.toString(cursor.getLong(cursor.getColumnIndex("CalfBW"))));
-                    data.calfBW = cursor.getLong(cursor.getColumnIndex("CalfBW"));
-                    editTexts[4].setText(cursor.getString(cursor.getColumnIndex("CalvingDate")));
-                    data.calvingDate = new Date (cursor.getLong(cursor.getColumnIndex("CalvingDate")));
-                    editTexts[5].setText(cursor.getString(cursor.getColumnIndex("CalvingDiff")));
-                    data.calvingDiff = cursor.getString(cursor.getColumnIndex("CalvingDiff"));
-                    editTexts[6].setText(cursor.getString(cursor.getColumnIndex("Condition")));
-                    data.condition = cursor.getString(cursor.getColumnIndex("Condition"));
-                    editTexts[7].setText(cursor.getString(cursor.getColumnIndex("Sex")));
-                    data.sex = cursor.getString(cursor.getColumnIndex("Sex"));
-                    editTexts[8].setText(cursor.getString(cursor.getColumnIndex("Fate")));
-                    data.fate = cursor.getString(cursor.getColumnIndex("Fate"));
-                    editTexts[9].setText(Integer.toString(cursor.getInt(cursor.getColumnIndex("CalfID"))));
-                    data.calfIndentNo = cursor.getInt(cursor.getColumnIndex("CalfID"));
-                    editTexts[10].setText(cursor.getString(cursor.getColumnIndex("Remarks")));
-                    data.remarks = cursor.getString(cursor.getColumnIndex("Remarks"));
+                    if(cursor.getType(cursor.getColumnIndex("CowNum"))!= Cursor.FIELD_TYPE_NULL) {
+                        editTexts[0].setText(Integer.toString(cursor.getInt(cursor.getColumnIndex("CowNum"))));
+                        data.cowNum = cursor.getInt(cursor.getColumnIndex("CowNum"));
+                    } if(cursor.getType(cursor.getColumnIndex("DueCalveDate"))!= Cursor.FIELD_TYPE_NULL) {
+                        editTexts[1].setText(cursor.getString(cursor.getColumnIndex("DueCalveDate")));
+                        data.dueCalveDate = new Date(cursor.getLong(cursor.getColumnIndex("DueCalveDate")));
+                    } if(cursor.getType(cursor.getColumnIndex("SireOfCalf"))!= Cursor.FIELD_TYPE_NULL) {
+                        editTexts[2].setText(Integer.toString(cursor.getInt(cursor.getColumnIndex("SireOfCalf"))));
+                        data.sireOfCalf = cursor.getInt(cursor.getColumnIndex("SireOfCalf"));
+                    } if(cursor.getType(cursor.getColumnIndex("CalfBW"))!= Cursor.FIELD_TYPE_NULL) {
+                        editTexts[3].setText(Long.toString(cursor.getLong(cursor.getColumnIndex("CalfBW"))));
+                        data.calfBW = cursor.getLong(cursor.getColumnIndex("CalfBW"));
+                    } if(cursor.getType(cursor.getColumnIndex("CalvingDate"))!= Cursor.FIELD_TYPE_NULL) {
+                        editTexts[4].setText(cursor.getString(cursor.getColumnIndex("CalvingDate")));
+                        data.calvingDate = new Date(cursor.getLong(cursor.getColumnIndex("CalvingDate")));
+                    } if(cursor.getType(cursor.getColumnIndex("CalvingDiff"))!= Cursor.FIELD_TYPE_NULL) {
+                        editTexts[5].setText(cursor.getString(cursor.getColumnIndex("CalvingDiff")));
+                        data.calvingDiff = cursor.getString(cursor.getColumnIndex("CalvingDiff"));
+                    } if(cursor.getType(cursor.getColumnIndex("Condition"))!= Cursor.FIELD_TYPE_NULL) {
+                        editTexts[6].setText(cursor.getString(cursor.getColumnIndex("Condition")));
+                        data.condition = cursor.getString(cursor.getColumnIndex("Condition"));
+                    } if(cursor.getType(cursor.getColumnIndex("Sex"))!= Cursor.FIELD_TYPE_NULL) {
+                        editTexts[7].setText(cursor.getString(cursor.getColumnIndex("Sex")));
+                        data.sex = cursor.getString(cursor.getColumnIndex("Sex"));
+                    } if(cursor.getType(cursor.getColumnIndex("Fate"))!= Cursor.FIELD_TYPE_NULL) {
+                        editTexts[8].setText(cursor.getString(cursor.getColumnIndex("Fate")));
+                        data.fate = cursor.getString(cursor.getColumnIndex("Fate"));
+                    } if(cursor.getType(cursor.getColumnIndex("CalfID"))!= Cursor.FIELD_TYPE_NULL) {
+                        editTexts[9].setText(Integer.toString(cursor.getInt(cursor.getColumnIndex("CalfID"))));
+                        data.calfIndentNo = cursor.getInt(cursor.getColumnIndex("CalfID"));
+                    } if(cursor.getType(cursor.getColumnIndex("Remarks"))!= Cursor.FIELD_TYPE_NULL) {
+                        editTexts[10].setText(cursor.getString(cursor.getColumnIndex("Remarks")));
+                        data.remarks = cursor.getString(cursor.getColumnIndex("Remarks"));
+                    }
                 }
             }
             finally {
