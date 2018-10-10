@@ -362,8 +362,6 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
         intent.putExtra(RecognizerIntent.EXTRA_PROMPT, labels[index]);
-        editTexts[1].setFocusable(true);
-        editTexts[4].setFocusable(true);
         if(!isIndividual)
             index++;
         try {
@@ -552,11 +550,6 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
                     } catch (Exception e) {
                         Log.e("STT", e.getMessage());
                     }
-                    editTexts[1].setFocusable(false);
-                    editTexts[4].setFocusable(false);
-                } else if(intent != null){
-                    editTexts[1].setFocusable(false);
-                    editTexts[4].setFocusable(false);
                 }
             }
             break;
