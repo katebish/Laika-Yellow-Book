@@ -552,6 +552,8 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
                     } catch (Exception e) {
                         Log.e("STT", e.getMessage());
                     }
+                    editTexts[1].setFocusable(false);
+                    editTexts[4].setFocusable(false);
                 } else if(intent != null){
                     editTexts[1].setFocusable(false);
                     editTexts[4].setFocusable(false);
