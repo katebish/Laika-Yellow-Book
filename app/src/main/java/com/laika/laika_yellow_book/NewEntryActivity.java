@@ -561,63 +561,86 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
         speechR.startListening(intent);
     }
 
+    private boolean isFieldName (String text) {
+        boolean found = false;
+        String keyword = text.trim();
+        String[] keywords = keyword.split(" ");
+        if(keywords.length == 1) {
+            switch (keyword) {
+                case "cow": {
+                    currEditText = editTexts[0];
+                    found = true;
+                    break;
+                }
+                case "due": {
+                    currEditText = editTexts[1];
+                    found = true;
+                    break;
+                }
+                case "sire": {
+                    currEditText = editTexts[2];
+                    found = true;
+                    break;
+                }
+                case "discard": {
+                    currEditText = editTexts[3];
+                    found = true;
+                    break;
+                }
+            }
+            if(found){
+                isIndividual = true;
+                currEditText.requestFocus();
+                if (currEditText.getTag() != null) {
+                    index = (int) currEditText.getTag();
+                }
+                askSpeechInput(currEditText);
+            }
+            return found;
+        }
+        return false;
+    }
+
     class SpeechListener implements RecognitionListener {
 
         @Override
         public void onEndOfSpeech() {
-            //need to implement this
+            //can use this to start listening again
             Log.d("Speech End", "True");
         }
 
         @Override
-        public void onReadyForSpeech(Bundle results) {
-            //need to implement this
-        }
+        public void onReadyForSpeech(Bundle results) { }
 
         @Override
-        public void onBufferReceived(byte[] b) {
-            //need to implement this
-        }
+        public void onBufferReceived(byte[] b) { }
 
         @Override
-        public void onResults(Bundle results) {
-            //Not implimented
-            //String all = (String) textV.getText();
-            //all += " END";
-            //textV.setText(all);
-        }
+        public void onResults(Bundle results) { }
 
         @Override
         public void onError(int error) {
-            //need to implement
             Log.d("Speech Error", Integer.toString(error));
         }
 
         @Override
-        public void onRmsChanged(float rms) {
-            //need to implement
-        }
+        public void onRmsChanged(float rms) { }
 
         @Override
-        public void onEvent(int bundle, Bundle results) {
-            //need to implement
-        }
+        public void onEvent(int bundle, Bundle results) { }
 
         @Override
         public void onBeginningOfSpeech() {
-            //need to implement
             Log.d("Speech Start", "True");
         }
 
         @Override
         public void onPartialResults(Bundle results) {
             ArrayList<String> data = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
-            TextView textV = (TextView) findViewById(R.id.TextView);
             if(!data.isEmpty()&&data.get(0).matches("(?i)submit")){
                 speechR.stopListening();
                 Toast.makeText(NewEntryActivity.this, "Speech Ended", Toast.LENGTH_SHORT).show();
             }
-            String all = "";
             HashMap<String, String> vals = Parser.parse(data.get(0));
             for(String key : vals.keySet()){
                 switch (key) {
