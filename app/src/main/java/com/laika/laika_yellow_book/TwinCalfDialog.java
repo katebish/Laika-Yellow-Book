@@ -9,6 +9,9 @@ import android.support.v7.app.AppCompatDialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
+
+import java.util.ArrayList;
 
 public class TwinCalfDialog extends AppCompatDialogFragment {
     private EditText calfID;
@@ -16,6 +19,7 @@ public class TwinCalfDialog extends AppCompatDialogFragment {
     private EditText calfBW;
     private EditText calfCondition;
     private TwinCalfDialogListener listener;
+
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -29,8 +33,9 @@ public class TwinCalfDialog extends AppCompatDialogFragment {
         calfBW = view.findViewById(R.id.edit_TwinCalfBW);
         calfCondition = view.findViewById(R.id.edit_TwinCondition);
 
+
         builder.setView(view)
-            .setTitle("Twin Calves")
+            .setTitle("Add Twin Calf")
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -61,6 +66,7 @@ public class TwinCalfDialog extends AppCompatDialogFragment {
         return builder.create();
     }
 
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -70,4 +76,11 @@ public class TwinCalfDialog extends AppCompatDialogFragment {
             throw new ClassCastException(context.toString() + "must implement TwinDialogListener");
         }
     }
+
+    @Override
+    public Dialog getDialog() {
+        return super.getDialog();
+    }
+
+
 }

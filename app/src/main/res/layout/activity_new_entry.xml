@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -241,34 +242,47 @@
                     android:layout_height="fill_parent"
                     android:padding="10dp">
 
-                    <TextView
-                        android:id="@+id/twin1"
+                    <android.support.design.chip.ChipGroup
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentTop="true"
-                        android:clickable="true"
-                        android:theme="@style/MyEditText"/>
+                        android:layout_marginTop="14dp">
 
-                    <TextView
-                        android:id="@+id/twin2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentTop="true"
-                        android:layout_marginLeft= "50dp"
-                        android:clickable="true"
-                        android:theme="@style/MyEditText"/>
+                        <android.support.design.chip.Chip
+                            android:id="@+id/twin1chip"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentTop="true"
+                            android:layout_marginTop="8dp"
+                            app:chipText="Twin 1"
+                            app:closeIcon="@drawable/closs_button"
+                            app:closeIconEnabled="true"/>
 
-                    <TextView
-                        android:id="@+id/twin3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentTop="true"
-                        android:layout_marginLeft= "100dp"
-                        android:clickable="true"
-                        android:theme="@style/MyEditText"/>
+                        <android.support.design.chip.Chip
+                            android:id="@+id/twin2chip"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentTop="true"
+                            android:layout_marginTop="8dp"
+                            app:chipText="Twin 2"
+                            app:closeIcon="@drawable/closs_button"
+                            app:closeIconEnabled="true"/>
+
+                        <android.support.design.chip.Chip
+                            android:id="@+id/twin3chip"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentTop="true"
+                            android:layout_marginTop="8dp"
+                            app:chipText="Twin 3"
+                            app:closeIcon="@drawable/closs_button"
+                            app:closeIconEnabled="true"/>
+                    </android.support.design.chip.ChipGroup>
+
+
+
 
                     <TextView
                         android:id="@+id/tv_addTwinCalf"
