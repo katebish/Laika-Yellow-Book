@@ -117,21 +117,6 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
             }
         });
 
-
-        //create toolbar
-        Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        if(method == "newData")
-            mToolbar.setTitle("New Entry");
-        else if (method == "updateData")
-            mToolbar.setTitle("Update Entry");
-        mToolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
-        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                    finish();
-            }
-        });
-
         //get all label values
         LinearLayout layout = findViewById(R.id.linearLayout1);
         labels = new String[11];
@@ -299,6 +284,20 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
                 }
             });
         }
+
+        //create toolbar
+        Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        if(method == "newData")
+            mToolbar.setTitle("New Entry");
+        else if (method == "updateData")
+            mToolbar.setTitle("Update Entry");
+        mToolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     private void setDateTimePicker(final EditText ed, final int index) {
