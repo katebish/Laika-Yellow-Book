@@ -244,7 +244,9 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
                         editTexts[1].setText(cursor.getString(cursor.getColumnIndex("DueCalveDate")));
                         try{
                         data.dueCalveDate = format.parse(cursor.getString(cursor.getColumnIndex("DueCalveDate")));
-                        } catch(Exception e){}
+                        } catch(Exception e){
+                            Log.d("new entry","parse error from database should not be reachable");
+                        }
                     } if(cursor.getType(cursor.getColumnIndex("SireOfCalf"))!= Cursor.FIELD_TYPE_NULL) {
                         editTexts[2].setText(Integer.toString(cursor.getInt(cursor.getColumnIndex("SireOfCalf"))));
                         data.sireOfCalf = cursor.getInt(cursor.getColumnIndex("SireOfCalf"));
@@ -255,7 +257,9 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
                         editTexts[4].setText(cursor.getString(cursor.getColumnIndex("CalvingDate")));
                         try{
                             data.calvingDate = format.parse(cursor.getString(cursor.getColumnIndex("CalvingDate")));
-                        } catch(Exception e){}
+                        } catch(Exception e){
+                            Log.d("new entry","parse error from database should not be reachable");
+                        }
                     } if(cursor.getType(cursor.getColumnIndex("CalvingDiff"))!= Cursor.FIELD_TYPE_NULL) {
                         editTexts[5].setText(cursor.getString(cursor.getColumnIndex("CalvingDiff")));
                         data.calvingDiff = cursor.getString(cursor.getColumnIndex("CalvingDiff"));
