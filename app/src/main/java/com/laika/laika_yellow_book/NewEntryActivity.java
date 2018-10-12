@@ -644,7 +644,7 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
                 }
             }
             if(insertTwin) {
-                Boolean hasEntry = true;
+                Boolean hasEntry = false;
                 if(data.calfIndentNo != 0)
                     hasEntry = myDb.hasCalf(String.valueOf(data.calfIndentNo));
                 if(hasEntry == false)
