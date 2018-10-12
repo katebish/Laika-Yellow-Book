@@ -39,7 +39,6 @@ import java.util.Locale;
 
 import static android.speech.tts.TextToSpeech.QUEUE_ADD;
 
-
 public class NewEntryActivity extends AppCompatActivity implements AsyncResponse,TwinCalfDialogListener {
     private DbHelper myDb;
     private TextToSpeech mTTS;
@@ -55,9 +54,11 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
     private ArrayList<DataLine> twins;
     private int twinCount = 0;
 
-    private String method = "newData";
+    private Method method = Method.NEWDATA;
     private boolean isSuccessful;
     private String ID;
+
+    public enum Method {NEWDATA, UPDATE};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -209,7 +210,7 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
 
         //Update and Delete
         if (getIntent().hasExtra("com.laika.laika_yellow_book.rowIDContent")) {
-            method = "updateData";
+            method = Method.UPDATE;
             //get info from clicked row
             String row_id_display = getIntent().getExtras().getString("com.laika.laika_yellow_book.rowIDContent");
 
@@ -287,9 +288,9 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
 
         //create toolbar
         Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        if(method == "newData")
+        if(method == Method.NEWDATA)
             mToolbar.setTitle("New Entry");
-        else if (method == "updateData")
+        else if (method == Method.UPDATE)
             mToolbar.setTitle("Update Entry");
         mToolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -624,7 +625,7 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
             }
         }
 
-        if(method == "newData") {
+        if(method == Method.NEWDATA) {
             boolean insertTwin = true;
             if(twins.size() > 0) {
                 for (DataLine twinData: twins) {
@@ -654,7 +655,7 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
                 }
             }
         }
-        if(method == "updateData") {
+        if(method == Method.UPDATE) {
             isSuccessful = myDb.updateData(ID,data.cowNum, data.dueCalveDate, data.sireOfCalf, data.calfBW, data.calvingDate, data.calvingDiff, data.condition, data.sex, data.fate, data.calfIndentNo, data.remarks);
         }
 
@@ -671,12 +672,12 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
     }
 
     private void openDialog() {
-        if(method == "newData") {
+        if(method == Method.NEWDATA) {
             PopupDialog dialog = new PopupDialog();
             dialog.setContext(this);
             dialog.show(getSupportFragmentManager(), "popup dialog");
         }
-        else if (method == "updateData") {
+        else if (method == Method.UPDATE) {
             Toast.makeText(NewEntryActivity.this, "Entry updated!", Toast.LENGTH_LONG).show();
 
             Intent intent = new Intent(this, SearchResults.class);
