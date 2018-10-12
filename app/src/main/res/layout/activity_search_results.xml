@@ -9,7 +9,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/search_toolbar"
@@ -19,35 +21,25 @@
             app:theme="@style/ThemeOverlay.AppCompat.Dark" />
 
 
-    <LinearLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
-            <EditText
-                android:id="@+id/editTextSearch2"
-                android:layout_width="250dp"
+            <AutoCompleteTextView
+                android:id="@+id/autoCompleteTextViewSearch"
+                android:layout_width="match_parent"
                 android:layout_height="64dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
-                android:ems="10"
-                android:hint="Search by cow number"
-                android:inputType="number"
-                android:selectAllOnFocus="true"
-                android:singleLine="true"
-                android:textSize="14sp" />
+                android:layout_weight="1" />
 
             <Button
                 android:id="@+id/buttonGo2"
                 android:layout_width="64dp"
                 android:layout_height="64dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginRight="16dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
                 android:text="GO"
                 android:textSize="24sp" />
         </LinearLayout>
@@ -56,17 +48,17 @@
             android:id="@+id/display_listview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="24dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
             android:layout_marginStart="16dp"
+            android:layout_marginLeft="8dp"
             android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="24dp"
             android:scrollbars="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
 
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-        </LinearLayout>
+    </LinearLayout>
 </android.support.constraint.ConstraintLayout>

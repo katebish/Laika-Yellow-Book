@@ -7,13 +7,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
 public class SearchResults extends AppCompatActivity {
 
-    DbHelper myDb;
+    DbHelper myDb, myDbAuto;
     ListView listview;
 
     CowSearchedAdapter cowSearchedAdapter;
@@ -24,7 +26,17 @@ public class SearchResults extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_results);
-        EditText searchBox = findViewById(R.id.editTextSearch2);
+        AutoCompleteTextView searchBox = findViewById(R.id.autoCompleteTextViewSearch);
+
+        myDbAuto = new DbHelper(this);
+
+        String[] cIds = myDbAuto.returnIds();
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>
+                (this, android.R.layout.select_dialog_item, cIds);
+
+        searchBox.setThreshold(1);
+        searchBox.setAdapter(adapter);
 
         //create toolbar
         Toolbar mToolbar = (Toolbar) findViewById(R.id.search_toolbar);
@@ -41,6 +53,7 @@ public class SearchResults extends AppCompatActivity {
         if (getIntent().hasExtra("com.laika.laika_yellow_book.SearchContent")) {
             text = getIntent().getExtras().getString("com.laika.laika_yellow_book.SearchContent");
             searchBox.setText(text);
+            searchBox.dismissDropDown();
             getSearchResults(text);
         }
 
@@ -48,7 +61,7 @@ public class SearchResults extends AppCompatActivity {
         final Button button = findViewById(R.id.buttonGo2);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                EditText searchBox = findViewById(R.id.editTextSearch2);
+                AutoCompleteTextView searchBox = findViewById(R.id.autoCompleteTextViewSearch);
                 text = searchBox.getText().toString();
                 getSearchResults(text);
             }
