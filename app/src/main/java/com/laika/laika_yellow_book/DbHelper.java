@@ -79,11 +79,11 @@ public class DbHelper extends SQLiteOpenHelper{
             contentValues.put(COL2,dateFormat.format(DueCalveDate));
         }
         else contentValues.putNull(COL2);
-        if(SireOfCalf!=-1) {
+        if(SireOfCalf!= 0) {
             contentValues.put(COL3, SireOfCalf);
         }
         else contentValues.putNull(COL3);
-        if(CalfBW!=-1){
+        if(CalfBW!= 0){
             contentValues.put(COL4, CalfBW);
         }
         else contentValues.putNull(COL4);
@@ -107,7 +107,7 @@ public class DbHelper extends SQLiteOpenHelper{
             contentValues.put(COL9, Fate);
         }
         else contentValues.putNull(COL9);
-        if(CalfIndentNo!=-1){
+        if(CalfIndentNo!= 0){
             contentValues.put(COL10, CalfIndentNo);
         }
         else contentValues.putNull(COL10);
