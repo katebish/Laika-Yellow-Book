@@ -53,9 +53,13 @@ public class CowSearchedAdapter extends ArrayAdapter {
         }
 
         CowSearched cowSearched = (CowSearched) getItem(position);
+        String sireText = "N/A";
+        String calfText = "N/A";
+        if(cowSearched.getSire()!=0)sireText = Integer.toString(cowSearched.getSire());
+        if(cowSearched.getCalfID()!=0)calfText = Integer.toString(cowSearched.getCalfID());
         cowSearchedHolder.tx_cowNum.setText(Integer.toString(cowSearched.getCowNum()));
-        cowSearchedHolder.tx_sire.setText(Integer.toString(cowSearched.getSire()));
-        cowSearchedHolder.tx_calfID.setText(Integer.toString(cowSearched.getCalfID()));
+        cowSearchedHolder.tx_sire.setText(sireText);
+        cowSearchedHolder.tx_calfID.setText(calfText);
 
         return row;
     }
