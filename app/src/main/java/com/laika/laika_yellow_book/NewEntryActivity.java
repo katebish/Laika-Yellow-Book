@@ -470,7 +470,7 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
                         }
                     }
                     return true;
-                case "previous":
+                case "return":
                     if(findViewById(currEditText.getNextFocusUpId()) != null){
                         currEditText = findViewById(currEditText.getNextFocusUpId());
                         currEditText.requestFocus();
@@ -493,14 +493,13 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
                     return true;
                 case "safe":
                 case "save":
+                    isKeyword = true;
                     boolean isSuccess = AddData(currEditText);
                     map = new HashMap<String, String>();
                     map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "finish");
                     if(isSuccess) {
-                        Intent intent = new Intent(this, MainActivity.class);
-                        startActivity(intent);
+                        Toast.makeText(NewEntryActivity.this, "New entry saved!", Toast.LENGTH_LONG).show();
                         mTTS.speak("New entry saved", QUEUE_ADD, map);
-
                     }
                     else{
                         map = new HashMap<String, String>();
