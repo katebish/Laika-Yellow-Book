@@ -1,5 +1,6 @@
 package com.laika.laika_yellow_book;
 
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -22,7 +23,8 @@ public class ValidateResultsAPI extends AsyncTask<Object, Void, String> {
     protected String doInBackground(Object... objects) {
         String cleaned = "";
         try {
-            URL request = new URL("https://api.wit.ai/message?v=20180802&q=" + (String) objects[0]);
+            String requestString = Uri.encode((String) objects[0]);
+            URL request = new URL("https://api.wit.ai/message?v=20180802&q=" + requestString);
             HttpsURLConnection connection = (HttpsURLConnection) request.openConnection();
             connection.setRequestMethod("GET");
             connection.setRequestProperty("Accept", "application/json");

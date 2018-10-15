@@ -41,8 +41,10 @@ public class InputValidation {
                     }
                     break;
                 case 4:
-                    if(data.calvingDate == null)
+                    if(data.calvingDate == null) {
+                        textInput = textInput.replaceAll("/", "-");
                         data.calvingDate = format.parse(textInput);
+                    }
                     break;
                 case 5:
                     if (textInput.matches("(?i)bull|male|b")) {
