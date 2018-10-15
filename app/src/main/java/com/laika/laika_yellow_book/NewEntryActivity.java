@@ -553,52 +553,12 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
-        intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 2);
+        intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 5);
         intent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true);
         intent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS, 2000);
         intent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS, 2000);
 
         speechR.startListening(intent);
-    }
-
-    private boolean isFieldName (String text) {
-        boolean found = false;
-        String keyword = text.trim();
-        String[] keywords = keyword.split(" ");
-        if(keywords.length == 1) {
-            switch (keyword) {
-                case "cow": {
-                    currEditText = editTexts[0];
-                    found = true;
-                    break;
-                }
-                case "due": {
-                    currEditText = editTexts[1];
-                    found = true;
-                    break;
-                }
-                case "sire": {
-                    currEditText = editTexts[2];
-                    found = true;
-                    break;
-                }
-                case "discard": {
-                    currEditText = editTexts[3];
-                    found = true;
-                    break;
-                }
-            }
-            if(found){
-                isIndividual = true;
-                currEditText.requestFocus();
-                if (currEditText.getTag() != null) {
-                    index = (int) currEditText.getTag();
-                }
-                askSpeechInput(currEditText);
-            }
-            return found;
-        }
-        return false;
     }
 
     class SpeechListener implements RecognitionListener {
@@ -616,32 +576,18 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
         public void onBufferReceived(byte[] b) { }
 
         @Override
-        public void onResults(Bundle results) { }
-
-        @Override
-        public void onError(int error) {
-            Log.d("Speech Error", Integer.toString(error));
-        }
-
-        @Override
-        public void onRmsChanged(float rms) { }
-
-        @Override
-        public void onEvent(int bundle, Bundle results) { }
-
-        @Override
-        public void onBeginningOfSpeech() {
-            Log.d("Speech Start", "True");
-        }
-
-        @Override
-        public void onPartialResults(Bundle results) {
+        public void onResults(Bundle results) {
             ArrayList<String> data = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
-            if(!data.isEmpty()&&data.get(0).matches("(?i)submit")){
-                speechR.stopListening();
-                Toast.makeText(NewEntryActivity.this, "Speech Ended", Toast.LENGTH_SHORT).show();
+            HashMap<String, String> vals;
+            Log.d("parser",""+data.size());
+            if((vals = Parser.parse(data.get(0))).isEmpty()){
+                int i = 1;
+                while ((data.size() > i) && (vals = Parser.parse(data.get(i))).isEmpty()) {
+                    Log.d("parser", data.get(i));
+                    i++;
+                    Log.d("parser", "looped " + i);
+                }
             }
-            HashMap<String, String> vals = Parser.parse(data.get(0));
             for(String key : vals.keySet()){
                 switch (key) {
                     case "cow number":
@@ -701,6 +647,40 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
                         break;
                 }
             }
+            if(!data.isEmpty()&&data.get(0).matches("(?i).*(submit|save)")) {
+                boolean isSuccess = AddData(currEditText);
+                HashMap<String, String> map = new HashMap<String, String>();
+                map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "message");
+                if (isSuccess) {
+                    mTTS.speak("New entry saved", QUEUE_ADD, map);
+                    clearEditText();
+                } else {
+                    mTTS.speak("Please ensure that all fields are valid", QUEUE_ADD, map);
+                }
+            } else {
+                startSpeech(currEditText);
+            }
+        }
+
+        @Override
+        public void onError(int error) {
+            Log.d("Speech Error", Integer.toString(error));
+        }
+
+        @Override
+        public void onRmsChanged(float rms) { }
+
+        @Override
+        public void onEvent(int bundle, Bundle results) { }
+
+        @Override
+        public void onBeginningOfSpeech() {
+            Log.d("Speech Start", "True");
+        }
+
+        @Override
+        public void onPartialResults(Bundle results) {
+
         }
     }
 }
