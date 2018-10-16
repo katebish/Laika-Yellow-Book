@@ -41,13 +41,15 @@ public class InputValidation {
                     }
                     break;
                 case 4:
-                    if(data.calvingDate == null)
+                    if(data.calvingDate == null) {
+                        textInput = textInput.replaceAll("/", "-");
                         data.calvingDate = format.parse(textInput);
+                    }
                     break;
                 case 5:
-                    if (textInput.matches("(?i)bull|male|b|m")) {
+                    if (textInput.matches("(?i)bull|male|b")) {
                         data.sex = "Bull";
-                    } else if (textInput.matches("(?i)heifer|female|f|h")) {
+                    } else if (textInput.matches("(?i)heifer|female|f")) {
                         data.sex = "Heifer";
                     } else {
                         return "Cow sex invalid";
@@ -132,5 +134,4 @@ public class InputValidation {
             return null;
         }
     }
-
 }

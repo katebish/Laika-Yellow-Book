@@ -26,8 +26,17 @@
             android:name=".NewEntryActivity"
             android:label="New Entry"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustResize"></activity>
-        <activity android:name=".SearchResults"></activity>
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
+            android:theme="@style/NewEntryTheme">
+        </activity>
+        <activity android:name=".SearchResults"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
+        <activity android:name=".MostRecent"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
+        <activity android:name=".UpdateDelete"
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

@@ -1,10 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".NewEntryActivity">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/toolbarLayout"
+        tools:context="com.codingdemos.toolbarbuttontutorial.MainActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark" />
+    </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/btn_VoiceInput"
+        android:layout_width="84dp"
+        android:layout_height="84dp"
+        android:layout_marginEnd="28dp"
+        android:layout_marginRight="28dp"
+        android:background="@android:color/transparent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbarLayout"
+        android:onClick="askSpeechInput"
+        android:scaleType="centerInside"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/microphone"
+        tools:layout_editor_absoluteY="16dp" />
+
 
     <ScrollView
         android:layout_width="0dp"
@@ -31,6 +64,8 @@
                 android:id="@+id/CowNumber_text_input_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:errorTextAppearance="@style/MyErrorText"
+                app:hintTextAppearance="@style/MyHintText"
                 app:errorEnabled="true">
 
                 <EditText
@@ -40,6 +75,7 @@
                     android:drawableRight="@drawable/voicebutton"
                     android:ems="10"
                     android:hint="Cow Number"
+                    android:theme="@style/MyEditText"
                     android:imeOptions="actionNext"
                     android:inputType="number"
                     android:nextFocusDown="@+id/edit_DueCalveDate" />
@@ -49,9 +85,9 @@
                 android:id="@+id/DueCalveDate_text_input_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:errorEnabled="true"
-                app:errorTextAppearance="@style/MyErrorText">
-
+                app:errorTextAppearance="@style/MyErrorText"
+                app:hintTextAppearance="@style/MyHintText"
+                app:errorEnabled="true">
                 <EditText
                     android:id="@+id/edit_DueCalveDate"
                     android:layout_width="match_parent"
@@ -60,6 +96,8 @@
                     android:ems="10"
                     android:focusable="false"
                     android:hint="Due Calve Date"
+                    android:theme="@style/MyEditText"
+                    android:textColorHint="@color/DarkBlue"
                     android:imeOptions="actionNext"
                     android:inputType="date"
                     android:nextFocusDown="@+id/edit_SireOfCalf"
@@ -71,7 +109,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:errorEnabled="true"
-                app:errorTextAppearance="@style/MyErrorText">
+                app:errorTextAppearance="@style/MyErrorText"
+                app:hintTextAppearance="@style/MyHintText">
 
                 <EditText
                     android:id="@+id/edit_SireOfCalf"
@@ -80,6 +119,7 @@
                     android:drawableRight="@drawable/voicebutton"
                     android:ems="10"
                     android:hint="Sire of Calf"
+                    android:theme="@style/MyEditText"
                     android:imeOptions="actionNext"
                     android:inputType="date"
                     android:nextFocusDown="@+id/edit_CalfBW"
@@ -91,7 +131,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:errorEnabled="true"
-                app:errorTextAppearance="@style/MyErrorText">
+                app:errorTextAppearance="@style/MyErrorText"
+                app:hintTextAppearance="@style/MyHintText">
 
                 <EditText
                     android:id="@+id/edit_CalfBW"
@@ -100,6 +141,7 @@
                     android:drawableRight="@drawable/voicebutton"
                     android:ems="10"
                     android:hint="Calf Birth Weight"
+                    android:theme="@style/MyEditText"
                     android:imeOptions="actionNext"
                     android:inputType="numberDecimal"
                     android:nextFocusDown="@+id/edit_CalvingDate"
@@ -111,7 +153,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:errorEnabled="true"
-                app:errorTextAppearance="@style/MyErrorText">
+                app:errorTextAppearance="@style/MyErrorText"
+                app:hintTextAppearance="@style/MyHintText">
 
                 <EditText
                     android:id="@+id/edit_CalvingDate"
@@ -121,6 +164,7 @@
                     android:ems="10"
                     android:focusable="false"
                     android:hint="Calving Date"
+                    android:theme="@style/MyEditText"
                     android:imeOptions="actionNext"
                     android:inputType="date"
                     android:nextFocusDown="@+id/edit_Sex"
@@ -132,7 +176,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:errorEnabled="true"
-                app:errorTextAppearance="@style/MyErrorText">
+                app:errorTextAppearance="@style/MyErrorText"
+                app:hintTextAppearance="@style/MyHintText">
 
                 <EditText
                     android:id="@+id/edit_Sex"
@@ -141,6 +186,7 @@
                     android:drawableRight="@drawable/voicebutton"
                     android:ems="10"
                     android:hint="Sex"
+                    android:theme="@style/MyEditText"
                     android:imeOptions="actionNext"
                     android:inputType="text"
                     android:nextFocusDown="@+id/edit_Fate"
@@ -153,7 +199,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:errorEnabled="true"
-                app:errorTextAppearance="@style/MyErrorText">
+                app:errorTextAppearance="@style/MyErrorText"
+                app:hintTextAppearance="@style/MyHintText">
 
                 <EditText
                     android:id="@+id/edit_Fate"
@@ -162,6 +209,7 @@
                     android:drawableRight="@drawable/voicebutton"
                     android:ems="10"
                     android:hint="Fate"
+                    android:theme="@style/MyEditText"
                     android:imeOptions="actionNext"
                     android:inputType="text"
                     android:nextFocusDown="@+id/edit_CalfID"
@@ -173,7 +221,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:errorEnabled="true"
-                app:errorTextAppearance="@style/MyErrorText">
+                app:errorTextAppearance="@style/MyErrorText"
+                app:hintTextAppearance="@style/MyHintText">
 
                 <EditText
                     android:id="@+id/edit_CalfID"
@@ -182,28 +231,79 @@
                     android:drawableRight="@drawable/voicebutton"
                     android:ems="10"
                     android:hint="Calf ID"
+                    android:theme="@style/MyEditText"
                     android:imeOptions="actionNext"
                     android:inputType="number"
                     android:nextFocusDown="@+id/edit_CalvingDiff"
                     android:nextFocusUp="@id/edit_Fate" />
-            </android.support.design.widget.TextInputLayout>
 
-            <TextView
-                android:id="@+id/tv_addTwinCalf"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clickable="true"
-                android:gravity="right"
-                android:labelFor="@id/edit_CalfID"
-                android:onClick="AddNewCalf"
-                android:text="@string/addNewCalf" />
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:padding="10dp">
+
+                    <android.support.design.chip.ChipGroup
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="14dp">
+
+                        <android.support.design.chip.Chip
+                            android:id="@+id/twin1chip"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentTop="true"
+                            android:layout_marginTop="8dp"
+                            app:chipText="Twin 1"
+                            app:closeIcon="@drawable/closs_button"
+                            app:closeIconEnabled="true"/>
+
+                        <android.support.design.chip.Chip
+                            android:id="@+id/twin2chip"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentTop="true"
+                            android:layout_marginTop="8dp"
+                            app:chipText="Twin 2"
+                            app:closeIcon="@drawable/closs_button"
+                            app:closeIconEnabled="true"/>
+
+                        <android.support.design.chip.Chip
+                            android:id="@+id/twin3chip"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentTop="true"
+                            android:layout_marginTop="8dp"
+                            app:chipText="Twin 3"
+                            app:closeIcon="@drawable/closs_button"
+                            app:closeIconEnabled="true"/>
+                    </android.support.design.chip.ChipGroup>
+
+
+
+
+                    <TextView
+                        android:id="@+id/tv_addTwinCalf"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight = "true"
+                        android:clickable="true"
+                        android:labelFor="@id/edit_CalfID"
+                        android:text="@string/addNewCalf"
+                        android:theme="@style/MyEditText" />
+
+                </RelativeLayout>
+            </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/CalvingDiff_text_input_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:errorEnabled="true"
-                app:errorTextAppearance="@style/MyErrorText">
+                app:errorTextAppearance="@style/MyErrorText"
+                app:hintTextAppearance="@style/MyHintText">
 
                 <EditText
                     android:id="@+id/edit_CalvingDiff"
@@ -212,6 +312,7 @@
                     android:drawableRight="@drawable/voicebutton"
                     android:ems="10"
                     android:hint="Calving Difficulty"
+                    android:theme="@style/MyEditText"
                     android:imeOptions="actionNext"
                     android:inputType="text"
                     android:nextFocusDown="@+id/edit_Condition"
@@ -223,7 +324,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:errorEnabled="true"
-                app:errorTextAppearance="@style/MyErrorText">
+                app:errorTextAppearance="@style/MyErrorText"
+                app:hintTextAppearance="@style/MyHintText">
 
                 <EditText
                     android:id="@+id/edit_Condition"
@@ -232,6 +334,7 @@
                     android:drawableRight="@drawable/voicebutton"
                     android:ems="10"
                     android:hint="Condition"
+                    android:theme="@style/MyEditText"
                     android:imeOptions="actionNext"
                     android:inputType="text"
                     android:nextFocusDown="@+id/edit_Remarks"
@@ -243,7 +346,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:errorEnabled="true"
-                app:errorTextAppearance="@style/MyErrorText">
+                app:errorTextAppearance="@style/MyErrorText"
+                app:hintTextAppearance="@style/MyHintText">
 
                 <EditText
                     android:id="@+id/edit_Remarks"
@@ -252,6 +356,7 @@
                     android:drawableRight="@drawable/voicebutton"
                     android:ems="10"
                     android:hint="Remarks"
+                    android:theme="@style/MyEditText"
                     android:imeOptions="actionDone"
                     android:inputType="text"
                     android:nextFocusUp="@id/edit_Condition" />
@@ -276,29 +381,18 @@
         app:layout_constraintHorizontal_bias="0.333"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <ImageButton
-        android:id="@+id/btn_VoiceInput"
-        android:layout_width="84dp"
-        android:layout_height="84dp"
-        android:layout_marginEnd="28dp"
-        android:layout_marginRight="28dp"
-        android:layout_marginTop="16dp"
-        android:background="@android:color/transparent"
-        android:onClick="askSpeechInput"
-        android:scaleType="centerInside"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/microphone" />
-
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/deleteButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginLeft="24dp"
-        android:layout_marginTop="16dp"
-        android:onClick="startSpeech"
-        android:text="Test Speak All"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="76dp"
+        android:layout_marginEnd="1dp"
+        android:layout_marginRight="1dp"
+        android:text="DELETE"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.029"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

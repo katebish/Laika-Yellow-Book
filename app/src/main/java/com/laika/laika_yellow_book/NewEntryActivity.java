@@ -1,34 +1,33 @@
 package com.laika.laika_yellow_book;
 
-import android.Manifest;
 import android.app.DatePickerDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.speech.RecognitionListener;
+import android.os.Bundle;
 import android.speech.RecognizerIntent;
-import android.speech.SpeechRecognizer;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
+import android.support.design.chip.Chip;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -40,8 +39,7 @@ import java.util.Locale;
 
 import static android.speech.tts.TextToSpeech.QUEUE_ADD;
 
-
-public class NewEntryActivity extends AppCompatActivity implements AsyncResponse {
+public class NewEntryActivity extends AppCompatActivity implements AsyncResponse,TwinCalfDialogListener {
     private DbHelper myDb;
     private TextToSpeech mTTS;
     private String[] labels;
@@ -50,10 +48,18 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
     private EditText[] editTexts;
     private DataLine data;
     private boolean isIndividual = false;
-    private boolean isParser = false;
     private TextInputLayout[] textInputLayout;
     private InputValidation inputValidation;
     private int apiIndex;
+    private ArrayList<DataLine> twins;
+    private int twinCount = 0;
+
+    private Method method = Method.NEWDATA;
+    private boolean isSuccessful;
+    private String ID;
+
+    public enum Method {NEWDATA, UPDATE};
+    private boolean isParser = false;
     /*SPEECH TEST*/
     private SpeechRecognizer speechR;
 
@@ -61,9 +67,83 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_entry);
+
         myDb = new DbHelper(this);
         data = new DataLine();
+        twins = new ArrayList<DataLine>();
 
+        inputValidation = new InputValidation();
+        inputValidation.setData(data);
+        editTexts = new EditText[11];
+        textInputLayout = new TextInputLayout[11];
+
+        /*SPEECH TEST*/
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO},99);
+        }
+        speechR = SpeechRecognizer.createSpeechRecognizer(this);
+        speechR.setRecognitionListener(new SpeechListener());
+
+        Button deleteButton = (Button) findViewById(R.id.deleteButton);
+        deleteButton.setVisibility(View.GONE);
+
+        TextView addTwinCalf = findViewById(R.id.tv_addTwinCalf);
+        addTwinCalf.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+            if(twinCount < 3)
+                openTwinCalfDialog();
+            else
+                Toast.makeText(NewEntryActivity.this, "Max of 3 twin calves allowed", Toast.LENGTH_LONG).show();
+                }
+        });
+
+        final Chip twin1chip = findViewById(R.id.twin1chip);
+        twin1chip.setVisibility(View.INVISIBLE);
+
+        twin1chip.setOnCloseIconClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                twin1chip.setVisibility(View.INVISIBLE);
+            }
+        });
+
+        final Chip twin2chip = findViewById(R.id.twin2chip);
+        twin2chip.setVisibility(View.INVISIBLE);
+
+        twin2chip.setOnCloseIconClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                twin2chip.setVisibility(View.INVISIBLE);
+            }
+        });
+
+        final Chip twin3chip = findViewById(R.id.twin3chip);
+        twin3chip.setVisibility(View.INVISIBLE);
+
+        twin3chip.setOnCloseIconClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                twin3chip.setVisibility(View.INVISIBLE);
+            }
+        });
+
+        //get all label values
+        LinearLayout layout = findViewById(R.id.linearLayout1);
+        labels = new String[11];
+        int c = 0;
+        for (int i = 0; i < layout.getChildCount(); i++) {
+            View v = layout.getChildAt(i);
+            if(v instanceof TextInputLayout) {
+                textInputLayout[c] = (TextInputLayout)v;
+                editTexts[c] = ((TextInputLayout) v).getEditText();
+                labels[c] = ((TextInputLayout) v).getHint().toString();
+                c++;
+            }
+        }
+
+        setDateTimePicker(editTexts[1],1);
+        setDateTimePicker(editTexts[4],4);
         inputValidation = new InputValidation();
         inputValidation.setData(data);
         editTexts = new EditText[11];
@@ -165,6 +245,99 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
         }
 
         initTTS();
+
+
+        //Update and Delete
+        if (getIntent().hasExtra("com.laika.laika_yellow_book.rowIDContent")) {
+            method = Method.UPDATE;
+            //get info from clicked row
+            String row_id_display = getIntent().getExtras().getString("com.laika.laika_yellow_book.rowIDContent");
+
+            //Query the database
+            Cursor cursor = null;
+
+            try {
+                cursor = myDb.getDataPopulateEntry(row_id_display);
+                if(cursor.getCount() > 0) {
+                    cursor.moveToFirst();
+                    DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                    ID = Integer.toString(cursor.getInt(cursor.getColumnIndex("ID")));
+                    if(cursor.getType(cursor.getColumnIndex("CowNum"))!= Cursor.FIELD_TYPE_NULL) {
+                        editTexts[0].setText(Integer.toString(cursor.getInt(cursor.getColumnIndex("CowNum"))));
+                        data.cowNum = cursor.getInt(cursor.getColumnIndex("CowNum"));
+                    } if(cursor.getType(cursor.getColumnIndex("DueCalveDate"))!= Cursor.FIELD_TYPE_NULL) {
+                        editTexts[1].setText(cursor.getString(cursor.getColumnIndex("DueCalveDate")));
+                        try{
+                        data.dueCalveDate = format.parse(cursor.getString(cursor.getColumnIndex("DueCalveDate")));
+                        } catch(Exception e){
+                            Log.d("new entry","parse error from database should not be reachable");
+                        }
+                    } if(cursor.getType(cursor.getColumnIndex("SireOfCalf"))!= Cursor.FIELD_TYPE_NULL) {
+                        editTexts[2].setText(Integer.toString(cursor.getInt(cursor.getColumnIndex("SireOfCalf"))));
+                        data.sireOfCalf = cursor.getInt(cursor.getColumnIndex("SireOfCalf"));
+                    } if(cursor.getType(cursor.getColumnIndex("CalfBW"))!= Cursor.FIELD_TYPE_NULL) {
+                        editTexts[3].setText(Long.toString(cursor.getLong(cursor.getColumnIndex("CalfBW"))));
+                        data.calfBW = cursor.getLong(cursor.getColumnIndex("CalfBW"));
+                    } if(cursor.getType(cursor.getColumnIndex("CalvingDate"))!= Cursor.FIELD_TYPE_NULL) {
+                        editTexts[4].setText(cursor.getString(cursor.getColumnIndex("CalvingDate")));
+                        try{
+                            data.calvingDate = format.parse(cursor.getString(cursor.getColumnIndex("CalvingDate")));
+                        } catch(Exception e){
+                            Log.d("new entry","parse error from database should not be reachable");
+                        }
+                    } if(cursor.getType(cursor.getColumnIndex("CalvingDiff"))!= Cursor.FIELD_TYPE_NULL) {
+                        editTexts[5].setText(cursor.getString(cursor.getColumnIndex("CalvingDiff")));
+                        data.calvingDiff = cursor.getString(cursor.getColumnIndex("CalvingDiff"));
+                    } if(cursor.getType(cursor.getColumnIndex("CalfID"))!= Cursor.FIELD_TYPE_NULL) {
+                        editTexts[6].setText(cursor.getString(cursor.getColumnIndex("CalfID")));
+                        data.condition = cursor.getString(cursor.getColumnIndex("CalfID"));
+                    } if(cursor.getType(cursor.getColumnIndex("Sex"))!= Cursor.FIELD_TYPE_NULL) {
+                        editTexts[7].setText(cursor.getString(cursor.getColumnIndex("Sex")));
+                        data.sex = cursor.getString(cursor.getColumnIndex("Sex"));
+                    } if(cursor.getType(cursor.getColumnIndex("Fate"))!= Cursor.FIELD_TYPE_NULL) {
+                        editTexts[8].setText(cursor.getString(cursor.getColumnIndex("Fate")));
+                        data.fate = cursor.getString(cursor.getColumnIndex("Fate"));
+                    } if(cursor.getType(cursor.getColumnIndex("Condition"))!= Cursor.FIELD_TYPE_NULL) {
+                        editTexts[9].setText(Integer.toString(cursor.getInt(cursor.getColumnIndex("Condition"))));
+                        data.calfIndentNo = cursor.getInt(cursor.getColumnIndex("Condition"));
+                    } if(cursor.getType(cursor.getColumnIndex("Remarks"))!= Cursor.FIELD_TYPE_NULL) {
+                        editTexts[10].setText(cursor.getString(cursor.getColumnIndex("Remarks")));
+                        data.remarks = cursor.getString(cursor.getColumnIndex("Remarks"));
+                    }
+                }
+            }
+            finally {
+                cursor.close();
+            }
+
+            //Display Delete Button
+            deleteButton.setVisibility(View.VISIBLE);
+            deleteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //Delete query
+                    myDb.deleteData(ID);
+
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    startActivity(intent);
+
+                }
+            });
+        }
+
+        //create toolbar
+        Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        if(method == Method.NEWDATA)
+            mToolbar.setTitle("New Entry");
+        else if (method == Method.UPDATE)
+            mToolbar.setTitle("Update Entry");
+        mToolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     private void setDateTimePicker(final EditText ed, final int index) {
@@ -223,6 +396,9 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
                                     }
                                     askSpeechInput(currEditText);
                                 }
+                            }
+                            else if(s.equals("finish")){
+                                finish();
                             }
                         }
 
@@ -307,13 +483,20 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
         String[] keywords = keyword.split(" ");
         if(keywords.length == 1) {
             switch (keyword) {
+                case "clear":
+                    currEditText.setText("");
+                    HashMap<String, String> map = new HashMap<String, String>();
+                    map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "label");
+                    mTTS.speak(labels[index], QUEUE_ADD, map);
+                    askSpeechInput(currEditText);
+                    return true;
                 case "skip":
                     if(findViewById(currEditText.getNextFocusDownId()) != null){
                         currEditText = findViewById(currEditText.getNextFocusDownId());
                         currEditText.requestFocus();
                         if (!isIndividual && currEditText != null) {
                             //read next label
-                            HashMap<String, String> map = new HashMap<String, String>();
+                            map = new HashMap<String, String>();
                             map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "label");
                             mTTS.speak(labels[index], QUEUE_ADD, map);
                             //pause for 1 sec before speech starts
@@ -326,7 +509,7 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
                         }
                     }
                     return true;
-                case "previous":
+                case "return":
                     if(findViewById(currEditText.getNextFocusUpId()) != null){
                         currEditText = findViewById(currEditText.getNextFocusUpId());
                         currEditText.requestFocus();
@@ -334,7 +517,7 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
                             if(currEditText.getTag() != null)
                                 index = (int) currEditText.getTag();
                             //read previous label
-                            HashMap<String, String> map = new HashMap<String, String>();
+                            map = new HashMap<String, String>();
                             map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "label");
                             mTTS.speak(labels[index], QUEUE_ADD, map);
                             //pause for 1 sec before speech starts
@@ -347,15 +530,19 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
                         }
                     }
                     return true;
+                case "safe":
                 case "save":
+                    isKeyword = true;
                     boolean isSuccess = AddData(currEditText);
-                    HashMap<String, String> map = new HashMap<String, String>();
-                    map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "message");
+                    map = new HashMap<String, String>();
+                    map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "finish");
                     if(isSuccess) {
+                        Toast.makeText(NewEntryActivity.this, "New entry saved!", Toast.LENGTH_LONG).show();
                         mTTS.speak("New entry saved", QUEUE_ADD, map);
-                        clearEditText();
                     }
                     else{
+                        map = new HashMap<String, String>();
+                        map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "error");
                         mTTS.speak("Please ensure that all fields are valid", QUEUE_ADD, map);
                     }
                     return true;
@@ -378,6 +565,7 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
         }
         editTexts[0].requestFocus();
     }
+    boolean isKeyword = false;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
@@ -493,7 +681,6 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
             return false;
         }
 
-
         String input = currEditText.getText().toString();
         if (!input.isEmpty()) {
             currEditText.getOnFocusChangeListener().onFocusChange(currEditText,false);
@@ -507,9 +694,45 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
                 return false;
             }
         }
-        boolean isSuccessful = myDb.insertData(data.cowNum, data.dueCalveDate, data.sireOfCalf, data.calfBW, data.calvingDate, data.calvingDiff, data.condition, data.sex, data.fate, data.calfIndentNo, data.remarks);
+
+        if(method == Method.NEWDATA) {
+            boolean insertTwin = true;
+            if(twins.size() > 0) {
+                for (DataLine twinData: twins) {
+                    boolean hasEntry = myDb.hasCalf(String.valueOf(twinData.calfIndentNo));
+                    if(!hasEntry) {
+                        insertTwin = myDb.insertData(data.cowNum, data.dueCalveDate, data.sireOfCalf, twinData.calfBW, data.calvingDate, data.calvingDiff, twinData.condition, twinData.sex, data.fate, twinData.calfIndentNo, data.remarks);
+                        if (!insertTwin) {
+                            Toast.makeText(NewEntryActivity.this, twinData.calfIndentNo + " Insertion failed, please check that all fields are valid", Toast.LENGTH_LONG).show();
+                            break;
+                        }
+                    }
+                    else {
+                        Toast.makeText(NewEntryActivity.this, twinData.calfIndentNo + " already existed, do you want to override it with current entry?", Toast.LENGTH_LONG).show();
+                        break;
+                    }
+                }
+            }
+            if(insertTwin) {
+                Boolean hasEntry = false;
+                if(data.calfIndentNo != 0)
+                    hasEntry = myDb.hasCalf(String.valueOf(data.calfIndentNo));
+                if(hasEntry == false)
+                    isSuccessful = myDb.insertData(data.cowNum, data.dueCalveDate, data.sireOfCalf, data.calfBW, data.calvingDate, data.calvingDiff, data.condition, data.sex, data.fate, data.calfIndentNo, data.remarks);
+                else if(hasEntry == true) {
+                    isSuccessful = false;
+                    Toast.makeText(NewEntryActivity.this, data.calfIndentNo + " already existed, do you want to override it with current entry?", Toast.LENGTH_LONG).show();
+                }
+            }
+        }
+        if(method == Method.UPDATE) {
+            isSuccessful = myDb.updateData(ID,data.cowNum, data.dueCalveDate, data.sireOfCalf, data.calfBW, data.calvingDate, data.calvingDiff, data.condition, data.sex, data.fate, data.calfIndentNo, data.remarks);
+        }
+
         if (isSuccessful) {
-            Toast.makeText(NewEntryActivity.this, "Data is inserted", Toast.LENGTH_LONG).show();
+            if(!isKeyword)
+                openDialog();
+            clearEditText();
             return true;
         }
         else {
@@ -518,42 +741,27 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
         }
     }
 
-    private int id = 1;
-    private int count = 1;
-    public void AddNewCalf(View view) {
-        if (count > 3) {
-            Toast.makeText(NewEntryActivity.this, "Max of four twin calves allowed!", Toast.LENGTH_LONG).show();
-            return;
+    private void openDialog() {
+        if(method == Method.NEWDATA) {
+            PopupDialog dialog = new PopupDialog();
+            dialog.setContext(this);
+            dialog.show(getSupportFragmentManager(), "popup dialog");
         }
-        final EditText twinCalf = new EditText(this);
-        final LinearLayout linearLayout = (LinearLayout) findViewById(R.id.linearLayout1);
-        twinCalf.setLayoutParams(new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-        ));
-        twinCalf.setEms(10);
-        twinCalf.setHint("Twin Calf ID");
-        twinCalf.setId(id);
-        twinCalf.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.closs_button, 0);
-        twinCalf.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
-                    if (motionEvent.getRawX() >= (twinCalf.getRight() - twinCalf.getCompoundDrawables()[2].getBounds().width())) {
-                        // your action here
-                        linearLayout.removeView(twinCalf);
-                        count--;
-                        return true;
-                    }
-                }
-                return false;
-            }
-        });
+        else if (method == Method.UPDATE) {
+            Toast.makeText(NewEntryActivity.this, "Entry updated!", Toast.LENGTH_LONG).show();
 
-        int pos = 3 + count;
-        id++;
-        count++;
-        linearLayout.addView(twinCalf, pos);
+            Intent intent = new Intent(this, SearchResults.class);
+            String searchContent = "";
+
+            if(data.calfIndentNo != 0)
+                searchContent = String.valueOf(data.calfIndentNo);
+            else
+                searchContent = String.valueOf(data.cowNum);
+            //pass search box information to searchResults activity
+            intent.putExtra("com.laika.laika_yellow_book.SearchContent", searchContent);
+            finish();
+            startActivity(intent);
+        }
     }
 
     @Override
@@ -763,5 +971,46 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
         public void onPartialResults(Bundle results) {
 
         }
+    }
+
+    private void openTwinCalfDialog(){
+        TwinCalfDialog twinCalfDialog = new TwinCalfDialog();
+        twinCalfDialog.show(getSupportFragmentManager(), "twin dialog");
+    }
+
+
+    @Override
+    public void passData(int calfID, String calfSex, Double calfBW, String calfCondition) {
+        String id = String.valueOf(calfID);
+        switch (twinCount) {
+            case 0:
+               Chip twin1chip = findViewById(R.id.twin1chip);
+               twin1chip.setVisibility(View.VISIBLE);
+
+               break;
+            case 1:
+               /* TextView twin2 = findViewById(R.id.twin2);
+                twin2.setVisibility(View.VISIBLE);
+                twin2.setText(id);*/
+
+               Chip twin2chip = findViewById(R.id.twin2chip);
+               twin2chip.setVisibility(View.VISIBLE);
+
+               break;
+            case 2:
+                /*TextView twin3 = findViewById(R.id.twin3);
+                twin3.setVisibility(View.VISIBLE);
+                twin3.setText(id);*/
+
+                Chip twin3chip = findViewById(R.id.twin3chip);
+                twin3chip.setVisibility(View.VISIBLE);
+
+                break;
+        }
+        twinCount++;
+        editTexts[8].requestFocus();
+        DataLine twin = new DataLine(data.cowNum, data.dueCalveDate,data.sireOfCalf,calfBW,data.calvingDate,data.calvingDiff,calfCondition,calfSex,data.fate,calfID,data.remarks);
+        twins.add(twin);
+
     }
 }

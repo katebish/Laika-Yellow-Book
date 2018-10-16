@@ -18,7 +18,7 @@ public class DataLine {
     String remarks;
 
     public DataLine() {
-        dataLine = new DataLine(-1, new Date(), -1, -1, new Date(), "", "", "", "", -1,"");
+        dataLine = new DataLine(0, new Date(), 0, 0, new Date(), "", "", "", "", 0,"");
     }
 
     public DataLine(int cowNum, Date dueCalveDate, int sireOfCalf, double calfBW, Date calvingDate, String calvingDiff, String condition, String sex, String fate, int calfIndentNo, String remarks) {
