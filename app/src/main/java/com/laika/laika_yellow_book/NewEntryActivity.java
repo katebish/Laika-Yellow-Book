@@ -151,13 +151,6 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
         setDateTimePicker(editTexts[1],1);
         setDateTimePicker(editTexts[4],4);
 
-        /*SPEECH TEST*/
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO},99);
-        }
-        speechR = SpeechRecognizer.createSpeechRecognizer(this);
-        speechR.setRecognitionListener(new SpeechListener());
-
         int tag = 0;
         for (final EditText et : editTexts) {
             et.setTag(tag);

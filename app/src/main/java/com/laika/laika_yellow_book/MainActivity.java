@@ -66,7 +66,6 @@ public class MainActivity extends AppCompatActivity {
         String searchContent = textSearchBox.getText().toString();
         //pass search box information to searchResults activity
         intent.putExtra("com.laika.laika_yellow_book.SearchContent", searchContent);
-
         startActivity(intent);
     }
 }
