@@ -14,6 +14,7 @@ public class InputValidation {
     }
 
     public String validate(String textInput, int index) {
+        format.setLenient(false);
         try {
             switch (index) {
                 case 0:

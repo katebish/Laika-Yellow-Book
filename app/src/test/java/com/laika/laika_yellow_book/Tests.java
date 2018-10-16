@@ -21,6 +21,12 @@ public class Tests {
     }
     @Test
     public void dueDate_Validation() {
-        assertTrue("validation returns error for invalid cow due date", validation.validate("21-10-18", 1) == ""&&validation.validate("11/11/11",1)==""&&validation.validate("today",1)=="Invalid date format, please try again.");
+        assertTrue("validation returns error for invalid cow due date", validation.validate("21-10-18", 1) == "");
+        data.dueCalveDate = null;
+        assertTrue("validation returns error for invalid cow due date",validation.validate("11/11/11",1)=="");
+        data.dueCalveDate = null;
+        assertTrue("validation returns error for invalid cow due date",validation.validate("today",1)=="Invalid date format, please try again.");
+        data.dueCalveDate = null;
+        assertTrue("validation returns error for invalid cow due date",validation.validate("20/20/20",1)=="Invalid date format, please try again.");
     }
 }
