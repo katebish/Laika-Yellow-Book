@@ -1,18 +1,24 @@
 package com.laika.laika_yellow_book;
 
+import android.Manifest;
 import android.app.DatePickerDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
+import android.speech.SpeechRecognizer;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
 import android.support.design.chip.Chip;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -144,10 +150,6 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
 
         setDateTimePicker(editTexts[1],1);
         setDateTimePicker(editTexts[4],4);
-        inputValidation = new InputValidation();
-        inputValidation.setData(data);
-        editTexts = new EditText[11];
-        textInputLayout = new TextInputLayout[11];
 
         /*SPEECH TEST*/
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
@@ -155,24 +157,6 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
         }
         speechR = SpeechRecognizer.createSpeechRecognizer(this);
         speechR.setRecognitionListener(new SpeechListener());
-
-        //get all label values
-        LinearLayout layout = findViewById(R.id.linearLayout1);
-        labels = new String[11];
-        int c = 0;
-        for (int i = 0; i < layout.getChildCount(); i++) {
-            View v = layout.getChildAt(i);
-            if(v instanceof TextInputLayout) {
-                textInputLayout[c] = (TextInputLayout)v;
-                editTexts[c] = ((TextInputLayout) v).getEditText();
-                labels[c] = ((TextInputLayout) v).getHint().toString();
-                c++;
-            }
-        }
-
-        setDateTimePicker(editTexts[1],1);
-        setDateTimePicker(editTexts[4],4);
-
 
         int tag = 0;
         for (final EditText et : editTexts) {
