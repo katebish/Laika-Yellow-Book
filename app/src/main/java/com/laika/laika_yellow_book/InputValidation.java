@@ -18,8 +18,8 @@ public class InputValidation {
             switch (index) {
                 case 0:
                     data.cowNum = Integer.parseInt(textInput);
-                    if (data.cowNum < 0) {
-                        return "Cow number cannot be negative";
+                    if (data.cowNum <= 0) {
+                        return "Cow number cannot be negative or zero";
                     }
                     break;
                 case 1:

@@ -387,27 +387,59 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
             case REQ_CODE_SPEECH_INPUT: {
                 if (resultCode == RESULT_OK && null != intent) {
                     ArrayList<String> result = intent.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                    String resText = result.get(0);
                     //check keywords
                     boolean isKeyword = isKeyword(currEditText, result.get(0));
                     if(isKeyword)
                         return;
-
+                    if(currEditText == editTexts[0]||currEditText == editTexts[2]||currEditText == editTexts[7]){
+                        int i = 0;
+                        boolean parseOk = false;
+                        while (result.size() > i && !parseOk) {
+                            resText = result.get(i);
+                            try {
+                                Integer.parseInt(resText);
+                                parseOk = true;
+                            } catch (Exception e) {
+                                i++;
+                            }
+                        }
+                        if(!parseOk) {
+                            resText = result.get(0);
+                        }
+                    }
+                    if(currEditText == editTexts[3]){
+                        int i = 0;
+                        boolean parseOk = false;
+                        while (result.size() > i && !parseOk) {
+                            resText = result.get(i);
+                            try {
+                                Double.parseDouble(resText);
+                                parseOk = true;
+                            } catch (Exception e) {
+                                i++;
+                            }
+                        }
+                        if(!parseOk) {
+                            resText = result.get(0);
+                        }
+                    }
                     //check internet connection
                     try {
                         if (currEditText == editTexts[1]) {
                             boolean hasInternet = hasInternet();
                             if (hasInternet) {
-                                currEditText.setText(result.get(0));
+                                currEditText.setText(resText);
                                 currEditText.setEnabled(false);
                                 ValidateResultsAPI validateResult = new ValidateResultsAPI();
                                 validateResult.delegate = this;
                                 apiIndex = 1;
-                                validateResult.execute(result.get(0));
+                                validateResult.execute(resText);
                             } else {
-                                Date date = inputValidation.parseDate(result.get(0));
+                                Date date = inputValidation.parseDate(resText);
                                 if (date == null) {
                                     textInputLayout[1].setError("Format: first of August 2018");
-                                    currEditText.setText(result.get(0));
+                                    currEditText.setText(resText);
                                 } else {
                                     data.dueCalveDate = date;
                                     currEditText.setText(new SimpleDateFormat("yyyy-MM-dd").format(date));
@@ -417,17 +449,17 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
                         } else if (currEditText == editTexts[4]) {
                             boolean hasInternet = hasInternet();
                             if (hasInternet) {
-                                currEditText.setText(result.get(0));
+                                currEditText.setText(resText);
                                 currEditText.setEnabled(false);
                                 ValidateResultsAPI validateResult = new ValidateResultsAPI();
                                 validateResult.delegate = this;
                                 apiIndex = 4;
-                                validateResult.execute(result.get(0));
+                                validateResult.execute(resText);
                             } else {
-                                Date date = inputValidation.parseDate(result.get(0));
+                                Date date = inputValidation.parseDate(resText);
                                 if (date == null) {
                                     textInputLayout[4].setError("Format: first of August 2018");
-                                    currEditText.setText(result.get(0));
+                                    currEditText.setText(resText);
                                 } else {
                                     data.calvingDate = date;
                                     currEditText.setText(new SimpleDateFormat("yyyy-MM-dd").format(date));
@@ -435,7 +467,7 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
                                 speakResult(currEditText);
                             }
                         } else {
-                            currEditText.setText(result.get(0));
+                            currEditText.setText(resText);
                             speakResult(currEditText);
                         }
                     } catch (Exception e) {
