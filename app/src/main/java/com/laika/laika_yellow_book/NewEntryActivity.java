@@ -607,7 +607,9 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
                                     currEditText.setText(resText);
                                 } else {
                                     data.dueCalveDate = date;
-                                    currEditText.setText(new SimpleDateFormat("yyyy-MM-dd").format(date));
+                                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                                    dateFormat.setLenient(false);
+                                    currEditText.setText(dateFormat.format(date));
                                 }
                                 speakResult(currEditText);
                             }
@@ -627,7 +629,9 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
                                     currEditText.setText(resText);
                                 } else {
                                     data.calvingDate = date;
-                                    currEditText.setText(new SimpleDateFormat("yyyy-MM-dd").format(date));
+                                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                                    dateFormat.setLenient(false);
+                                    currEditText.setText(dateFormat.format(date));
                                 }
                                 speakResult(currEditText);
                             }
@@ -743,7 +747,8 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
 
     @Override
     public void processFinish(final String output) {
-        DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        format.setLenient(false);
         try {
             if(apiIndex==1) {
                 data.dueCalveDate = format.parse(output);
