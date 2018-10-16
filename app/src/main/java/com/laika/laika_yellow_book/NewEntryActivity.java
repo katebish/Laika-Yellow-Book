@@ -50,6 +50,7 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
     private EditText[] editTexts;
     private DataLine data;
     private boolean isIndividual = false;
+    private boolean isParser = false;
     private TextInputLayout[] textInputLayout;
     private InputValidation inputValidation;
     private int apiIndex;
@@ -532,18 +533,30 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
                 editTexts[apiIndex].setText(format.format(data.dueCalveDate));
                 textInputLayout[apiIndex].setError(null);
                 editTexts[apiIndex].setEnabled(true);
-                speakResult(editTexts[apiIndex]);
+                if(isParser){
+                    isParser = false;
+                } else {
+                    speakResult(editTexts[apiIndex]);
+                }
             } if(apiIndex==4){
                 data.calvingDate = format.parse(output);
                 editTexts[apiIndex].setText(format.format(data.calvingDate));
                 textInputLayout[apiIndex].setError(null);
                 editTexts[apiIndex].setEnabled(true);
-                speakResult(editTexts[apiIndex]);
+                if(isParser){
+                    isParser = false;
+                } else {
+                    speakResult(editTexts[apiIndex]);
+                }
             }
         } catch (ParseException e) {
            textInputLayout[apiIndex].setError("Invalid date, please try again.");
            editTexts[apiIndex].setEnabled(true);
-           speakResult(editTexts[apiIndex]);
+            if(isParser){
+                isParser = false;
+            } else {
+                speakResult(editTexts[apiIndex]);
+            }
         }
     }
 
@@ -577,13 +590,13 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
 
         @Override
         public void onResults(Bundle results) {
-            ArrayList<String> data = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+            ArrayList<String> res = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
             HashMap<String, String> vals;
-            Log.d("parser",""+data.size());
-            if((vals = Parser.parse(data.get(0))).isEmpty()){
+            Log.d("parser",""+res.size());
+            if((vals = Parser.parse(res.get(0))).isEmpty()){
                 int i = 1;
-                while ((data.size() > i) && (vals = Parser.parse(data.get(i))).isEmpty()) {
-                    Log.d("parser", data.get(i));
+                while ((res.size() > i) && (vals = Parser.parse(res.get(i))).isEmpty()) {
+                    Log.d("parser", res.get(i));
                     i++;
                     Log.d("parser", "looped " + i);
                 }
@@ -598,6 +611,24 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
                     case "calf due date":
                         editTexts[1].requestFocus();
                         editTexts[1].setText(vals.get(key));
+                        isParser = true;
+                        if (hasInternet()) {
+                            editTexts[1].setEnabled(false);
+                            ValidateResultsAPI validateResult = new ValidateResultsAPI();
+                            validateResult.delegate = NewEntryActivity.this;
+                            apiIndex = 1;
+                            validateResult.execute(vals.get(key));
+                        } else {
+                            Date date = inputValidation.parseDate(vals.get(key));
+                            if (date == null) {
+                                textInputLayout[1].setError("Format: first of August 2018");
+                                editTexts[1].setText(vals.get(key));
+                            } else {
+                                data.dueCalveDate = date;
+                                editTexts[1].setText(new SimpleDateFormat("yyyy-MM-dd").format(date));
+                            }
+                            speakResult(currEditText);
+                        }
                         editTexts[1].clearFocus();
                         break;
                     case "sire":
@@ -613,6 +644,24 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
                     case "calving date":
                         editTexts[4].requestFocus();
                         editTexts[4].setText(vals.get(key));
+                        isParser = true;
+                        if (hasInternet()) {
+                            editTexts[4].setEnabled(false);
+                            ValidateResultsAPI validateResult = new ValidateResultsAPI();
+                            validateResult.delegate = NewEntryActivity.this;
+                            apiIndex = 4;
+                            validateResult.execute(vals.get(key));
+                        } else {
+                            Date date = inputValidation.parseDate(vals.get(key));
+                            if (date == null) {
+                                textInputLayout[4].setError("Format: first of August 2018");
+                                editTexts[4].setText(vals.get(key));
+                            } else {
+                                data.calvingDate = date;
+                                editTexts[4].setText(new SimpleDateFormat("yyyy-MM-dd").format(date));
+                            }
+                            speakResult(currEditText);
+                        }
                         editTexts[4].clearFocus();
                         break;
                     case "sex":
@@ -647,7 +696,7 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
                         break;
                 }
             }
-            if(!data.isEmpty()&&data.get(0).matches("(?i).*(submit|save)")) {
+            if(!res.isEmpty()&&res.get(0).matches("(?i).*(submit|save)")) {
                 boolean isSuccess = AddData(currEditText);
                 HashMap<String, String> map = new HashMap<String, String>();
                 map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "message");
