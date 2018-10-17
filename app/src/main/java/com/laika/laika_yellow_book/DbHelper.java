@@ -10,6 +10,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 
 public class DbHelper extends SQLiteOpenHelper{
     public static final String DATABASE_NAME = "Calving.db";
@@ -162,14 +163,20 @@ public class DbHelper extends SQLiteOpenHelper{
 
     public String[] returnIds() {
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor res = db.rawQuery("select distinct "+COL1+" from "+TABLE_NAME + " WHERE 1", null);
+        Cursor res = db.rawQuery("select "+COL1+","+COL3+","+COL10+" from "+TABLE_NAME + " WHERE 1", null);
         res.moveToFirst();
-        ArrayList<String> ids = new ArrayList<String>();
+        HashSet<String> ids = new HashSet();
         while(!res.isAfterLast()) {
             ids.add(res.getString(0));
+            if(res.getType(1)!=Cursor.FIELD_TYPE_NULL) {
+                ids.add(res.getString(1));
+            } if(res.getType(2)!=Cursor.FIELD_TYPE_NULL) {
+                ids.add(res.getString(2));
+            }
             res.moveToNext();
         }
         res.close();
+        ids.remove("0");
         return ids.toArray(new String[ids.size()]);
     }
 
