@@ -162,7 +162,7 @@ public class DbHelper extends SQLiteOpenHelper{
 
     public String[] returnIds() {
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor res = db.rawQuery("select "+COL1+" from "+TABLE_NAME + " WHERE 1", null);
+        Cursor res = db.rawQuery("select distinct "+COL1+" from "+TABLE_NAME + " WHERE 1", null);
         res.moveToFirst();
         ArrayList<String> ids = new ArrayList<String>();
         while(!res.isAfterLast()) {
