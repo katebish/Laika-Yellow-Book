@@ -266,7 +266,7 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
                         editTexts[5].setText(cursor.getString(cursor.getColumnIndex("CalvingDiff")));
                         data.calvingDiff = cursor.getString(cursor.getColumnIndex("CalvingDiff"));
                     } if(cursor.getType(cursor.getColumnIndex("CalfID"))!= Cursor.FIELD_TYPE_NULL) {
-                        editTexts[6].setText(cursor.getString(cursor.getColumnIndex("CalfID")));
+                        editTexts[6].setText(Integer.toString(cursor.getInt(cursor.getColumnIndex("CalfID"))));
                         data.condition = cursor.getString(cursor.getColumnIndex("CalfID"));
                     } if(cursor.getType(cursor.getColumnIndex("Sex"))!= Cursor.FIELD_TYPE_NULL) {
                         editTexts[7].setText(cursor.getString(cursor.getColumnIndex("Sex")));
@@ -275,7 +275,7 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
                         editTexts[8].setText(cursor.getString(cursor.getColumnIndex("Fate")));
                         data.fate = cursor.getString(cursor.getColumnIndex("Fate"));
                     } if(cursor.getType(cursor.getColumnIndex("Condition"))!= Cursor.FIELD_TYPE_NULL) {
-                        editTexts[9].setText(Integer.toString(cursor.getInt(cursor.getColumnIndex("Condition"))));
+                        editTexts[9].setText(cursor.getString(cursor.getColumnIndex("Condition")));
                         data.calfIndentNo = cursor.getInt(cursor.getColumnIndex("Condition"));
                     } if(cursor.getType(cursor.getColumnIndex("Remarks"))!= Cursor.FIELD_TYPE_NULL) {
                         editTexts[10].setText(cursor.getString(cursor.getColumnIndex("Remarks")));
