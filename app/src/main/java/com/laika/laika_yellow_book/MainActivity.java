@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume(){
         super.onResume();
 
-        EditText textSearchBox = (EditText) findViewById(R.id.autoCompleteTextView);
+        EditText textSearchBox = findViewById(R.id.autoCompleteTextView);
         textSearchBox.setText("");
 
         myDb = new DbHelper(this);
@@ -30,23 +30,9 @@ public class MainActivity extends AppCompatActivity {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>
                 (this, android.R.layout.select_dialog_item, cIds);
 
-        AutoCompleteTextView actv = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextView);
+        AutoCompleteTextView actv = findViewById(R.id.autoCompleteTextView);
         actv.setThreshold(1);
         actv.setAdapter(adapter);
-
-        //Inserting some test data on load, used to test search function
-//        try {
-//            String calDate = "2018-09-11";
-//            Date date1 = new SimpleDateFormat("yyyy-MM-dd").parse(calDate);
-//
-//            myDb.insertData(32, null, 35, 0, date1, "k", null, null, null, 0, null);
-//            myDb.insertData(658, null, 32, 0, date1, null, null, null, null, 116, null);
-//            myDb.insertData(632, null, 32, 0, date1, null, null, null, null, 119, null);
-//            myDb.insertData(836, null, 32, 0, date1, null, null, null, null, 125, null);
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
-
     }
 
     public void NewEntryPage(View view) {
@@ -62,9 +48,8 @@ public class MainActivity extends AppCompatActivity {
     public void SearchResults(View view) {
         Intent intent = new Intent(this, SearchResults.class);
 
-        EditText textSearchBox = (EditText) findViewById(R.id.autoCompleteTextView);
+        EditText textSearchBox = findViewById(R.id.autoCompleteTextView);
         String searchContent = textSearchBox.getText().toString();
-        //pass search box information to searchResults activity
         intent.putExtra("com.laika.laika_yellow_book.SearchContent", searchContent);
         startActivity(intent);
     }

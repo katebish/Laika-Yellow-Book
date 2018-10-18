@@ -27,8 +27,6 @@ public class PopupDialog extends AppCompatDialogFragment {
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        Intent main = new Intent(currContext, MainActivity.class);
-                        currContext.startActivity(main);
                         ((Activity) currContext).finish();
                     }
                 });

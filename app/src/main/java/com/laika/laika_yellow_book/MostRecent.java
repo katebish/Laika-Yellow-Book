@@ -54,11 +54,8 @@ public class MostRecent extends AppCompatActivity {
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                int itemPosition = position;
                 CowSearched value = (CowSearched) listview.getItemAtPosition(position);
-                //int row_id = value.getRowID();
                 String row_id = Integer.toString(value.getRowID());
-
                 UpdateDeletePage(view, row_id);
             }
         });
@@ -69,5 +66,4 @@ public class MostRecent extends AppCompatActivity {
         intent.putExtra("com.laika.laika_yellow_book.rowIDContent", row_id);
         startActivity(intent);
     }
-
 }

@@ -242,42 +242,52 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
                     if(cursor.getType(cursor.getColumnIndex("CowNum"))!= Cursor.FIELD_TYPE_NULL) {
                         editTexts[0].setText(Integer.toString(cursor.getInt(cursor.getColumnIndex("CowNum"))));
                         data.cowNum = cursor.getInt(cursor.getColumnIndex("CowNum"));
-                    } if(cursor.getType(cursor.getColumnIndex("DueCalveDate"))!= Cursor.FIELD_TYPE_NULL) {
+                    }
+                    if(cursor.getType(cursor.getColumnIndex("DueCalveDate"))!= Cursor.FIELD_TYPE_NULL) {
                         editTexts[1].setText(cursor.getString(cursor.getColumnIndex("DueCalveDate")));
                         try{
                         data.dueCalveDate = format.parse(cursor.getString(cursor.getColumnIndex("DueCalveDate")));
                         } catch(Exception e){
                             Log.d("new entry","parse error from database should not be reachable");
                         }
-                    } if(cursor.getType(cursor.getColumnIndex("SireOfCalf"))!= Cursor.FIELD_TYPE_NULL) {
+                    }
+                    if(cursor.getType(cursor.getColumnIndex("SireOfCalf"))!= Cursor.FIELD_TYPE_NULL) {
                         editTexts[2].setText(Integer.toString(cursor.getInt(cursor.getColumnIndex("SireOfCalf"))));
                         data.sireOfCalf = cursor.getInt(cursor.getColumnIndex("SireOfCalf"));
-                    } if(cursor.getType(cursor.getColumnIndex("CalfBW"))!= Cursor.FIELD_TYPE_NULL) {
-                        editTexts[3].setText(Long.toString(cursor.getLong(cursor.getColumnIndex("CalfBW"))));
-                        data.calfBW = cursor.getLong(cursor.getColumnIndex("CalfBW"));
-                    } if(cursor.getType(cursor.getColumnIndex("CalvingDate"))!= Cursor.FIELD_TYPE_NULL) {
+                    }
+                    if(cursor.getType(cursor.getColumnIndex("CalfBW"))!= Cursor.FIELD_TYPE_NULL) {
+                        editTexts[3].setText(Double.toString(cursor.getDouble(cursor.getColumnIndex("CalfBW"))));
+                        data.calfBW = cursor.getDouble(cursor.getColumnIndex("CalfBW"));
+                    }
+                    if(cursor.getType(cursor.getColumnIndex("CalvingDate"))!= Cursor.FIELD_TYPE_NULL) {
                         editTexts[4].setText(cursor.getString(cursor.getColumnIndex("CalvingDate")));
                         try{
                             data.calvingDate = format.parse(cursor.getString(cursor.getColumnIndex("CalvingDate")));
                         } catch(Exception e){
                             Log.d("new entry","parse error from database should not be reachable");
                         }
-                    } if(cursor.getType(cursor.getColumnIndex("CalvingDiff"))!= Cursor.FIELD_TYPE_NULL) {
-                        editTexts[5].setText(cursor.getString(cursor.getColumnIndex("CalvingDiff")));
-                        data.calvingDiff = cursor.getString(cursor.getColumnIndex("CalvingDiff"));
-                    } if(cursor.getType(cursor.getColumnIndex("CalfID"))!= Cursor.FIELD_TYPE_NULL) {
-                        editTexts[6].setText(Integer.toString(cursor.getInt(cursor.getColumnIndex("CalfID"))));
-                        data.condition = cursor.getString(cursor.getColumnIndex("CalfID"));
-                    } if(cursor.getType(cursor.getColumnIndex("Sex"))!= Cursor.FIELD_TYPE_NULL) {
-                        editTexts[7].setText(cursor.getString(cursor.getColumnIndex("Sex")));
+                    }
+                    if(cursor.getType(cursor.getColumnIndex("Sex"))!= Cursor.FIELD_TYPE_NULL) {
+                        editTexts[5].setText(cursor.getString(cursor.getColumnIndex("Sex")));
                         data.sex = cursor.getString(cursor.getColumnIndex("Sex"));
-                    } if(cursor.getType(cursor.getColumnIndex("Fate"))!= Cursor.FIELD_TYPE_NULL) {
-                        editTexts[8].setText(cursor.getString(cursor.getColumnIndex("Fate")));
+                    }
+                    if(cursor.getType(cursor.getColumnIndex("Fate"))!= Cursor.FIELD_TYPE_NULL) {
+                        editTexts[6].setText(cursor.getString(cursor.getColumnIndex("Fate")));
                         data.fate = cursor.getString(cursor.getColumnIndex("Fate"));
-                    } if(cursor.getType(cursor.getColumnIndex("Condition"))!= Cursor.FIELD_TYPE_NULL) {
+                    }
+                    if(cursor.getType(cursor.getColumnIndex("CalfID"))!= Cursor.FIELD_TYPE_NULL) {
+                        editTexts[7].setText(Integer.toString(cursor.getInt(cursor.getColumnIndex("CalfID"))));
+                        data.calfIndentNo = cursor.getInt(cursor.getColumnIndex("CalfID"));
+                    }
+                    if(cursor.getType(cursor.getColumnIndex("CalvingDiff"))!= Cursor.FIELD_TYPE_NULL) {
+                        editTexts[8].setText(cursor.getString(cursor.getColumnIndex("CalvingDiff")));
+                        data.calvingDiff = cursor.getString(cursor.getColumnIndex("CalvingDiff"));
+                    }
+                    if(cursor.getType(cursor.getColumnIndex("Condition"))!= Cursor.FIELD_TYPE_NULL) {
                         editTexts[9].setText(cursor.getString(cursor.getColumnIndex("Condition")));
-                        data.calfIndentNo = cursor.getInt(cursor.getColumnIndex("Condition"));
-                    } if(cursor.getType(cursor.getColumnIndex("Remarks"))!= Cursor.FIELD_TYPE_NULL) {
+                        data.condition = cursor.getString(cursor.getColumnIndex("Condition"));
+                    }
+                    if(cursor.getType(cursor.getColumnIndex("Remarks"))!= Cursor.FIELD_TYPE_NULL) {
                         editTexts[10].setText(cursor.getString(cursor.getColumnIndex("Remarks")));
                         data.remarks = cursor.getString(cursor.getColumnIndex("Remarks"));
                     }
@@ -730,18 +740,7 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
         }
         else if (method == Method.UPDATE) {
             Toast.makeText(NewEntryActivity.this, "Entry updated!", Toast.LENGTH_LONG).show();
-
-            Intent intent = new Intent(this, SearchResults.class);
-            String searchContent = "";
-
-            if(data.calfIndentNo != 0)
-                searchContent = String.valueOf(data.calfIndentNo);
-            else
-                searchContent = String.valueOf(data.cowNum);
-            //pass search box information to searchResults activity
-            intent.putExtra("com.laika.laika_yellow_book.SearchContent", searchContent);
             finish();
-            startActivity(intent);
         }
     }
 
