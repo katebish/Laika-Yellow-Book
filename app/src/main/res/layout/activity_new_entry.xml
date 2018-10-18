@@ -245,44 +245,9 @@
                     <android.support.design.chip.ChipGroup
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="14dp">
-
-                        <android.support.design.chip.Chip
-                            android:id="@+id/twin1chip"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentLeft="true"
-                            android:layout_alignParentTop="true"
-                            android:layout_marginTop="8dp"
-                            app:chipText="Twin 1"
-                            app:closeIcon="@drawable/closs_button"
-                            app:closeIconEnabled="true"/>
-
-                        <android.support.design.chip.Chip
-                            android:id="@+id/twin2chip"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentLeft="true"
-                            android:layout_alignParentTop="true"
-                            android:layout_marginTop="8dp"
-                            app:chipText="Twin 2"
-                            app:closeIcon="@drawable/closs_button"
-                            app:closeIconEnabled="true"/>
-
-                        <android.support.design.chip.Chip
-                            android:id="@+id/twin3chip"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentLeft="true"
-                            android:layout_alignParentTop="true"
-                            android:layout_marginTop="8dp"
-                            app:chipText="Twin 3"
-                            app:closeIcon="@drawable/closs_button"
-                            app:closeIconEnabled="true"/>
+                        android:layout_marginTop="14dp"
+                        android:id="@+id/chipgroup">
                     </android.support.design.chip.ChipGroup>
-
-
-
 
                     <TextView
                         android:id="@+id/tv_addTwinCalf"

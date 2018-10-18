@@ -12,6 +12,7 @@ import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
 import android.support.design.chip.Chip;
+import android.support.design.chip.ChipGroup;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -19,8 +20,11 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -54,11 +58,11 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
     private ArrayList<DataLine> twins;
     private int twinCount = 0;
 
-    private Method method = Method.NEWDATA;
     private boolean isSuccessful;
     private String ID;
 
     public enum Method {NEWDATA, UPDATE};
+    private Method method = Method.NEWDATA;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,47 +78,24 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
         editTexts = new EditText[11];
         textInputLayout = new TextInputLayout[11];
 
-        Button deleteButton = (Button) findViewById(R.id.deleteButton);
+        Button deleteButton = findViewById(R.id.deleteButton);
         deleteButton.setVisibility(View.GONE);
 
         TextView addTwinCalf = findViewById(R.id.tv_addTwinCalf);
         addTwinCalf.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-            if(twinCount < 3)
-                openTwinCalfDialog();
-            else
-                Toast.makeText(NewEntryActivity.this, "Max of 3 twin calves allowed", Toast.LENGTH_LONG).show();
+            @Override
+            public void onClick(View view) {
+                if (editTexts[7].getText().toString().isEmpty()) {
+                    editTexts[7].requestFocus();
+                    Toast.makeText(NewEntryActivity.this, "Please fill the Calf ID field first", Toast.LENGTH_LONG).show();
+                    return;
                 }
-        });
-
-        final Chip twin1chip = findViewById(R.id.twin1chip);
-        twin1chip.setVisibility(View.INVISIBLE);
-
-        twin1chip.setOnCloseIconClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                twin1chip.setVisibility(View.INVISIBLE);
-            }
-        });
-
-        final Chip twin2chip = findViewById(R.id.twin2chip);
-        twin2chip.setVisibility(View.INVISIBLE);
-
-        twin2chip.setOnCloseIconClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                twin2chip.setVisibility(View.INVISIBLE);
-            }
-        });
-
-        final Chip twin3chip = findViewById(R.id.twin3chip);
-        twin3chip.setVisibility(View.INVISIBLE);
-
-        twin3chip.setOnCloseIconClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                twin3chip.setVisibility(View.INVISIBLE);
+                ChipGroup chipGroup = findViewById(R.id.chipgroup);
+                int childCount = chipGroup.getChildCount();
+                if(childCount < 3)
+                    openTwinCalfDialog();
+                else
+                    Toast.makeText(NewEntryActivity.this, "Max of 3 twin calves allowed", Toast.LENGTH_LONG).show();
             }
         });
 
@@ -717,44 +698,58 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
         }
     }
 
+    private void updateTwinCalfDialog(int index, int id, String sex, Double birthweight, String condition) {
+        TwinCalfDialog twinCalfDialog = new TwinCalfDialog();
+        twinCalfDialog.setTextFields(index, id,sex,birthweight,condition);
+        twinCalfDialog.show(getSupportFragmentManager(), "twin dialog");
+    }
+
     private void openTwinCalfDialog(){
         TwinCalfDialog twinCalfDialog = new TwinCalfDialog();
         twinCalfDialog.show(getSupportFragmentManager(), "twin dialog");
     }
 
-
     @Override
-    public void passData(int calfID, String calfSex, Double calfBW, String calfCondition) {
+    public void passData(final int calfID, String calfSex, Double calfBW, String calfCondition) {
         String id = String.valueOf(calfID);
-        switch (twinCount) {
-            case 0:
-               Chip twin1chip = findViewById(R.id.twin1chip);
-               twin1chip.setVisibility(View.VISIBLE);
+        Chip chip = new Chip(this);
+        chip.setChipText(id);
+        chip.setCloseIconEnabled(true);
+        chip.setCloseIconResource(R.drawable.ic_close_black_24dp);
+        chip.setOnCloseIconClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                twinCount--;
+                ChipGroup chipGroup = (ChipGroup) v.getParent();
+                int i = chipGroup.indexOfChild(v);
+                twins.remove(i);
+                chipGroup.removeView(v);
+            }
+        });
+        chip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ChipGroup chipGroup = (ChipGroup) v.getParent();
+                int i = chipGroup.indexOfChild(v);
+                DataLine t = twins.get(i);
+                updateTwinCalfDialog(i, t.calfIndentNo, t.sex,t.calfBW, t.condition);
+            }
+        });
+        ChipGroup chipGroup = findViewById(R.id.chipgroup);
+        chipGroup.addView(chip);
 
-               break;
-            case 1:
-               /* TextView twin2 = findViewById(R.id.twin2);
-                twin2.setVisibility(View.VISIBLE);
-                twin2.setText(id);*/
-
-               Chip twin2chip = findViewById(R.id.twin2chip);
-               twin2chip.setVisibility(View.VISIBLE);
-
-               break;
-            case 2:
-                /*TextView twin3 = findViewById(R.id.twin3);
-                twin3.setVisibility(View.VISIBLE);
-                twin3.setText(id);*/
-
-                Chip twin3chip = findViewById(R.id.twin3chip);
-                twin3chip.setVisibility(View.VISIBLE);
-
-                break;
-        }
         twinCount++;
         editTexts[8].requestFocus();
         DataLine twin = new DataLine(data.cowNum, data.dueCalveDate,data.sireOfCalf,calfBW,data.calvingDate,data.calvingDiff,calfCondition,calfSex,data.fate,calfID,data.remarks);
         twins.add(twin);
+    }
 
+    @Override
+    public void updateData(int index, int calfID, String calfSex, Double calfBW, String calfCondition) {
+        DataLine twin = new DataLine(data.cowNum, data.dueCalveDate,data.sireOfCalf,calfBW,data.calvingDate,data.calvingDiff,calfCondition,calfSex,data.fate,calfID,data.remarks);
+        ChipGroup chipGroup = findViewById(R.id.chipgroup);
+        Chip chip = (Chip) chipGroup.getChildAt(index);
+        chip.setChipText(String.valueOf(calfID));
+        twins.set(index,twin);
     }
 }
