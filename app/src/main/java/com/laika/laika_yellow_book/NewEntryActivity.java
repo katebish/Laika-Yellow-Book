@@ -429,6 +429,8 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
                 currEditText = findViewById(currEditText.getNextFocusDownId());
                 currEditText.requestFocus();
             }
+        } else {
+            currEditText.clearFocus();
         }
     }
 
