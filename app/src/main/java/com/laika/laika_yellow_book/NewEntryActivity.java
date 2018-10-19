@@ -364,7 +364,7 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
                                 }
                             }
                             else if(s.equals("finish")){
-                                finish();
+                                openDialog();
                             }
                         }
 
@@ -503,7 +503,6 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
                     map = new HashMap<String, String>();
                     map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "finish");
                     if(isSuccess) {
-                        Toast.makeText(NewEntryActivity.this, "New entry saved!", Toast.LENGTH_LONG).show();
                         mTTS.speak("New entry saved", QUEUE_ADD, map);
                     }
                     else{
