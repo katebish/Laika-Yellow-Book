@@ -13,7 +13,7 @@ public class Parser {
             "cow( number| id)?",
             "calf( number| id)?",
             "(calf )?(due( date)?|expected( to be( born)?)?)( on)?",
-            "(sire|bull)( number| id)?",
+            "(sire|bull)( number| id)?( of calf)?",
             "(calf )?(bw|birth weight|weighs)",
             "(cal(f|ving)?|actual(ly)?) (date|(born( on)?))",
             "difficulty",
