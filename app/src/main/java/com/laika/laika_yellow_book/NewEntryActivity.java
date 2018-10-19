@@ -814,9 +814,9 @@ public class NewEntryActivity extends AppCompatActivity implements AsyncResponse
             ArrayList<String> res = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
             HashMap<String, String> vals;
             Log.d("parser",""+res.size());
-            if((vals = Parser.parse(res.get(0))).isEmpty()){
+            if((vals = Parser.parse(WordsToNumber.convertNumbers(res.get(0)))).isEmpty()){
                 int i = 1;
-                while ((res.size() > i) && (vals = Parser.parse(res.get(i))).isEmpty()) {
+                while ((res.size() > i) && (vals = Parser.parse(WordsToNumber.convertNumbers(res.get(i)))).isEmpty()) {
                     Log.d("parser", res.get(i));
                     i++;
                     Log.d("parser", "looped " + i);
